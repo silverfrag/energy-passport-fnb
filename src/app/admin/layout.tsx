@@ -1,9 +1,7 @@
-import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import FameDrinkLogo from '@/components/FameDrinkLogo'
 import AdminUnlockCard from '@/features/admin/AdminUnlockCard'
 import AdminLogoutButton from '@/features/admin/AdminLogoutButton'
-import { isEmailAdmin } from '@/lib/constants/admin'
 import { cookies } from 'next/headers'
 
 export default async function AdminLayout({
@@ -11,38 +9,14 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
   const cookieStore = await cookies()
-  const hasAdminSessionCookie = cookieStore.get('ep_admin_session')?.value === 'true'
-
-  // 1. Check if user email is recognized admin (e.g. nhathung121225@gmail.com)
-  const isDirectEmailAdmin = isEmailAdmin(user?.email)
-
-  // 2. Check if user is in admin_users table in database
-  let isDbAdmin = false
-  if (!isDirectEmailAdmin && !hasAdminSessionCookie && user) {
-    try {
-      const { data: adminUser } = await supabase
-        .from('admin_users')
-        .select('user_id')
-        .eq('user_id', user.id)
-        .maybeSingle()
-
-      if (adminUser) isDbAdmin = true
-    } catch {
-      // Supabase query error fallback
-    }
-  }
-
-  const isAdmin = hasAdminSessionCookie || isDirectEmailAdmin || isDbAdmin
+  const isAdmin = cookieStore.get('ep_admin_session')?.value === 'true'
 
   // If not admin, show store PIN authorization card directly on page (no email/account required!)
   if (!isAdmin) {
     return (
       <div className="min-h-dvh flex items-center justify-center p-4" style={{ background: 'var(--color-bg)' }}>
-        <AdminUnlockCard userEmail={user?.email} />
+        <AdminUnlockCard />
       </div>
     )
   }
@@ -88,8 +62,8 @@ export default async function AdminLayout({
         </div>
 
         <div className="flex items-center gap-3 text-xs font-mono">
-          <span className="hidden sm:inline text-stone-400 text-[11px]">
-            {user?.email ?? 'Quản lý cửa hàng (PIN 1212)'}
+          <span className="hidden sm:inline text-amber-300/80 text-[11px] font-bold">
+            Chủ quán & Quản lý (PIN 1212)
           </span>
           <Link
             href="/"

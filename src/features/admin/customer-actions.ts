@@ -335,20 +335,6 @@ export async function verifyAdminPasskey(
       secure: process.env.NODE_ENV === 'production',
     })
 
-    // 2. Also try inserting into admin_users table in Supabase if user is logged in
-    try {
-      const supabase = await createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-
-      if (user) {
-        await supabase
-          .from('admin_users')
-          .upsert({ user_id: user.id } as any)
-      }
-    } catch (dbErr) {
-      console.warn('Note: Could not upsert admin_users table (handled by admin cookie):', dbErr)
-    }
-
     revalidatePath('/admin')
     revalidatePath('/admin/customers')
     revalidatePath('/admin/products')

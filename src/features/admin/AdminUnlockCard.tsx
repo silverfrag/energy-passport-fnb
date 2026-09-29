@@ -26,7 +26,9 @@ export default function AdminUnlockCard({ userEmail }: Props) {
 
     if (res.success) {
       setSuccess(true)
-      window.location.reload()
+      setTimeout(() => {
+        window.location.href = '/admin'
+      }, 500)
     } else {
       setError(res.message)
     }
@@ -48,14 +50,14 @@ export default function AdminUnlockCard({ userEmail }: Props) {
             Xác Thực Quyền Barista / Quản Lý
           </h2>
           <p className="text-xs text-muted mt-2 leading-relaxed">
-            Tài khoản <span className="text-amber-300 font-mono font-bold">{userEmail || 'của bạn'}</span> đang đăng nhập. Vui lòng nhập mã PIN bảo mật của cửa hàng để kích hoạt quyền quản trị.
+            Tài khoản <span className="text-amber-300 font-mono font-bold">{userEmail || 'của bạn'}</span> đang đăng nhập. Vui lòng nhập mã PIN bảo mật để truy cập bảng điều khiển.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-left">
           <div>
             <label className="text-[11px] font-mono uppercase text-muted block mb-1.5">
-              Mã PIN Cửa Hàng (Gợi ý: 8826 hoặc 2026)
+              Mã PIN Quản Trị Cửa Hàng
             </label>
             <input
               type="password"

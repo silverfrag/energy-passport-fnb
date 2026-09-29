@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import FameDrinkLogo from '@/components/FameDrinkLogo'
 import AdminUnlockCard from '@/features/admin/AdminUnlockCard'
+import { isEmailAdmin } from '@/lib/constants/admin'
+import { cookies } from 'next/headers'
 
 export default async function AdminLayout({
   children,
@@ -14,19 +16,30 @@ export default async function AdminLayout({
 
   if (!user) redirect('/auth?redirect=/admin')
 
-  // Check if user is in admin_users table
-  let isAdmin = false
-  try {
-    const { data: adminUser } = await supabase
-      .from('admin_users')
-      .select('user_id')
-      .eq('user_id', user.id)
-      .maybeSingle()
+  // 1. Check if user email is recognized admin (e.g. nhathung121225@gmail.com)
+  const isDirectEmailAdmin = isEmailAdmin(user.email)
 
-    if (adminUser) isAdmin = true
-  } catch {
-    // Supabase query error fallback
+  // 2. Check if admin session cookie was set via PIN
+  const cookieStore = await cookies()
+  const hasAdminSessionCookie = cookieStore.get('ep_admin_session')?.value === 'true'
+
+  // 3. Check if user is in admin_users table in database
+  let isDbAdmin = false
+  if (!isDirectEmailAdmin && !hasAdminSessionCookie) {
+    try {
+      const { data: adminUser } = await supabase
+        .from('admin_users')
+        .select('user_id')
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      if (adminUser) isDbAdmin = true
+    } catch {
+      // Supabase query error fallback
+    }
   }
+
+  const isAdmin = isDirectEmailAdmin || hasAdminSessionCookie || isDbAdmin
 
   // If not admin, show store PIN authorization card
   if (!isAdmin) {

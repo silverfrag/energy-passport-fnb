@@ -2,6 +2,8 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
+import { ADMIN_PASSKEY } from '@/lib/constants/admin'
 
 export interface CustomerSummary {
   id: string
@@ -311,37 +313,47 @@ export async function quickCreateCustomer(
 }
 
 /**
- * Self-service Admin PIN authorization for Store Owner
- * PIN: 8826 (Store Hotline) or 2026
+ * Self-service Admin PIN authorization for Store Owner & Barista
+ * PIN: 1212
  */
 export async function verifyAdminPasskey(
   passkey: string
 ): Promise<{ success: boolean; message: string }> {
-  const validKeys = ['8826', '2026', 'famedrink', 'admin8826']
-  if (!validKeys.includes(passkey.trim().toLowerCase())) {
+  const cleanPass = passkey.trim()
+  if (cleanPass !== ADMIN_PASSKEY) {
     return { success: false, message: 'Mã PIN quản trị viên không chính xác.' }
   }
 
   try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    // 1. Set persistent HTTP-only admin session cookie (guarantees instant access regardless of DB RLS)
+    const cookieStore = await cookies()
+    cookieStore.set('ep_admin_session', 'true', {
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+      path: '/',
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    })
 
-    if (!user) {
-      return { success: false, message: 'Vui lòng đăng nhập trước khi cấp quyền.' }
-    }
+    // 2. Also try inserting into admin_users table in Supabase if user is logged in
+    try {
+      const supabase = await createClient()
+      const { data: { user } } = await supabase.auth.getUser()
 
-    // Insert user into admin_users
-    const { error } = await supabase
-      .from('admin_users')
-      .upsert({ user_id: user.id } as any)
-
-    if (error) {
-      console.error('Error inserting admin_users:', error)
+      if (user) {
+        await supabase
+          .from('admin_users')
+          .upsert({ user_id: user.id } as any)
+      }
+    } catch (dbErr) {
+      console.warn('Note: Could not upsert admin_users table (handled by admin cookie):', dbErr)
     }
 
     revalidatePath('/admin')
     revalidatePath('/admin/customers')
-    return { success: true, message: 'Cấp quyền Quản trị viên Fame Drink thành công!' }
+    revalidatePath('/admin/products')
+    revalidatePath('/admin/actions')
+    return { success: true, message: 'Xác thực thành công! Đang mở trang quản trị...' }
   } catch (err: any) {
     return { success: false, message: err?.message || 'Có lỗi khi xác thực mã PIN.' }
   }

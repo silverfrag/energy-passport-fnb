@@ -18,6 +18,8 @@ import {
 
 interface Props {
   product: Product
+  isAuthenticated?: boolean
+  userEmail?: string | null
 }
 
 type UIState = 'idle' | 'loading' | 'duplicate' | 'success' | 'error'
@@ -28,7 +30,11 @@ const CATEGORY_COLORS = {
   REFRESH: { primary: 'var(--color-refresh)', light: 'rgba(74,144,217,0.1)', border: 'rgba(74,144,217,0.3)' },
 }
 
-export default function ScanConfirmClient({ product }: Props) {
+export default function ScanConfirmClient({ 
+  product, 
+  isAuthenticated = false, 
+  userEmail = null 
+}: Props) {
   const [uiState, setUiState] = useState<UIState>('idle')
   const [error, setError] = useState<string | null>(null)
 
@@ -93,27 +99,46 @@ export default function ScanConfirmClient({ product }: Props) {
           </div>
         )}
 
-        {/* Claim Account Card */}
-        <div className="surface p-5 text-left rounded-2xl border border-amber-400/20 bg-amber-500/5 space-y-2.5">
-          <div className="flex items-center gap-2">
-            <IconPassportCrest className="w-5 h-5 text-amber-400" color="#D4AF37" />
-            <p className="text-xs font-bold uppercase tracking-wider text-amber-300 font-mono">
-              Bảo Lưu Sổ Ký Danh Passport
+        {/* Account status card: only show claim prompt for guests */}
+        {isAuthenticated ? (
+          <div className="surface p-4 text-left rounded-2xl border border-emerald-500/20 bg-emerald-500/5 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                <IconShield className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-emerald-400 font-mono tracking-wider uppercase">
+                  TÀI KHOẢN ĐÃ XÁC THỰC
+                </p>
+                <p className="text-[11px] text-muted mt-0.5">
+                  Đã tự động lưu vào sổ Passport của <span className="text-white font-medium">{userEmail || 'bạn'}</span>.
+                </p>
+              </div>
+            </div>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+          </div>
+        ) : (
+          <div className="surface p-5 text-left rounded-2xl border border-amber-400/20 bg-amber-500/5 space-y-2.5">
+            <div className="flex items-center gap-2">
+              <IconPassportCrest className="w-5 h-5 text-amber-400" color="#D4AF37" />
+              <p className="text-xs font-bold uppercase tracking-wider text-amber-300 font-mono">
+                Bảo Lưu Sổ Ký Danh Passport
+              </p>
+            </div>
+            <p className="text-xs text-muted leading-relaxed">
+              Lịch sử hiện tại đang lưu tạm trên trình duyệt này. Bạn có thể liên kết email bất cứ lúc nào để đồng bộ trên mọi thiết bị.
             </p>
+            <div className="pt-1">
+              <Link
+                href="/auth"
+                className="btn btn-gold text-xs font-bold uppercase tracking-wider py-2 px-4 inline-flex items-center gap-1.5"
+              >
+                <span>Liên Kết Email Ngay</span>
+                <IconArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
           </div>
-          <p className="text-xs text-muted leading-relaxed">
-            Lịch sử hiện tại đang lưu tạm trên trình duyệt này. Bạn có thể liên kết email bất cứ lúc nào để đồng bộ trên mọi thiết bị.
-          </p>
-          <div className="pt-1">
-            <Link
-              href="/auth"
-              className="btn btn-gold text-xs font-bold uppercase tracking-wider py-2 px-4 inline-flex items-center gap-1.5"
-            >
-              <span>Liên Kết Email Ngay</span>
-              <IconArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-        </div>
+        )}
 
         <div className="flex flex-col gap-3 pt-2">
           <Link href="/passport" className="btn btn-gold btn-full text-xs font-bold uppercase tracking-wider py-3 shadow-xl flex items-center justify-center gap-2">
@@ -166,9 +191,18 @@ export default function ScanConfirmClient({ product }: Props) {
   return (
     <div className="w-full mx-auto max-w-md px-4 py-10 fade-in space-y-6">
       <div className="text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold tracking-[0.2em] uppercase text-muted font-mono mb-3">
-          <IconScan className="w-3.5 h-3.5 text-amber-400" />
-          <span>QUÉT MÃ QR TRÊN THÂN LY</span>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold tracking-[0.2em] uppercase font-mono mb-3">
+          {isAuthenticated ? (
+            <>
+              <IconShield className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="text-emerald-400">HỘI VIÊN: {userEmail ? userEmail.split('@')[0] : 'ĐÃ ĐĂNG NHẬP'}</span>
+            </>
+          ) : (
+            <>
+              <IconScan className="w-3.5 h-3.5 text-amber-400" />
+              <span className="text-muted">QUÉT MÃ QR TRÊN THÂN LY</span>
+            </>
+          )}
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-white">
           Xác Nhận Thức Uống

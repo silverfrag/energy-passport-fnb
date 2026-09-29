@@ -52,6 +52,21 @@ export default async function ScanPage({ params }: Props) {
   const { slug } = await params
   const { product, inactive } = await getProduct(slug)
 
+  // Check authenticated state
+  let isAuthenticated = false
+  let userEmail: string | null = null
+
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user && !user.is_anonymous) {
+      isAuthenticated = true
+      userEmail = user.email ?? null
+    }
+  } catch {
+    // ignore
+  }
+
   // Inactive product
   if (inactive) {
     return (
@@ -75,5 +90,11 @@ export default async function ScanPage({ params }: Props) {
     notFound()
   }
 
-  return <ScanConfirmClient product={product} />
+  return (
+    <ScanConfirmClient
+      product={product}
+      isAuthenticated={isAuthenticated}
+      userEmail={userEmail}
+    />
+  )
 }

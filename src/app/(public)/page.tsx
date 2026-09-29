@@ -13,6 +13,19 @@ import {
   IconShield,
   IconCup,
   IconSparkles,
+  IconCoffeeBean,
+  IconCeremonialMatcha,
+  IconArtisanCroissant,
+  IconFocusWorkspace,
+  IconStar,
+  IconMapPin,
+  IconPhone,
+  IconWifi,
+  IconCreditCard,
+  IconSnowflake,
+  IconParking,
+  IconHeart,
+  IconBolt,
 } from '@/components/icons'
 import { CATEGORY_DETAILS } from '@/lib/constants/drink-assets'
 
@@ -138,22 +151,30 @@ const PROMOTIONS = [
 
 const STRENGTHS = [
   {
-    icon: '☕',
+    icon: IconCoffeeBean,
+    accentColor: '#D4AF37',
+    badge: 'Arabica 1.600m',
     title: 'Hạt Arabica Cầu Đất 1.600m',
     desc: 'Thu hoạch quả chín thủ công tại Lâm Đồng, sơ chế ướt và rang mẻ nhỏ để giữ trọn nốt hoa quả thanh lịch.',
   },
   {
-    icon: '🍵',
+    icon: IconCeremonialMatcha,
+    accentColor: '#387B4E',
+    badge: 'Uji Kyoto Grade A',
     title: 'Matcha Ceremonial Grade Uji',
     desc: 'Nhập khẩu chính ngạch từ vùng Uji (Kyoto), đánh bằng chổi tre Chasen truyền thống giữ nguyên dưỡng chất L-theanine.',
   },
   {
-    icon: '🥐',
+    icon: IconArtisanCroissant,
+    accentColor: '#E05A2B',
+    badge: 'Bơ Pháp 06:30',
     title: 'Bánh Nướng Tươi Mỗi Ngày',
     desc: 'Croissant bơ Pháp nướng tại chỗ mỗi sáng lúc 06:30, thơm lừng giòn rụm kết hợp hoàn hảo cùng cà phê.',
   },
   {
-    icon: '💻',
+    icon: IconFocusWorkspace,
+    accentColor: '#3D8CA8',
+    badge: 'Wifi 300Mbps',
     title: 'Không Gian Focus Tiêu Chuẩn',
     desc: 'Ghế ngồi công thái học, ổ cắm từng bàn, wifi cáp quang 300Mbps chuyên dụng cho làm việc và họp sáng tạo.',
   },
@@ -577,16 +598,40 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {STRENGTHS.map((s, i) => (
-              <div
-                key={i}
-                className="surface p-6 rounded-2xl border border-white/10 text-center card-hover"
-              >
-                <div className="text-3xl mb-3">{s.icon}</div>
-                <h3 className="text-sm font-bold text-white mb-2">{s.title}</h3>
-                <p className="text-xs text-muted leading-relaxed">{s.desc}</p>
-              </div>
-            ))}
+            {STRENGTHS.map((s, i) => {
+              const IconComp = s.icon
+              return (
+                <div
+                  key={i}
+                  className="surface p-6 rounded-2xl border border-white/10 text-center card-hover flex flex-col items-center justify-between group transition-all duration-300 hover:border-amber-400/40 hover:-translate-y-1"
+                >
+                  <div className="flex flex-col items-center">
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 shadow-lg"
+                      style={{
+                        background: `radial-gradient(circle, ${s.accentColor}25 0%, rgba(0,0,0,0.6) 100%)`,
+                        border: `1px solid ${s.accentColor}40`,
+                        boxShadow: `0 8px 24px ${s.accentColor}20`,
+                      }}
+                    >
+                      <IconComp className="w-7 h-7" color={s.accentColor} />
+                    </div>
+                    <span
+                      className="text-[9px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full mb-2.5"
+                      style={{
+                        color: s.accentColor,
+                        background: `${s.accentColor}15`,
+                        border: `1px solid ${s.accentColor}30`,
+                      }}
+                    >
+                      {s.badge}
+                    </span>
+                    <h3 className="text-sm font-bold text-white mb-2">{s.title}</h3>
+                    <p className="text-xs text-muted leading-relaxed">{s.desc}</p>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -712,8 +757,9 @@ export default function HomePage() {
                   </div>
 
                   <div className="p-2.5 rounded-xl bg-amber-400/10 border border-amber-400/20 text-center">
-                    <p className="text-[11px] text-amber-200 font-mono">
-                      ✨ Hệ thống tự động tích lũy đặc quyền & ưu đãi tri ân khách quen Fame Drink
+                    <p className="text-[11px] text-amber-200 font-mono flex items-center justify-center gap-1.5">
+                      <IconSparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                      <span>Hệ thống tự động tích lũy đặc quyền & ưu đãi tri ân khách quen Fame Drink</span>
                     </p>
                   </div>
                 </div>
@@ -735,9 +781,13 @@ export default function HomePage() {
             <h2 className="text-3xl sm:text-4xl font-black mt-2 text-white">
               Được Yêu Thích Tại Sài Gòn
             </h2>
-            <div className="flex items-center justify-center gap-1.5 mt-3 text-amber-400 text-sm">
-              <span>★★★★★</span>
-              <span className="text-white font-bold ml-1">4.9 / 5.0</span>
+            <div className="flex items-center justify-center gap-2 mt-3 text-amber-400 text-sm">
+              <div className="flex items-center gap-1">
+                {Array.from({ length: 5 }).map((_, sIdx) => (
+                  <IconStar key={sIdx} className="w-4 h-4" color="#D4AF37" fill="#D4AF37" />
+                ))}
+              </div>
+              <span className="text-white font-bold ml-1 font-mono">4.9 / 5.0</span>
               <span className="text-muted text-xs">(Hơn 500+ lượt đánh giá trên Google)</span>
             </div>
           </div>
@@ -750,7 +800,11 @@ export default function HomePage() {
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-amber-400 text-sm">★★★★★</span>
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: r.stars }).map((_, sIdx) => (
+                        <IconStar key={sIdx} className="w-3.5 h-3.5" color="#D4AF37" fill="#D4AF37" />
+                      ))}
+                    </div>
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-stone-400">
                       {r.tag}
                     </span>
@@ -794,21 +848,27 @@ export default function HomePage() {
 
           <div className="surface p-8 rounded-3xl border border-white/10 text-left mb-10 grid grid-cols-1 md:grid-cols-3 gap-6 shadow-xl">
             <div className="space-y-1">
-              <span className="text-2xl mb-2 block">📍</span>
+              <div className="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center mb-3">
+                <IconMapPin className="w-5 h-5 text-amber-400" />
+              </div>
               <h4 className="text-sm font-bold text-white">Địa Chỉ Atelier</h4>
               <p className="text-xs text-stone-300">68 Nguyễn Huệ, P. Bến Nghé</p>
               <p className="text-xs text-muted">Quận 1, TP. Hồ Chí Minh</p>
             </div>
 
             <div className="space-y-1">
-              <span className="text-2xl mb-2 block">⏱</span>
+              <div className="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center mb-3">
+                <IconClock className="w-5 h-5 text-amber-400" />
+              </div>
               <h4 className="text-sm font-bold text-white">Giờ Hoạt Động</h4>
               <p className="text-xs text-stone-300">07:00 — 22:00 Mỗi ngày</p>
               <p className="text-xs text-muted">Bánh tươi nướng từ 06:30 sáng</p>
             </div>
 
             <div className="space-y-1">
-              <span className="text-2xl mb-2 block">📞</span>
+              <div className="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center mb-3">
+                <IconPhone className="w-5 h-5 text-amber-400" />
+              </div>
               <h4 className="text-sm font-bold text-white">Hotline Barista</h4>
               <p className="text-xs text-amber-300 font-mono font-bold">1900 8826</p>
               <p className="text-xs text-muted">Giữ chỗ & Tư vấn hạt đặc sản</p>
@@ -816,12 +876,27 @@ export default function HomePage() {
           </div>
 
           {/* Amenities Strip */}
-          <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-10 text-xs text-stone-400 mb-10">
-            <span className="flex items-center gap-1.5">🛵 Chỗ Đậu Xe Miễn Phí</span>
-            <span className="flex items-center gap-1.5">⚡ Wifi Cáp Quang 300Mbps</span>
-            <span className="flex items-center gap-1.5">❄️ Máy Lạnh Êm Dịu</span>
-            <span className="flex items-center gap-1.5">💳 Thanh Toán Không Tiền Mặt</span>
-            <span className="flex items-center gap-1.5">🐾 Thân Thiện Với Thú Cưng</span>
+          <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 text-xs text-stone-300 mb-10">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+              <IconParking className="w-3.5 h-3.5 text-amber-400" />
+              <span>Chỗ Đậu Xe Miễn Phí</span>
+            </span>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+              <IconWifi className="w-3.5 h-3.5 text-amber-400" />
+              <span>Wifi Cáp Quang 300Mbps</span>
+            </span>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+              <IconSnowflake className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Máy Lạnh Êm Dịu</span>
+            </span>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+              <IconCreditCard className="w-3.5 h-3.5 text-amber-400" />
+              <span>Thanh Toán Không Tiền Mặt</span>
+            </span>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+              <IconHeart className="w-3.5 h-3.5 text-rose-400" />
+              <span>Thân Thiện Thú Cưng</span>
+            </span>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { getCustomersData } from '@/features/admin/customer-actions'
 import { getAdminProductsList, getAdminActionsList } from '@/lib/store/catalog-service'
+import { IconStar, IconCoffeeBean, IconDashboard, IconTimer } from '@/components/icons'
 
 export const dynamic = 'force-dynamic'
 
@@ -39,7 +40,7 @@ export default async function AdminDashboard() {
       subtitle: `${customersData.rewardEligibleCount} khách đủ điều kiện nhận ưu đãi`,
       href: '/admin/customers',
       color: '#f59e0b',
-      emoji: '⭐',
+      icon: IconStar,
       badge: 'Chăm sóc khách',
     },
     {
@@ -48,7 +49,7 @@ export default async function AdminDashboard() {
       subtitle: 'Cà phê đặc sản & trà tươi',
       href: '/admin/products',
       color: 'var(--color-wake)',
-      emoji: '☕',
+      icon: IconCoffeeBean,
       badge: 'Thực đơn',
     },
     {
@@ -57,7 +58,7 @@ export default async function AdminDashboard() {
       subtitle: `${customersData.activeWeeklyCount} khách dùng trong 7 ngày`,
       href: '/admin/customers',
       color: 'var(--color-refresh)',
-      emoji: '📊',
+      icon: IconDashboard,
       badge: 'Lượt phục vụ',
     },
     {
@@ -66,7 +67,7 @@ export default async function AdminDashboard() {
       subtitle: 'Liệu pháp thư giãn 3-10 phút',
       href: '/admin/actions',
       color: 'var(--color-focus)',
-      emoji: '⏱️',
+      icon: IconTimer,
       badge: 'Sức khỏe',
     },
   ]
@@ -87,19 +88,29 @@ export default async function AdminDashboard() {
 
       {/* Main KPI Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => (
-          <Link key={stat.label} href={stat.href} className="group">
-            <div className="surface p-5 rounded-2xl border border-white/10 hover:border-amber-400/40 transition-all shadow-lg h-full flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-2xl">{stat.emoji}</span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-muted group-hover:text-amber-300 transition-colors">
-                    {stat.badge}
-                  </span>
-                </div>
-                <p className="text-3xl font-black mb-1 font-mono" style={{ color: stat.color }}>
-                  {stat.count}
-                </p>
+        {stats.map((stat) => {
+          const IconComp = stat.icon
+          return (
+            <Link key={stat.label} href={stat.href} className="group">
+              <div className="surface p-5 rounded-2xl border border-white/10 hover:border-amber-400/40 transition-all shadow-lg h-full flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-md"
+                      style={{
+                        background: `${stat.color}18`,
+                        border: `1px solid ${stat.color}35`,
+                      }}
+                    >
+                      <IconComp className="w-5 h-5" color={stat.color} />
+                    </div>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-muted group-hover:text-amber-300 transition-colors">
+                      {stat.badge}
+                    </span>
+                  </div>
+                  <p className="text-3xl font-black mb-1 font-mono" style={{ color: stat.color }}>
+                    {stat.count}
+                  </p>
                 <h3 className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">
                   {stat.label}
                 </h3>
@@ -109,7 +120,8 @@ export default async function AdminDashboard() {
               </p>
             </div>
           </Link>
-        ))}
+          )
+        })}
       </div>
 
       {/* Quick Action Station */}

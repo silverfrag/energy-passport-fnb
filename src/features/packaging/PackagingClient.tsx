@@ -8,7 +8,8 @@ import {
   IconScan, 
   IconShield, 
   IconPassportCrest, 
-  IconArrowRight 
+  IconArrowRight,
+  IconPrinter
 } from '@/components/icons'
 
 interface Props {
@@ -418,7 +419,7 @@ export default function PackagingClient({ products, baseUrl }: Props) {
                   <div className="flex items-center justify-center gap-1.5 text-amber-400">
                     <IconPassportCrest className="w-4 h-4" color="#D4AF37" />
                     <span className="text-[9px] font-black tracking-[0.2em] uppercase font-mono">
-                      ENERGY PASSPORT
+                      FAME DRINK • PASSPORT
                     </span>
                   </div>
                   <h4 className="text-sm font-black text-white mt-1 max-w-[200px] truncate">
@@ -492,7 +493,8 @@ export default function PackagingClient({ products, baseUrl }: Props) {
                 onClick={handlePrint}
                 className="btn btn-gold text-xs font-bold uppercase tracking-wider py-2.5 px-6 shadow-xl flex items-center gap-2"
               >
-                <span>🖨️ In Bảng Tem Ngay (Ctrl + P)</span>
+                <IconPrinter className="w-4 h-4 text-stone-950" />
+                <span>In Bảng Tem Ngay (Ctrl + P)</span>
               </button>
             </div>
           </div>
@@ -529,7 +531,7 @@ export default function PackagingClient({ products, baseUrl }: Props) {
                 >
                   <div className="space-y-0.5">
                     <span className="text-[8px] font-black uppercase tracking-widest text-amber-700 font-mono block">
-                      ENERGY PASSPORT
+                      FAME DRINK • PASSPORT
                     </span>
                     <p className="text-[10px] font-bold text-stone-900 line-clamp-1 max-w-[120px]">
                       {selectedProduct.name}

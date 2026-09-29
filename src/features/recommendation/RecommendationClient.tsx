@@ -17,7 +17,9 @@ import {
   IconPassportCrest,
   IconShield,
   IconSparkles,
-  IconCup
+  IconCup,
+  IconBolt,
+  IconTeaLeaf
 } from '@/components/icons'
 
 interface Props {
@@ -219,7 +221,19 @@ export default function RecommendationClient({ result }: Props) {
             </div>
 
             <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs text-amber-200/90 font-mono">
-              <span>{result.recommendedProduct.caffeine_mg ? `⚡ ~${result.recommendedProduct.caffeine_mg}mg caffeine` : '🌿 Không caffeine'}</span>
+              <span className="inline-flex items-center gap-1.5">
+                {result.recommendedProduct.caffeine_mg ? (
+                  <>
+                    <IconBolt className="w-3.5 h-3.5 text-amber-400" />
+                    <span>~{result.recommendedProduct.caffeine_mg}mg caffeine</span>
+                  </>
+                ) : (
+                  <>
+                    <IconTeaLeaf className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Không caffeine</span>
+                  </>
+                )}
+              </span>
               <span>Pha tươi tại quầy ✓</span>
             </div>
           </div>

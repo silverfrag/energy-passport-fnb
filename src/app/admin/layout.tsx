@@ -2,6 +2,13 @@ import Link from 'next/link'
 import FameDrinkLogo from '@/components/FameDrinkLogo'
 import AdminUnlockCard from '@/features/admin/AdminUnlockCard'
 import AdminLogoutButton from '@/features/admin/AdminLogoutButton'
+import { 
+  IconDashboard, 
+  IconStar, 
+  IconCoffeeBean, 
+  IconTimer, 
+  IconTag 
+} from '@/components/icons'
 import { cookies } from 'next/headers'
 
 export default async function AdminLayout({
@@ -22,11 +29,11 @@ export default async function AdminLayout({
   }
 
   const navLinks = [
-    { href: '/admin', label: '📊 Dashboard' },
-    { href: '/admin/customers', label: '⭐ Khách Quen & Ưu Đãi' },
-    { href: '/admin/products', label: '☕ Sản Phẩm (20k-40k)' },
-    { href: '/admin/actions', label: '⏱️ Micro-actions' },
-    { href: '/packaging', label: '🏷️ Bao Bì & In Tem QR' },
+    { href: '/admin', label: 'Dashboard', icon: IconDashboard },
+    { href: '/admin/customers', label: 'Khách Quen & Ưu Đãi', icon: IconStar },
+    { href: '/admin/products', label: 'Sản Phẩm (20k-40k)', icon: IconCoffeeBean },
+    { href: '/admin/actions', label: 'Micro-actions', icon: IconTimer },
+    { href: '/packaging', label: 'Bao Bì & In Tem QR', icon: IconTag },
   ]
 
   return (
@@ -49,15 +56,19 @@ export default async function AdminLayout({
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1">
-            {navLinks.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="px-3 py-1.5 rounded-xl text-xs font-medium text-stone-300 hover:text-white hover:bg-white/5 transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navLinks.map((item) => {
+              const IconComp = item.icon
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="px-3 py-1.5 rounded-xl text-xs font-medium text-stone-300 hover:text-white hover:bg-white/5 transition-colors inline-flex items-center gap-1.5"
+                >
+                  <IconComp className="w-3.5 h-3.5 text-amber-400" />
+                  <span>{item.label}</span>
+                </Link>
+              )
+            })}
           </nav>
         </div>
 
@@ -77,15 +88,19 @@ export default async function AdminLayout({
 
       {/* Subnav for Mobile */}
       <div className="lg:hidden flex items-center gap-2 px-4 py-2.5 overflow-x-auto bg-stone-900 border-b border-white/10">
-        {navLinks.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap bg-white/5 text-stone-300 hover:text-white"
-          >
-            {item.label}
-          </Link>
-        ))}
+        {navLinks.map((item) => {
+          const IconComp = item.icon
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap bg-white/5 text-stone-300 hover:text-white inline-flex items-center gap-1.5"
+            >
+              <IconComp className="w-3.5 h-3.5 text-amber-400" />
+              <span>{item.label}</span>
+            </Link>
+          )
+        })}
       </div>
 
       <main className="w-full mx-auto max-w-6xl px-4 sm:px-8 py-8">

@@ -13,7 +13,8 @@ import {
   IconArrowRight, 
   IconShield,
   IconClock,
-  IconCup
+  IconCup,
+  IconSparkles
 } from '@/components/icons'
 import { getLocalPassportLogs } from '@/lib/passport/store'
 import { cookies } from 'next/headers'
@@ -247,7 +248,7 @@ export default async function PassportPage() {
           ============================================================ */}
       <div className="surface p-4 rounded-2xl border border-amber-400/20 bg-gradient-to-r from-amber-500/10 via-black/40 to-transparent flex items-start gap-3.5">
         <div className="w-9 h-9 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-300 text-base shrink-0 mt-0.5">
-          ✨
+          <IconSparkles className="w-5 h-5 text-amber-400" />
         </div>
         <div className="space-y-1">
           <h4 className="text-xs font-bold text-amber-200 uppercase tracking-wider font-mono">

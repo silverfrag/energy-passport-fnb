@@ -4,6 +4,7 @@ import { getAdminActionsList } from '@/lib/store/catalog-service'
 import { handleSyncActions } from '@/features/admin/action-actions'
 import SyncCatalogBanner from '@/features/admin/SyncCatalogBanner'
 import ActionRowActions from '@/features/admin/ActionRowActions'
+import { IconTimer } from '@/components/icons'
 
 export const dynamic = 'force-dynamic'
 
@@ -74,10 +75,10 @@ export default async function AdminActionsPage() {
             >
               <div className="flex items-center gap-3.5 min-w-0">
                 <div
-                  className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center text-2xl font-bold border border-white/10"
+                  className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center border border-white/10"
                   style={{ background: 'var(--color-surface-2)' }}
                 >
-                  ⏱️
+                  <IconTimer className="w-6 h-6 text-amber-400" />
                 </div>
 
                 <div className="min-w-0 flex-1">

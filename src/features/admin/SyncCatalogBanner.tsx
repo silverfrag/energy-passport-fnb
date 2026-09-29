@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
+import { IconShield, IconBolt, IconTimer } from '@/components/icons'
 
 interface Props {
   type: 'products' | 'actions'
@@ -117,7 +118,19 @@ CREATE POLICY "public insert actions" ON micro_actions FOR ALL USING (true);
         }}
       >
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{isDatabaseSource ? '🟢' : '⚡'}</span>
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+            style={{
+              background: isDatabaseSource ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+              border: `1px solid ${isDatabaseSource ? 'rgba(16, 185, 129, 0.4)' : 'rgba(245, 158, 11, 0.4)'}`,
+            }}
+          >
+            {isDatabaseSource ? (
+              <IconShield className="w-5 h-5 text-emerald-400" />
+            ) : (
+              <IconBolt className="w-5 h-5 text-amber-400" />
+            )}
+          </div>
           <div>
             <div className="flex items-center gap-2">
               <span
@@ -147,7 +160,17 @@ CREATE POLICY "public insert actions" ON micro_actions FOR ALL USING (true);
             disabled={isPending}
             className="btn btn-ghost text-xs border border-white/20 hover:border-amber-400 py-2 px-3 rounded-xl flex items-center gap-1.5 transition-all text-white w-full sm:w-auto justify-center"
           >
-            <span>{isPending ? '⏳ Đang đồng bộ…' : '⚡ Đẩy vào Supabase'}</span>
+            {isPending ? (
+              <>
+                <IconTimer className="w-3.5 h-3.5 text-stone-400 animate-spin" />
+                <span>Đang đồng bộ…</span>
+              </>
+            ) : (
+              <>
+                <IconBolt className="w-3.5 h-3.5 text-amber-400" />
+                <span>Đẩy vào Supabase</span>
+              </>
+            )}
           </button>
           {!isDatabaseSource && (
             <button

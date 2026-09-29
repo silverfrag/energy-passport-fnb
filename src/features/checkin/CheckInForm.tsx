@@ -14,6 +14,13 @@ import {
   IconLeaf,
   IconDroplet,
   IconSparkles,
+  IconBolt,
+  IconBrain,
+  IconFocusWorkspace,
+  IconTeaLeaf,
+  IconSun,
+  IconSunset,
+  IconMoon,
 } from '@/components/icons'
 import Link from 'next/link'
 
@@ -22,7 +29,7 @@ type Step = 'vibe' | 'state' | 'curating'
 const VIBE_PRESETS = [
   {
     battery: 20,
-    emoji: '🥱',
+    icon: IconBolt,
     shortLabel: 'Mắt trĩu / Cần đánh thức',
     fatigueValue: 5,
     stateDefault: 'WAKE' as DrinkCategory,
@@ -31,7 +38,7 @@ const VIBE_PRESETS = [
   },
   {
     battery: 40,
-    emoji: '🧠',
+    icon: IconBrain,
     shortLabel: 'Mơ màng / Xao nhãng',
     fatigueValue: 4,
     stateDefault: 'FOCUS' as DrinkCategory,
@@ -40,7 +47,7 @@ const VIBE_PRESETS = [
   },
   {
     battery: 60,
-    emoji: '💻',
+    icon: IconFocusWorkspace,
     shortLabel: 'Sẵn sàng vào guồng Deep Work',
     fatigueValue: 3,
     stateDefault: 'FOCUS' as DrinkCategory,
@@ -49,7 +56,7 @@ const VIBE_PRESETS = [
   },
   {
     battery: 80,
-    emoji: '💆',
+    icon: IconTeaLeaf,
     shortLabel: 'Căng thẳng / Cần hạ nhiệt',
     fatigueValue: 2,
     stateDefault: 'REFRESH' as DrinkCategory,
@@ -58,7 +65,7 @@ const VIBE_PRESETS = [
   },
   {
     battery: 100,
-    emoji: '⚡',
+    icon: IconSparkles,
     shortLabel: 'Hứng khởi / Thử vị mới',
     fatigueValue: 1,
     stateDefault: 'WAKE' as DrinkCategory,
@@ -122,9 +129,9 @@ const STATE_CARDS: {
 ]
 
 const FLAVOR_OPTIONS = [
-  { id: 'bold', label: '☕ Đậm đà, thơm mộc mạc', icon: IconCoffeeBean },
-  { id: 'creamy', label: '🥛 Béo êm dịu cùng sữa hạt', icon: IconLeaf },
-  { id: 'fruity', label: '🍑 Chua ngọt trái cây sủi bọt', icon: IconDroplet },
+  { id: 'bold', label: 'Đậm đà, thơm mộc mạc', icon: IconCoffeeBean },
+  { id: 'creamy', label: 'Béo êm dịu cùng sữa hạt', icon: IconLeaf },
+  { id: 'fruity', label: 'Chua ngọt trái cây sủi bọt', icon: IconDroplet },
 ]
 
 export default function CheckInForm() {
@@ -149,22 +156,22 @@ export default function CheckInForm() {
     const hour = new Date().getHours()
     if (hour >= 6 && hour < 11) {
       setTimeGreeting({
-        title: '🌅 Buổi Sáng Khởi Động',
+        title: 'Buổi Sáng Khởi Động',
         subtitle: 'Bắt đầu ngày mới với một tách đồ uống được thiết kế riêng cho nhịp sinh học của bạn.',
       })
     } else if (hour >= 11 && hour < 14) {
       setTimeGreeting({
-        title: '☀️ Nạp Pin Giữa Ngày',
+        title: 'Nạp Pin Giữa Ngày',
         subtitle: 'Một khoảng lặng êm ái giữa buổi trưa. Bạn cần bứt phá hay thư giãn?',
       })
     } else if (hour >= 14 && hour < 18) {
       setTimeGreeting({
-        title: '🌇 Cơn Uể Oải Giờ Chiều?',
+        title: 'Cơn Uể Oải Giờ Chiều?',
         subtitle: 'Để Barista phối một công thức tiếp thêm năng lượng cho chặng nước rút cuối ngày.',
       })
     } else {
       setTimeGreeting({
-        title: '🌙 Thư Thái Buổi Tối',
+        title: 'Thư Thái Buổi Tối',
         subtitle: 'Khoảnh khắc chậm lại. Xoa dịu tâm trí sau một ngày dài làm việc năng suất.',
       })
     }
@@ -290,7 +297,15 @@ export default function CheckInForm() {
                   >
                     {currentVibe.battery}%
                   </span>
-                  <span className="text-2xl">{currentVibe.emoji}</span>
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center"
+                    style={{
+                      background: `${currentVibe.color}25`,
+                      border: `1px solid ${currentVibe.color}50`,
+                    }}
+                  >
+                    <currentVibe.icon className="w-4 h-4" color={currentVibe.color} />
+                  </div>
                 </>
               ) : (
                 <span className="text-xs font-mono text-stone-400 px-3 py-1 rounded-full bg-white/5 border border-white/10">
@@ -334,6 +349,7 @@ export default function CheckInForm() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {VIBE_PRESETS.map((item, idx) => {
                 const isSelected = selectedVibeIndex === idx
+                const IconComp = item.icon
                 return (
                   <button
                     key={item.battery}
@@ -347,7 +363,15 @@ export default function CheckInForm() {
                       boxShadow: isSelected ? '0 0 20px rgba(212,175,55,0.15)' : 'none',
                     }}
                   >
-                    <span className="text-2xl flex-shrink-0 mt-0.5">{item.emoji}</span>
+                    <div
+                      className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-transform group-hover:scale-110"
+                      style={{
+                        background: `${item.color}20`,
+                        border: `1px solid ${item.color}40`,
+                      }}
+                    >
+                      <IconComp className="w-5 h-5" color={item.color} />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <p
@@ -380,7 +404,15 @@ export default function CheckInForm() {
               }}
             >
               <div className="flex items-center gap-3">
-                <span className="text-2xl">{currentVibe.emoji}</span>
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                  style={{
+                    background: `${currentVibe.color}25`,
+                    border: `1px solid ${currentVibe.color}50`,
+                  }}
+                >
+                  <currentVibe.icon className="w-5 h-5" color={currentVibe.color} />
+                </div>
                 <div>
                   <p className="text-xs font-bold text-white">
                     Đã chọn: <span style={{ color: currentVibe.color }}>{currentVibe.shortLabel}</span>
@@ -548,18 +580,20 @@ export default function CheckInForm() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {FLAVOR_OPTIONS.map((fl) => {
             const isSelected = selectedFlavor === fl.id
+            const IconComp = fl.icon
             return (
               <button
                 key={fl.id}
                 type="button"
                 onClick={() => setSelectedFlavor(isSelected ? null : fl.id)}
-                className="p-3 rounded-xl border text-xs font-medium text-left transition-all flex items-center gap-2 cursor-pointer"
+                className="p-3 rounded-xl border text-xs font-medium text-left transition-all flex items-center gap-2.5 cursor-pointer"
                 style={{
                   background: isSelected ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.03)',
                   borderColor: isSelected ? 'var(--color-gold)' : 'rgba(255,255,255,0.08)',
                   color: isSelected ? 'var(--color-gold)' : 'var(--color-text)',
                 }}
               >
+                <IconComp className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>{fl.label}</span>
               </button>
             )

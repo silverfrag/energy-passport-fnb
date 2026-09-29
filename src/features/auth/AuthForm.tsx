@@ -2,6 +2,7 @@
 
 import { useState, useActionState } from 'react'
 import { signInWithEmail, signInWithGoogle } from './actions'
+import { IconMail } from '@/components/icons'
 
 export default function AuthForm() {
   const [emailSent, setEmailSent] = useState(false)
@@ -12,7 +13,9 @@ export default function AuthForm() {
   if (state?.success || emailSent) {
     return (
       <div className="fade-in text-center">
-        <div className="text-3xl mb-4">📧</div>
+        <div className="w-14 h-14 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center mx-auto mb-4 text-amber-400 shadow-lg">
+          <IconMail className="w-7 h-7" />
+        </div>
         <h2 className="text-xl font-black mb-2" style={{ color: 'var(--color-text)' }}>
           Kiểm tra email của bạn
         </h2>
@@ -64,7 +67,14 @@ export default function AuthForm() {
           className="btn btn-primary-wake btn-full"
           id="email-submit-btn"
         >
-          {isPending ? 'Đang gửi…' : '📧 Gửi link xác nhận'}
+          {isPending ? (
+            'Đang gửi…'
+          ) : (
+            <span className="inline-flex items-center justify-center gap-2">
+              <IconMail className="w-4 h-4" />
+              <span>Gửi link xác nhận</span>
+            </span>
+          )}
         </button>
       </form>
 

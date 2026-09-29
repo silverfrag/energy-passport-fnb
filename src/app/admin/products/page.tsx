@@ -5,6 +5,7 @@ import { getAdminProductsList } from '@/lib/store/catalog-service'
 import { handleSyncProducts } from '@/features/admin/product-actions'
 import SyncCatalogBanner from '@/features/admin/SyncCatalogBanner'
 import ProductRowActions from '@/features/admin/ProductRowActions'
+import { IconCoffeeBean, IconCeremonialMatcha, IconDrink } from '@/components/icons'
 
 export const dynamic = 'force-dynamic'
 
@@ -94,11 +95,11 @@ export default async function AdminProductsPage() {
                       sizes="56px"
                     />
                   ) : product.category === 'WAKE' ? (
-                    '☕'
+                    <IconCoffeeBean className="w-6 h-6 text-amber-500" />
                   ) : product.category === 'FOCUS' ? (
-                    '🍵'
+                    <IconCeremonialMatcha className="w-6 h-6 text-emerald-500" />
                   ) : (
-                    '🧃'
+                    <IconDrink className="w-6 h-6 text-cyan-400" />
                   )}
                 </div>
 

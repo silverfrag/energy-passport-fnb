@@ -82,6 +82,11 @@ export default function PublicLayout({
                   </Link>
                 </li>
                 <li>
+                  <Link href="/packaging" className="hover:text-amber-400 transition-colors">
+                    Bao Bì & Tem QR Take-away
+                  </Link>
+                </li>
+                <li>
                   <Link href="/auth" className="hover:text-white transition-colors">
                     Liên Kết Thẻ Thành Viên
                   </Link>

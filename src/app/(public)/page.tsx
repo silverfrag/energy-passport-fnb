@@ -653,11 +653,19 @@ export default function HomePage() {
                   </Link>
 
                   <Link
+                    href="/packaging"
+                    className="btn btn-ghost text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2 border border-white/20 text-white hover:border-amber-400/50 px-6 py-3"
+                  >
+                    <IconScan className="w-4 h-4 text-amber-400" />
+                    <span>Bao Bì & Tạo Tem QR</span>
+                  </Link>
+
+                  <Link
                     href="/check-in"
                     className="btn btn-ghost text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2 border border-white/20 text-white hover:border-amber-400/50 px-6 py-3"
                   >
                     <IconCompass className="w-4 h-4" />
-                    <span>Thử Check-in Năng Lượng</span>
+                    <span>Thử Check-in</span>
                   </Link>
                 </div>
               </div>

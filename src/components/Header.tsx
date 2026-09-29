@@ -3,12 +3,13 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { IconPassport, IconCompass, IconCup } from '@/components/icons'
+import { IconPassport, IconCompass, IconCup, IconScan } from '@/components/icons'
 
 const NAV_ITEMS = [
   { href: '/menu', label: 'Thực Đơn', icon: IconCup },
   { href: '/check-in', label: 'Check-in', icon: IconCompass },
   { href: '/passport', label: 'Passport', icon: IconPassport },
+  { href: '/packaging', label: 'Bao Bì & QR', icon: IconScan },
 ]
 
 export default function Header() {

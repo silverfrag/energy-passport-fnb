@@ -14,11 +14,8 @@ export const metadata: Metadata = {
   description: 'Đồ uống được gợi ý dựa trên trạng thái của bạn tại Fame Drink.',
 }
 
-const MOCK_ACTIONS: MicroAction[] = [
-  { id: '1', slug: 'wake-10-power-breathe', category: 'WAKE', title: 'Power Breathe 10+', duration_minutes: 10, description: 'Kỹ thuật thở kích hoạt năng lượng trong 10 phút.', steps: [{ order: 1, text: 'Ngồi thẳng lưng.' }, { order: 2, text: 'Hít thật sâu 4 giây.' }, { order: 3, text: 'Nín thở 4 giây.' }, { order: 4, text: 'Thở ra mạnh 4 giây.' }, { order: 5, text: 'Lặp lại 10 lần.' }], active: true, created_at: '', updated_at: '' },
-  { id: '2', slug: 'focus-25-deep-work', category: 'FOCUS', title: 'Deep Work 25+', duration_minutes: 25, description: 'Phiên làm việc tập trung 25 phút.', steps: [{ order: 1, text: 'Tắt thông báo.' }, { order: 2, text: 'Viết ra một nhiệm vụ.' }, { order: 3, text: 'Bắt đầu timer và làm việc.' }], active: true, created_at: '', updated_at: '' },
-  { id: '3', slug: 'refresh-5-mindful-sip', category: 'REFRESH', title: 'Mindful Sip Break', duration_minutes: 5, description: 'Nghỉ ngơi có chủ đích 5 phút.', steps: [{ order: 1, text: 'Rời khỏi màn hình.' }, { order: 2, text: 'Uống từng ngụm chậm.' }, { order: 3, text: 'Nhìn ra cửa sổ 30 giây.' }], active: true, created_at: '', updated_at: '' },
-]
+import { getAdminProductsList, getAdminActionsList } from '@/lib/store/catalog-service'
+import { STANDARD_ACTIONS } from '@/lib/constants/actions'
 
 interface PageProps {
   searchParams: Promise<{ fatigue?: string; state?: string }>
@@ -26,17 +23,19 @@ interface PageProps {
 
 async function getProductsAndActions() {
   try {
-    const supabase = await createClient()
-    const [{ data: products }, { data: actions }] = await Promise.all([
-      supabase.from('products').select('*').eq('active', true).order('sort_order'),
-      supabase.from('micro_actions').select('*').eq('active', true).order('duration_minutes'),
+    const [{ products }, { actions }] = await Promise.all([
+      getAdminProductsList(),
+      getAdminActionsList(),
     ])
     return {
-      products: products && products.length > 0 ? products : STANDARD_PRODUCTS,
-      actions: actions && actions.length > 0 ? actions : MOCK_ACTIONS,
+      products: products.filter((p) => p.active),
+      actions: actions.filter((a) => a.active),
     }
   } catch {
-    return { products: STANDARD_PRODUCTS, actions: MOCK_ACTIONS }
+    return {
+      products: STANDARD_PRODUCTS.filter((p) => p.active),
+      actions: STANDARD_ACTIONS.filter((a) => a.active),
+    }
   }
 }
 

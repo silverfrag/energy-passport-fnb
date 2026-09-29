@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { getCustomersData } from '@/features/admin/customer-actions'
+import { getAdminProductsList, getAdminActionsList } from '@/lib/store/catalog-service'
 
 export const dynamic = 'force-dynamic'
 
@@ -8,16 +9,28 @@ export default async function AdminDashboard() {
   const supabase = await createClient()
 
   const [
-    { count: productCount },
-    { count: actionCount },
-    { count: logCount },
+    productsRes,
+    actionsRes,
+    logCountRes,
     customersData,
   ] = await Promise.all([
-    supabase.from('products').select('*', { count: 'exact', head: true }),
-    supabase.from('micro_actions').select('*', { count: 'exact', head: true }),
-    supabase.from('consumption_logs').select('*', { count: 'exact', head: true }),
+    getAdminProductsList(),
+    getAdminActionsList(),
+    (async () => {
+      try {
+        const { count } = await supabase.from('consumption_logs').select('*', { count: 'exact', head: true })
+        return count
+      } catch {
+        return null
+      }
+    })(),
     getCustomersData(),
   ])
+
+  const logCount = logCountRes
+
+  const productCount = productsRes.products.length
+  const actionCount = actionsRes.actions.length
 
   const stats = [
     {

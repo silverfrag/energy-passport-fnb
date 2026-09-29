@@ -19,17 +19,12 @@ export const metadata: Metadata = {
   description: 'Thực đơn đồ uống thủ công định hướng trạng thái năng lượng: Cà phê đặc sản 20.000₫ – 40.000₫, Matcha Uji Kyoto và Trà Oolong thanh nhiệt.',
 }
 
+import { getAdminProductsList } from '@/lib/store/catalog-service'
+
 async function getProducts(): Promise<Product[]> {
   try {
-    const supabase = await createClient()
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .eq('active', true)
-      .order('sort_order', { ascending: true })
-
-    if (error || !data || data.length === 0) return STANDARD_PRODUCTS
-    return data
+    const { products } = await getAdminProductsList()
+    return products.filter((p) => p.active)
   } catch {
     return STANDARD_PRODUCTS
   }

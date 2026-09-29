@@ -1,18 +1,18 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 import type { DrinkCategory } from '@/types'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyRecord = Record<string, any>
+import {
+  saveAdminProduct,
+  deleteOrToggleAdminProduct,
+  syncProductsToSupabase,
+} from '@/lib/store/catalog-service'
 
 export async function createProduct(
   prevState: { error?: string } | null,
   formData: FormData
 ): Promise<{ error?: string }> {
-  const supabase = await createClient()
-
   const slug = formData.get('slug')?.toString().trim().toLowerCase().replace(/\s+/g, '-')
   const name = formData.get('name')?.toString().trim()
   const category = formData.get('category')?.toString() as DrinkCategory
@@ -29,7 +29,7 @@ export async function createProduct(
     return { error: 'Slug, tên và danh mục là bắt buộc.' }
   }
 
-  const payload: AnyRecord = {
+  const result = await saveAdminProduct({
     slug,
     name,
     category,
@@ -41,12 +41,15 @@ export async function createProduct(
     active,
     featured,
     sort_order: sortOrder,
+  })
+
+  if (!result.success) {
+    return { error: result.error || 'Không thể lưu sản phẩm' }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (supabase.from('products') as any).insert(payload)
-
-  if (error) return { error: error.message }
+  revalidatePath('/admin/products')
+  revalidatePath('/menu')
+  revalidatePath('/recommendation')
   redirect('/admin/products')
 }
 
@@ -55,8 +58,7 @@ export async function updateProduct(
   prevState: { error?: string } | null,
   formData: FormData
 ): Promise<{ error?: string }> {
-  const supabase = await createClient()
-
+  const slug = formData.get('slug')?.toString().trim().toLowerCase().replace(/\s+/g, '-') || id
   const name = formData.get('name')?.toString().trim()
   const category = formData.get('category')?.toString() as DrinkCategory
   const shortDescription = formData.get('short_description')?.toString()
@@ -68,7 +70,13 @@ export async function updateProduct(
   const featured = formData.get('featured') === 'true'
   const sortOrder = parseInt(formData.get('sort_order')?.toString() ?? '0')
 
-  const payload: AnyRecord = {
+  if (!name || !category) {
+    return { error: 'Tên và danh mục là bắt buộc.' }
+  }
+
+  const result = await saveAdminProduct({
+    id,
+    slug,
     name,
     category,
     short_description: shortDescription || null,
@@ -79,18 +87,42 @@ export async function updateProduct(
     active,
     featured,
     sort_order: sortOrder,
+  })
+
+  if (!result.success) {
+    return { error: result.error || 'Không thể cập nhật sản phẩm' }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (supabase.from('products') as any).update(payload).eq('id', id)
-
-  if (error) return { error: error.message }
+  revalidatePath('/admin/products')
+  revalidatePath(`/admin/products/${id}`)
+  revalidatePath(`/admin/products/${slug}`)
+  revalidatePath('/menu')
+  revalidatePath(`/menu/${slug}`)
+  revalidatePath(`/scan/${slug}`)
+  revalidatePath('/recommendation')
   redirect('/admin/products')
 }
 
 export async function deleteProduct(id: string) {
-  const supabase = await createClient()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (supabase.from('products') as any).update({ active: false }).eq('id', id)
+  await deleteOrToggleAdminProduct(id, false)
+  revalidatePath('/admin/products')
+  revalidatePath('/menu')
   redirect('/admin/products')
+}
+
+export async function toggleProductActive(id: string, currentActive: boolean) {
+  await deleteOrToggleAdminProduct(id, !currentActive)
+  revalidatePath('/admin/products')
+  revalidatePath('/menu')
+}
+
+export async function handleSyncProducts(): Promise<{
+  success: boolean
+  count: number
+  error?: string
+}> {
+  const res = await syncProductsToSupabase()
+  revalidatePath('/admin/products')
+  revalidatePath('/menu')
+  return res
 }

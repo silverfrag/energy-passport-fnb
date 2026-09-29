@@ -42,22 +42,18 @@ export async function confirmConsumption(
   try {
     const supabase = await createClient()
 
-    // 1. Resolve product: prioritize standard products or Supabase database
+    // 1. Resolve product: prioritize catalog-service, standard products or Supabase database
     const standardProduct = findStandardProduct(productSlug) || findStandardProduct(productId)
     let product: Pick<Product, 'id' | 'slug' | 'name' | 'caffeine_mg' | 'active'> | null = standardProduct
 
     try {
-      const { data: dbProduct } = await supabase
-        .from('products')
-        .select('id, slug, name, caffeine_mg, active')
-        .or(`slug.eq.${productSlug},id.eq.${productId}`)
-        .maybeSingle()
-
-      if (dbProduct) {
-        product = dbProduct as Pick<Product, 'id' | 'slug' | 'name' | 'caffeine_mg' | 'active'>
+      const { getAdminProduct } = await import('@/lib/store/catalog-service')
+      const custom = (await getAdminProduct(productSlug)) || (await getAdminProduct(productId))
+      if (custom) {
+        product = custom
       }
     } catch {
-      // Supabase table not created yet, use standard product
+      // fallback
     }
 
     if (!product) {

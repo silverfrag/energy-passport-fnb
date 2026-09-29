@@ -19,18 +19,12 @@ const MOCK_PRODUCTS: Product[] = [
   { id: '6', slug: 'refresh-lychee-mint', name: 'Lychee Mint Herbal Sparkler', category: 'REFRESH', short_description: 'Vải thiều ngọt dịu phối bạc hà tươi the mát và nước khoáng có ga thanh lọc vị giác.', description: null, price: 26000, caffeine_mg: null, image_url: '/images/drinks/refresh-fruit-tea.jpg', active: true, featured: false, sort_order: 2, created_at: '', updated_at: '' },
 ]
 
+import { getAdminProduct } from '@/lib/store/catalog-service'
 import { findStandardProduct } from '@/lib/constants/products'
 
 async function getProduct(slug: string): Promise<{ product: Product | null; inactive: boolean }> {
   try {
-    const supabase = await createClient()
-    const { data } = await supabase
-      .from('products')
-      .select('*')
-      .eq('slug', slug)
-      .maybeSingle()
-
-    const row = data as Product | null
+    const row = await getAdminProduct(slug)
     if (row) {
       return { product: row.active ? row : null, inactive: !row.active }
     }

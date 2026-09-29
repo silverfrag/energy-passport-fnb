@@ -18,18 +18,13 @@ interface Props {
   params: Promise<{ slug: string }>
 }
 
-import { STANDARD_PRODUCTS, findStandardProduct } from '@/lib/constants/products'
+import { getAdminProduct } from '@/lib/store/catalog-service'
+import { findStandardProduct } from '@/lib/constants/products'
 
 async function getProduct(slug: string): Promise<Product | null> {
   try {
-    const supabase = await createClient()
-    const { data } = await supabase
-      .from('products')
-      .select('*')
-      .eq('slug', slug)
-      .eq('active', true)
-      .single()
-    if (data) return data
+    const product = await getAdminProduct(slug)
+    if (product && product.active) return product
   } catch { /* fallback */ }
   return findStandardProduct(slug) ?? null
 }

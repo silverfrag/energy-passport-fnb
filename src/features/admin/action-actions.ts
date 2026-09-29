@@ -1,11 +1,13 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 import type { DrinkCategory, ActionStep } from '@/types'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyRecord = Record<string, any>
+import {
+  saveAdminAction,
+  deleteOrToggleAdminAction,
+  syncActionsToSupabase,
+} from '@/lib/store/catalog-service'
 
 function parseSteps(rawSteps: string): ActionStep[] {
   const lines = rawSteps.split('\n').filter((l) => l.trim())
@@ -16,8 +18,6 @@ export async function createMicroAction(
   prevState: { error?: string } | null,
   formData: FormData
 ): Promise<{ error?: string }> {
-  const supabase = await createClient()
-
   const slug = formData.get('slug')?.toString().trim().toLowerCase().replace(/\s+/g, '-')
   const category = formData.get('category')?.toString() as DrinkCategory
   const title = formData.get('title')?.toString().trim()
@@ -32,12 +32,22 @@ export async function createMicroAction(
 
   const steps = parseSteps(stepsRaw)
 
-  const payload: AnyRecord = { slug, category, title, duration_minutes: durationMinutes, description: description || null, steps, active }
+  const result = await saveAdminAction({
+    slug,
+    category,
+    title,
+    duration_minutes: durationMinutes,
+    description: description || null,
+    steps,
+    active,
+  })
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (supabase.from('micro_actions') as any).insert(payload)
+  if (!result.success) {
+    return { error: result.error || 'Không thể lưu micro-action' }
+  }
 
-  if (error) return { error: error.message }
+  revalidatePath('/admin/actions')
+  revalidatePath('/recommendation')
   redirect('/admin/actions')
 }
 
@@ -46,8 +56,7 @@ export async function updateMicroAction(
   prevState: { error?: string } | null,
   formData: FormData
 ): Promise<{ error?: string }> {
-  const supabase = await createClient()
-
+  const slug = formData.get('slug')?.toString().trim().toLowerCase().replace(/\s+/g, '-') || id
   const category = formData.get('category')?.toString() as DrinkCategory
   const title = formData.get('title')?.toString().trim()
   const durationMinutes = parseInt(formData.get('duration_minutes')?.toString() ?? '5')
@@ -55,13 +64,54 @@ export async function updateMicroAction(
   const stepsRaw = formData.get('steps')?.toString() ?? ''
   const active = formData.get('active') === 'true'
 
+  if (!category || !title) {
+    return { error: 'Danh mục và tiêu đề là bắt buộc.' }
+  }
+
   const steps = parseSteps(stepsRaw)
 
-  const payload: AnyRecord = { category, title, duration_minutes: durationMinutes, description: description || null, steps, active }
+  const result = await saveAdminAction({
+    id,
+    slug,
+    category,
+    title,
+    duration_minutes: durationMinutes,
+    description: description || null,
+    steps,
+    active,
+  })
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (supabase.from('micro_actions') as any).update(payload).eq('id', id)
+  if (!result.success) {
+    return { error: result.error || 'Không thể cập nhật micro-action' }
+  }
 
-  if (error) return { error: error.message }
+  revalidatePath('/admin/actions')
+  revalidatePath(`/admin/actions/${id}`)
+  revalidatePath(`/admin/actions/${slug}`)
+  revalidatePath('/recommendation')
   redirect('/admin/actions')
+}
+
+export async function deleteMicroAction(id: string) {
+  await deleteOrToggleAdminAction(id, false)
+  revalidatePath('/admin/actions')
+  revalidatePath('/recommendation')
+  redirect('/admin/actions')
+}
+
+export async function toggleMicroActionActive(id: string, currentActive: boolean) {
+  await deleteOrToggleAdminAction(id, !currentActive)
+  revalidatePath('/admin/actions')
+  revalidatePath('/recommendation')
+}
+
+export async function handleSyncActions(): Promise<{
+  success: boolean
+  count: number
+  error?: string
+}> {
+  const res = await syncActionsToSupabase()
+  revalidatePath('/admin/actions')
+  revalidatePath('/recommendation')
+  return res
 }

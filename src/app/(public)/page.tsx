@@ -17,9 +17,9 @@ import {
 import { CATEGORY_DETAILS } from '@/lib/constants/drink-assets'
 
 export const metadata: Metadata = {
-  title: 'Energy Passport Atelier — Specialty Coffee · Matcha · Herbal Tea',
+  title: 'Fame Drink — Cà Phê Đặc Sản & Trà Năng Lượng | Energy Passport',
   description:
-    'Quán cà phê đặc sản & trà thủ công cao cấp tại 68 Nguyễn Huệ, Quận 1, Sài Gòn. Cà phê Arabica Cầu Đất 1.600m, Matcha Ceremonial Uji Kyoto, bánh nướng tươi mỗi sáng và không gian làm việc Focus hiện đại.',
+    'Fame Drink — Quán cà phê đặc sản & trà thủ công cao cấp tại 68 Nguyễn Huệ, Quận 1, Sài Gòn. Cà phê Arabica Cầu Đất 1.600m, Matcha Ceremonial Uji Kyoto, bánh nướng tươi mỗi sáng và tích lũy ưu đãi thông minh Energy Passport.',
 }
 
 const FEATURED_DRINKS = [
@@ -28,7 +28,7 @@ const FEATURED_DRINKS = [
     name: 'Cold Brew Ủ Lạnh 12H',
     category: 'WAKE' as const,
     categoryLabel: 'WAKE',
-    price: '55.000₫',
+    price: '29.000₫',
     image: '/images/drinks/wake-cold-brew.jpg',
     badge: 'Best Seller',
     notes: 'Socola đen · Hạt phỉ nướng · Hậu ngọt êm',
@@ -41,7 +41,7 @@ const FEATURED_DRINKS = [
     name: 'Matcha Latte Ceremonial',
     category: 'FOCUS' as const,
     categoryLabel: 'FOCUS',
-    price: '65.000₫',
+    price: '35.000₫',
     image: '/images/drinks/focus-matcha-latte.jpg',
     badge: 'Nhập Khẩu',
     notes: 'Umami tròn · Cỏ ngọt non · Sữa yến mạch',
@@ -54,7 +54,7 @@ const FEATURED_DRINKS = [
     name: 'Peach Oolong Sparkling',
     category: 'REFRESH' as const,
     categoryLabel: 'REFRESH',
-    price: '50.000₫',
+    price: '28.000₫',
     image: '/images/drinks/refresh-fruit-tea.jpg',
     badge: 'Thanh Nhiệt',
     notes: 'Đào mật giòn · Hoa mộc · Bọt khoáng mát',
@@ -67,7 +67,7 @@ const FEATURED_DRINKS = [
     name: 'Americano Double Shot',
     category: 'WAKE' as const,
     categoryLabel: 'WAKE',
-    price: '45.000₫',
+    price: '25.000₫',
     image: '/images/drinks/wake-cold-brew.jpg',
     badge: 'Đặc Sản',
     notes: 'Cam Bergamot · Mật mía · Crema dày vàng',
@@ -80,7 +80,7 @@ const FEATURED_DRINKS = [
     name: 'Matcha Espresso Layered Dirty',
     category: 'FOCUS' as const,
     categoryLabel: 'FOCUS',
-    price: '70.000₫',
+    price: '39.000₫',
     image: '/images/drinks/focus-matcha-latte.jpg',
     badge: 'Đặc Quyền',
     notes: 'Umami matcha · Espresso đậm đà · Sữa lạnh',
@@ -93,7 +93,7 @@ const FEATURED_DRINKS = [
     name: 'Lychee Mint Herbal Sparkler',
     category: 'REFRESH' as const,
     categoryLabel: 'REFRESH',
-    price: '45.000₫',
+    price: '26.000₫',
     image: '/images/drinks/refresh-fruit-tea.jpg',
     badge: 'Không Caffeine',
     notes: 'Vải thiều mọng · Bạc hà the mát · Chanh tươi',
@@ -107,18 +107,18 @@ const PROMOTIONS = [
   {
     tag: 'COMBO BỮA SÁNG KHỞI ĐỘNG',
     title: 'Combo Morning Flow',
-    price: '79.000₫',
-    originalPrice: '99.000₫',
+    price: '39.000₫',
+    originalPrice: '49.000₫',
     image: '/images/combo-croissant.jpg',
     time: 'Áp dụng 07:00 — 11:00 mỗi sáng',
     desc: '01 Ly Cold Brew Ủ Lạnh 12H (hoặc Americano) + 01 Bánh Croissant bơ Pháp nướng nóng giòn tan.',
-    badge: 'Tiết kiệm 20.000₫',
+    badge: 'Tiết kiệm 10.000₫',
   },
   {
     tag: 'COMBO TẬP TRUNG SÂU 4H',
     title: 'Combo Deep Work Session',
-    price: '89.000₫',
-    originalPrice: '110.000₫',
+    price: '45.000₫',
+    originalPrice: '55.000₫',
     image: '/images/drinks/focus-matcha-latte.jpg',
     time: 'Phục vụ cả ngày tại Focus Lounge',
     desc: '01 Matcha Latte Ceremonial Uji Kyoto + 01 Bánh Financier hạt hạnh nhân nướng thủ công.',
@@ -210,7 +210,7 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-black/60 backdrop-blur-md border border-amber-400/30 mb-8 shadow-xl">
             <IconPassportCrest className="w-4 h-4 text-amber-400" color="#D4AF37" />
             <span className="text-[11px] font-bold tracking-[0.22em] uppercase text-amber-200/90 font-mono">
-              SPECIALTY COFFEE & TEA ATELIER • SÀI GÒN
+              FAME DRINK • SPECIALTY COFFEE & TEA • SÀI GÒN
             </span>
           </div>
 
@@ -476,7 +476,7 @@ export default function HomePage() {
               </h2>
               <div className="space-y-4 text-sm text-stone-300 leading-relaxed">
                 <p>
-                  Tại Energy Passport Atelier, chúng tôi không xem cà phê chỉ là chất kích thích nhanh — mà là một nghệ thuật ẩm thực tinh tế giúp nuôi dưỡng tâm trí minh mẫn.
+                  Tại Fame Drink, chúng tôi không xem cà phê chỉ là chất kích thích nhanh — mà là một nghệ thuật ẩm thực tinh tế giúp nuôi dưỡng tâm trí minh mẫn.
                 </p>
                 <p>
                   Hạt Arabica Cầu Đất được thu hái ở độ cao 1.600m, tuyển chọn 100% trái chín đỏ, rang mẻ nhỏ thủ công theo từng tuần. Mỗi ly pour-over hay espresso đều được cân đo từng gram, kiểm soát nhiệt độ nước và thời gian chiết xuất chính xác đến từng giây.
@@ -689,8 +689,8 @@ export default function HomePage() {
                       <p className="text-xl font-black text-amber-300 font-mono mt-0.5">~185 mg</p>
                     </div>
                     <div className="p-3 rounded-xl bg-black/50 border border-amber-400/20">
-                      <p className="text-[10px] text-muted uppercase font-mono">Tem Thưởng Thức</p>
-                      <p className="text-xl font-black text-emerald-400 font-mono mt-0.5">3 / 5 Tem</p>
+                      <p className="text-[10px] text-muted uppercase font-mono">Ưu Đãi Khách Quen</p>
+                      <p className="text-sm font-bold text-emerald-400 mt-1">Đang Tích Lũy</p>
                     </div>
                   </div>
 
@@ -713,7 +713,7 @@ export default function HomePage() {
 
                   <div className="p-2.5 rounded-xl bg-amber-400/10 border border-amber-400/20 text-center">
                     <p className="text-[11px] text-amber-200 font-mono">
-                      🎁 Còn 2 tem nữa để nhận 1 ly Signature miễn phí tại quầy!
+                      ✨ Hệ thống tự động tích lũy đặc quyền & ưu đãi tri ân khách quen Fame Drink
                     </p>
                   </div>
                 </div>

@@ -17,27 +17,27 @@ import type { Product, MicroAction } from '@/types'
 const mockProducts: Product[] = [
   {
     id: 'p1', slug: 'wake-americano', name: 'Americano', category: 'WAKE',
-    short_description: null, description: null, price: 45000, caffeine_mg: 120,
+    short_description: null, description: null, price: 25000, caffeine_mg: 120,
     image_url: null, active: true, featured: true, sort_order: 1, created_at: '', updated_at: '',
   },
   {
     id: 'p2', slug: 'wake-cold-brew', name: 'Cold Brew', category: 'WAKE',
-    short_description: null, description: null, price: 55000, caffeine_mg: 150,
+    short_description: null, description: null, price: 29000, caffeine_mg: 150,
     image_url: null, active: true, featured: false, sort_order: 2, created_at: '', updated_at: '',
   },
   {
     id: 'p3', slug: 'focus-matcha-latte', name: 'Matcha Latte', category: 'FOCUS',
-    short_description: null, description: null, price: 65000, caffeine_mg: 70,
+    short_description: null, description: null, price: 35000, caffeine_mg: 70,
     image_url: null, active: true, featured: true, sort_order: 1, created_at: '', updated_at: '',
   },
   {
     id: 'p4', slug: 'refresh-peach-tea', name: 'Peach Oolong Tea', category: 'REFRESH',
-    short_description: null, description: null, price: 50000, caffeine_mg: 30,
+    short_description: null, description: null, price: 28000, caffeine_mg: 30,
     image_url: null, active: true, featured: true, sort_order: 1, created_at: '', updated_at: '',
   },
   {
     id: 'p5', slug: 'inactive-product', name: 'Inactive', category: 'WAKE',
-    short_description: null, description: null, price: 50000, caffeine_mg: 200,
+    short_description: null, description: null, price: 30000, caffeine_mg: 200,
     image_url: null, active: false, featured: true, sort_order: 0, created_at: '', updated_at: '',
   },
 ]

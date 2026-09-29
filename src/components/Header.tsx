@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { IconPassport, IconCompass, IconCup, IconScan } from '@/components/icons'
+import FameDrinkLogo from '@/components/FameDrinkLogo'
 
 const NAV_ITEMS = [
   { href: '/menu', label: 'Thực Đơn', icon: IconCup },
@@ -40,25 +41,8 @@ export default function Header() {
     >
       <div className="w-full mx-auto max-w-7xl px-4 sm:px-8 py-3.5 flex items-center justify-between">
         {/* Brand Wordmark */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div
-            className="w-9 h-9 rounded-lg flex items-center justify-center font-black text-xs tracking-wider transition-colors border"
-            style={{
-              background: scrolled || !isHome ? 'var(--color-surface-elevated)' : 'rgba(0,0,0,0.4)',
-              borderColor: 'rgba(212,175,55,0.25)',
-              color: 'var(--color-wake)',
-            }}
-          >
-            EP
-          </div>
-          <div className="flex flex-col">
-            <span className="font-extrabold text-sm tracking-[0.14em] uppercase text-white leading-none">
-              ENERGY PASSPORT
-            </span>
-            <span className="text-[9px] tracking-[0.2em] uppercase text-muted font-medium mt-0.5">
-              Specialty Coffee & Tea Atelier
-            </span>
-          </div>
+        <Link href="/" className="flex items-center group">
+          <FameDrinkLogo size="md" variant="full" />
         </Link>
 
         {/* Desktop Nav */}

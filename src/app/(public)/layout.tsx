@@ -1,6 +1,7 @@
 import Header from '@/components/Header'
 import Link from 'next/link'
 import { IconPassportCrest, IconShield, IconClock } from '@/components/icons'
+import FameDrinkLogo from '@/components/FameDrinkLogo'
 
 export default function PublicLayout({
   children,
@@ -23,19 +24,9 @@ export default function PublicLayout({
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             {/* Atelier Crest & Mission */}
             <div className="md:col-span-2 space-y-3">
-              <div className="flex items-center gap-3">
-                <IconPassportCrest className="w-10 h-10 text-amber-400" color="#D4AF37" />
-                <div>
-                  <span className="font-serif text-lg tracking-[0.2em] font-black text-white">
-                    ENERGY PASSPORT
-                  </span>
-                  <p className="text-[10px] tracking-widest uppercase text-muted">
-                    Cognitive Beverage Atelier • Est. 2026
-                  </p>
-                </div>
-              </div>
+              <FameDrinkLogo size="lg" variant="full" showLink={true} />
               <p className="text-xs text-muted leading-relaxed max-w-md">
-                Chúng tôi định nghĩa lại trải nghiệm đồ uống thường nhật: kết hợp hương vị thủ công tuyển chọn cùng khoa học nhịp sinh học. Mỗi ly nước là một nguồn năng lượng chính xác — WAKE, FOCUS hay REFRESH.
+                Fame Drink định nghĩa lại trải nghiệm đồ uống thường nhật: kết hợp hương vị cà phê & trà thủ công tuyển chọn cùng khoa học nhịp sinh học Energy Passport. Mỗi ly nước là một nguồn năng lượng chính xác — WAKE, FOCUS hay REFRESH.
               </p>
               <div className="flex items-center gap-2 pt-2 text-[11px] text-amber-400/80">
                 <IconShield className="w-4 h-4 text-amber-400" color="#D4AF37" />
@@ -101,7 +92,7 @@ export default function PublicLayout({
               Thông tin caffeine được chuẩn hóa theo mẻ chiết xuất thủ công.
             </p>
             <p className="tracking-wider uppercase font-mono text-[10px]">
-              © 2026 ENERGY PASSPORT ATELIER • ALL RIGHTS RESERVED
+              © 2026 FAME DRINK • ENERGY PASSPORT ATELIER • ALL RIGHTS RESERVED
             </p>
           </div>
         </div>

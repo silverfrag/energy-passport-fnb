@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import FameDrinkLogo from '@/components/FameDrinkLogo'
+import AdminUnlockCard from '@/features/admin/AdminUnlockCard'
 
 export default async function AdminLayout({
   children,
@@ -12,52 +14,94 @@ export default async function AdminLayout({
 
   if (!user) redirect('/auth?redirect=/admin')
 
-  const { data: adminUser } = await supabase
-    .from('admin_users')
-    .select('user_id')
-    .eq('user_id', user.id)
-    .single()
+  // Check if user is in admin_users table
+  let isAdmin = false
+  try {
+    const { data: adminUser } = await supabase
+      .from('admin_users')
+      .select('user_id')
+      .eq('user_id', user.id)
+      .maybeSingle()
 
-  if (!adminUser) redirect('/')
+    if (adminUser) isAdmin = true
+  } catch {
+    // Supabase query error fallback
+  }
+
+  // If not admin, show store PIN authorization card
+  if (!isAdmin) {
+    return (
+      <div className="min-h-dvh flex items-center justify-center" style={{ background: 'var(--color-bg)' }}>
+        <AdminUnlockCard userEmail={user.email} />
+      </div>
+    )
+  }
+
+  const navLinks = [
+    { href: '/admin', label: '📊 Dashboard' },
+    { href: '/admin/customers', label: '⭐ Khách Quen & Ưu Đãi' },
+    { href: '/admin/products', label: '☕ Sản Phẩm (20k-40k)' },
+    { href: '/admin/actions', label: '⏱️ Micro-actions' },
+    { href: '/packaging', label: '🏷️ Bao Bì & In Tem QR' },
+  ]
 
   return (
     <div className="min-h-dvh" style={{ background: 'var(--color-bg)' }}>
       {/* Admin Header */}
       <header
-        className="sticky top-0 z-50 px-4 py-3 flex items-center justify-between"
-        style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}
+        className="sticky top-0 z-50 px-4 sm:px-8 py-3.5 flex items-center justify-between"
+        style={{
+          background: 'rgba(15, 14, 12, 0.95)',
+          backdropFilter: 'blur(12px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        }}
       >
-        <div className="flex items-center gap-4">
-          <span className="font-black text-sm" style={{ color: 'var(--color-text)' }}>
-            ⚙️ Admin
-          </span>
-          <nav className="hidden sm:flex items-center gap-1">
-            {[
-              { href: '/admin', label: 'Dashboard' },
-              { href: '/admin/products', label: 'Sản phẩm' },
-              { href: '/admin/actions', label: 'Micro-actions' },
-            ].map((item) => (
+        <div className="flex items-center gap-6">
+          <Link href="/admin" className="flex items-center gap-2">
+            <FameDrinkLogo size="sm" variant="compact" />
+            <span className="font-mono text-[10px] text-amber-300 font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/30">
+              QUẢN TRỊ VIÊN
+            </span>
+          </Link>
+
+          <nav className="hidden lg:flex items-center gap-1">
+            {navLinks.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="px-3 py-1.5 rounded text-xs font-medium"
-                style={{ color: 'var(--color-text-muted)' }}
+                className="px-3 py-1.5 rounded-xl text-xs font-medium text-stone-300 hover:text-white hover:bg-white/5 transition-colors"
               >
                 {item.label}
               </Link>
             ))}
           </nav>
         </div>
-        <div className="flex items-center gap-3">
+
+        <div className="flex items-center gap-4 text-xs font-mono">
+          <span className="hidden sm:inline text-stone-400 text-[11px]">
+            {user.email}
+          </span>
           <Link
             href="/"
-            className="text-xs"
-            style={{ color: 'var(--color-text-dim)' }}
+            className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white border border-white/10 transition-colors"
           >
-            ← Site
+            ← Ra Website
           </Link>
         </div>
       </header>
+
+      {/* Subnav for Mobile */}
+      <div className="lg:hidden flex items-center gap-2 px-4 py-2.5 overflow-x-auto bg-stone-900 border-b border-white/10">
+        {navLinks.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap bg-white/5 text-stone-300 hover:text-white"
+          >
+            {item.label}
+          </Link>
+        ))}
+      </div>
 
       <main className="w-full mx-auto max-w-6xl px-4 sm:px-8 py-8">
         {children}

@@ -502,7 +502,7 @@ export default function PackagingClient({ products, baseUrl }: Props) {
             {/* Header of sheet */}
             <div className="text-center pb-6 border-b border-stone-300 mb-8">
               <p className="text-[10px] font-black tracking-[0.3em] uppercase text-stone-500 font-mono">
-                ENERGY PASSPORT ATELIER — OFFICIAL PACKAGING STAMP SHEET
+                FAME DRINK • ENERGY PASSPORT — OFFICIAL PACKAGING STAMP SHEET
               </p>
               <h3 className="text-xl font-black text-stone-900 mt-1">
                 Bảng Tem Nhãn QR: {selectedProduct.name}

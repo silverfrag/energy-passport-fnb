@@ -12,109 +12,12 @@ import {
   IconArrowRight 
 } from '@/components/icons'
 
-export const metadata: Metadata = {
-  title: 'Thực Đơn Tinh Hoa — Energy Passport Atelier',
-  description: 'Thực đơn đồ uống thủ công định hướng trạng thái năng lượng: Cà phê đặc sản, Matcha Uji Kyoto và Trà Oolong thanh nhiệt.',
-}
+import { STANDARD_PRODUCTS } from '@/lib/constants/products'
 
-const FALLBACK_PRODUCTS: Product[] = [
-  {
-    id: '1', 
-    slug: 'wake-americano', 
-    name: 'Americano Double Shot', 
-    category: 'WAKE',
-    short_description: 'Espresso Arabica Cầu Đất nguyên chất, vị đắng sạch thanh lịch, đánh thức tức thì.',
-    description: 'Americano chế tác từ double shot espresso Arabica thượng hạng pha cùng nước khoáng tinh khiết ở nhiệt độ chuẩn xác.',
-    price: 45000, 
-    caffeine_mg: 120, 
-    image_url: '/images/drinks/wake-cold-brew.jpg',
-    active: true, 
-    featured: true, 
-    sort_order: 1, 
-    created_at: '', 
-    updated_at: '',
-  },
-  {
-    id: '2', 
-    slug: 'wake-cold-brew', 
-    name: 'Cold Brew Ủ Lạnh 12H', 
-    category: 'WAKE',
-    short_description: 'Ủ lạnh chậm 12-16 giờ ở 4°C, ngọt hậu tự nhiên không đường, êm ái cho dạ dày.',
-    description: 'Cold brew chiết xuất chậm từ hạt Arabica Cầu Đất ở độ cao 1.600m, mang tầng hương socola đen và hạt phỉ nướng đầm ấm.',
-    price: 55000, 
-    caffeine_mg: 150, 
-    image_url: '/images/drinks/wake-cold-brew.jpg',
-    active: true, 
-    featured: true, 
-    sort_order: 2, 
-    created_at: '', 
-    updated_at: '',
-  },
-  {
-    id: '3', 
-    slug: 'focus-matcha-latte', 
-    name: 'Matcha Latte Ceremonial', 
-    category: 'FOCUS',
-    short_description: 'Matcha Uji Kyoto đánh chổi tre thủ công cùng sữa yến mạch béo nhẹ, dồi dào L-theanine.',
-    description: 'Bột matcha thượng hạng nhập khẩu trực tiếp từ vùng Uji danh tiếng, kết hợp tỷ lệ L-theanine và caffeine tối ưu cho trạng thái làm việc sâu.',
-    price: 65000, 
-    caffeine_mg: 70, 
-    image_url: '/images/drinks/focus-matcha-latte.jpg',
-    active: true, 
-    featured: true, 
-    sort_order: 1, 
-    created_at: '', 
-    updated_at: '',
-  },
-  {
-    id: '4', 
-    slug: 'focus-matcha-espresso', 
-    name: 'Matcha Espresso Layered Dirty', 
-    category: 'FOCUS',
-    short_description: 'Sự giao thoa giữa vị chát umami thanh tao của matcha và độ nồng đượm của espresso.',
-    description: 'Kỹ thuật đổ tầng đặc biệt giữa sữa lạnh, cốt matcha đậm đặc và lớp espresso crema bồng bềnh mang lại cú hích tập trung kép.',
-    price: 70000, 
-    caffeine_mg: 110, 
-    image_url: '/images/drinks/focus-matcha-latte.jpg',
-    active: true, 
-    featured: false, 
-    sort_order: 2, 
-    created_at: '', 
-    updated_at: '',
-  },
-  {
-    id: '5', 
-    slug: 'refresh-peach-tea', 
-    name: 'Peach Oolong Sparkling Tea', 
-    category: 'REFRESH',
-    short_description: 'Trà Oolong Tứ Quý ủ lạnh ngâm đào tươi và bọt khoáng sủi sảng khoái.',
-    description: 'Lá trà Oolong Mộc Châu thu hái thủ công, ủ lạnh chiết xuất chậm cùng đào mật tươi tạo hương thơm ngọt ngào không gắt.',
-    price: 50000, 
-    caffeine_mg: 30, 
-    image_url: '/images/drinks/refresh-fruit-tea.jpg',
-    active: true, 
-    featured: true, 
-    sort_order: 1, 
-    created_at: '', 
-    updated_at: '',
-  },
-  {
-    id: '6', 
-    slug: 'refresh-lychee-mint', 
-    name: 'Lychee Mint Herbal Sparkler', 
-    category: 'REFRESH',
-    short_description: 'Vải thiều ngọt dịu phối bạc hà tươi the mát và nước khoáng có ga thanh lọc vị giác.',
-    description: 'Thức uống hạ nhiệt hoàn hảo không chứa caffeine nồng, giúp xua tan áp lực và tái tạo sự thư thái trọn vẹn.',
-    price: 45000, 
-    caffeine_mg: null, 
-    image_url: '/images/drinks/refresh-fruit-tea.jpg',
-    active: true, 
-    featured: false, 
-    sort_order: 2, 
-    created_at: '', 
-    updated_at: '',
-  },
-]
+export const metadata: Metadata = {
+  title: 'Thực Đơn Tinh Hoa — Fame Drink',
+  description: 'Thực đơn đồ uống thủ công định hướng trạng thái năng lượng: Cà phê đặc sản 20.000₫ – 40.000₫, Matcha Uji Kyoto và Trà Oolong thanh nhiệt.',
+}
 
 async function getProducts(): Promise<Product[]> {
   try {
@@ -125,10 +28,10 @@ async function getProducts(): Promise<Product[]> {
       .eq('active', true)
       .order('sort_order', { ascending: true })
 
-    if (error || !data || data.length === 0) return FALLBACK_PRODUCTS
+    if (error || !data || data.length === 0) return STANDARD_PRODUCTS
     return data
   } catch {
-    return FALLBACK_PRODUCTS
+    return STANDARD_PRODUCTS
   }
 }
 

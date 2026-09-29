@@ -16,15 +16,15 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Energy Passport Atelier — WAKE · FOCUS · REFRESH',
-    template: '%s | Energy Passport Atelier',
+    default: 'Fame Drink — Energy Passport Atelier | WAKE · FOCUS · REFRESH',
+    template: '%s | Fame Drink',
   },
-  description: 'Đồ uống đặc sản định hướng trạng thái năng lượng. Cà phê Arabica Cầu Đất, Matcha Ceremonial Uji và Trà Oolong cao sơn kết hợp sổ ký danh Energy Passport.',
+  description: 'Fame Drink — Đồ uống đặc sản định hướng trạng thái năng lượng. Cà phê Arabica Cầu Đất, Matcha Ceremonial Uji và Trà Oolong cao sơn kết hợp sổ ký danh Energy Passport.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'),
   openGraph: {
     type: 'website',
     locale: 'vi_VN',
-    siteName: 'Energy Passport Atelier',
+    siteName: 'Fame Drink — Energy Passport Atelier',
   },
 }
 

@@ -14,18 +14,17 @@ export default async function AdminLayout({
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user) redirect('/auth?redirect=/admin')
-
-  // 1. Check if user email is recognized admin (e.g. nhathung121225@gmail.com)
-  const isDirectEmailAdmin = isEmailAdmin(user.email)
-
-  // 2. Check if admin session cookie was set via PIN
   const cookieStore = await cookies()
   const hasAdminSessionCookie = cookieStore.get('ep_admin_session')?.value === 'true'
 
+  if (!user && !hasAdminSessionCookie) redirect('/auth?redirect=/admin')
+
+  // 1. Check if user email is recognized admin (e.g. nhathung121225@gmail.com)
+  const isDirectEmailAdmin = isEmailAdmin(user?.email)
+
   // 3. Check if user is in admin_users table in database
   let isDbAdmin = false
-  if (!isDirectEmailAdmin && !hasAdminSessionCookie) {
+  if (!isDirectEmailAdmin && !hasAdminSessionCookie && user) {
     try {
       const { data: adminUser } = await supabase
         .from('admin_users')
@@ -45,7 +44,7 @@ export default async function AdminLayout({
   if (!isAdmin) {
     return (
       <div className="min-h-dvh flex items-center justify-center" style={{ background: 'var(--color-bg)' }}>
-        <AdminUnlockCard userEmail={user.email} />
+        <AdminUnlockCard userEmail={user?.email} />
       </div>
     )
   }
@@ -92,7 +91,7 @@ export default async function AdminLayout({
 
         <div className="flex items-center gap-4 text-xs font-mono">
           <span className="hidden sm:inline text-stone-400 text-[11px]">
-            {user.email}
+            {user?.email ?? 'Quản lý cửa hàng (PIN 1212)'}
           </span>
           <Link
             href="/"

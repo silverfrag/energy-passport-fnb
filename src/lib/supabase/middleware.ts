@@ -32,9 +32,10 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protect admin routes: ensure user is authenticated
+  // Protect admin routes: ensure user is authenticated or has admin session PIN cookie
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!user) {
+    const hasAdminSession = request.cookies.get('ep_admin_session')?.value === 'true'
+    if (!user && !hasAdminSession) {
       const url = request.nextUrl.clone()
       url.pathname = '/auth'
       url.searchParams.set('redirect', request.nextUrl.pathname)

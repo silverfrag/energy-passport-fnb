@@ -358,3 +358,13 @@ export async function verifyAdminPasskey(
     return { success: false, message: err?.message || 'Có lỗi khi xác thực mã PIN.' }
   }
 }
+
+/**
+ * Lock/Logout from admin session (clears cookie)
+ */
+export async function logoutAdminPasskey(): Promise<void> {
+  const cookieStore = await cookies()
+  cookieStore.delete('ep_admin_session')
+  revalidatePath('/admin')
+}
+

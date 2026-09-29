@@ -27,8 +27,9 @@ export default function AdminUnlockCard({ userEmail }: Props) {
     if (res.success) {
       setSuccess(true)
       setTimeout(() => {
-        window.location.href = '/admin'
-      }, 500)
+        // Reload current page to unlock layout seamlessly
+        window.location.reload()
+      }, 400)
     } else {
       setError(res.message)
     }
@@ -44,13 +45,13 @@ export default function AdminUnlockCard({ userEmail }: Props) {
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-mono mb-3">
             <IconShield className="w-3.5 h-3.5" />
-            <span>KHU VỰC QUẢN TRỊ NỘI BỘ</span>
+            <span>FAME DRINK • QUẢN TRỊ VIÊN</span>
           </div>
-          <h2 className="text-xl font-black text-white">
-            Xác Thực Quyền Barista / Quản Lý
+          <h2 className="text-xl sm:text-2xl font-black text-white">
+            Đăng Nhập Quản Trị Quán
           </h2>
           <p className="text-xs text-muted mt-2 leading-relaxed">
-            Tài khoản <span className="text-amber-300 font-mono font-bold">{userEmail || 'của bạn'}</span> đang đăng nhập. Vui lòng nhập mã PIN bảo mật để truy cập bảng điều khiển.
+            Dành riêng cho Chủ quán và Quản lý vận hành. Nhập mã PIN trực tiếp để truy cập quản lý thực đơn, ưu đãi và số liệu mà không cần tạo tài khoản.
           </p>
         </div>
 
@@ -78,33 +79,36 @@ export default function AdminUnlockCard({ userEmail }: Props) {
 
           {success && (
             <p className="text-xs text-emerald-400 text-center font-mono">
-              ✓ Xác thực thành công! Đang tải trang quản trị...
+              ✓ Xác thực thành công! Đang tải bảng điều khiển...
             </p>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-gold btn-full text-xs font-bold uppercase tracking-wider py-3 flex items-center justify-center gap-2"
+            className="btn btn-gold btn-full text-xs font-bold uppercase tracking-wider py-3 flex items-center justify-center gap-2 shadow-lg"
           >
             {loading ? (
               <span>Đang kiểm tra...</span>
             ) : (
               <>
                 <IconSparkles className="w-4 h-4" />
-                <span>Mở Khóa Quản Trị Viên</span>
+                <span>Vào Trang Quản Trị →</span>
               </>
             )}
           </button>
         </form>
 
-        <div className="pt-2 border-t border-white/10">
+        <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs text-stone-400 font-mono">
           <Link
             href="/"
-            className="text-xs text-stone-400 hover:text-white underline font-mono"
+            className="hover:text-white underline"
           >
-            ← Quay về trang chủ Fame Drink
+            ← Ra website
           </Link>
+          <span className="text-[11px] text-white/40">
+            Truy cập một chạm (PIN)
+          </span>
         </div>
       </div>
     </div>

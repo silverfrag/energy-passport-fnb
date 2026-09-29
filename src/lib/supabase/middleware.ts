@@ -32,16 +32,8 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protect admin routes: ensure user is authenticated or has admin session PIN cookie
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    const hasAdminSession = request.cookies.get('ep_admin_session')?.value === 'true'
-    if (!user && !hasAdminSession) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/auth'
-      url.searchParams.set('redirect', request.nextUrl.pathname)
-      return NextResponse.redirect(url)
-    }
-  }
+  // Note: /admin routes are protected in app/admin/layout.tsx using PIN passkey (1212)
+  // and admin session cookies, allowing direct passcode login without forcing email accounts.
 
   return supabaseResponse
 }

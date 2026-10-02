@@ -32,7 +32,7 @@ import { CATEGORY_DETAILS } from '@/lib/constants/drink-assets'
 export const metadata: Metadata = {
   title: 'Fame Drink — Cà Phê Đặc Sản & Trà Năng Lượng | Energy Passport',
   description:
-    'Fame Drink — Quán cà phê đặc sản & trà thủ công cao cấp tại 68 Nguyễn Huệ, Quận 1, Sài Gòn. Cà phê Arabica Cầu Đất 1.600m, Matcha Ceremonial Uji Kyoto, bánh nướng tươi mỗi sáng và tích lũy ưu đãi thông minh Energy Passport.',
+    'Fame Drink — Quán cà phê đặc sản & trà thủ công cao cấp tại 1C Đỗ Thúc Tịnh, Đà Nẵng. Cà phê Arabica Cầu Đất 1.600m, Matcha Ceremonial Uji Kyoto, bánh nướng tươi mỗi sáng và tích lũy ưu đãi thông minh Energy Passport.',
 }
 
 const FEATURED_DRINKS = [
@@ -183,7 +183,7 @@ const STRENGTHS = [
 const REVIEWS = [
   {
     name: 'Hoàng Minh',
-    role: 'Product Designer tại District 1',
+    role: 'Product Designer tại Đà Nẵng',
     content:
       'Quán có không gian làm việc cực kỳ yên tĩnh và truyền cảm hứng. Cold Brew ở đây hậu vị thơm mộc, uống rất thanh và không hề cồn cào ruột.',
     stars: 5,
@@ -193,7 +193,7 @@ const REVIEWS = [
     name: 'Thu Trang',
     role: 'Founder & Content Creator',
     content:
-      'Matcha Latte Ceremonial ngon nhất Sài Gòn mình từng thử, thơm ngậy umami thật chứ không nồng mùi hương liệu. Quét mã QR trên ly đóng dấu Passport rất thú vị!',
+      'Matcha Latte Ceremonial ngon nhất Đà Nẵng mình từng thử, thơm ngậy umami thật chứ không nồng mùi hương liệu. Quét mã QR trên ly đóng dấu Passport rất thú vị!',
     stars: 5,
     tag: 'Khách hàng VIP',
   },
@@ -231,7 +231,7 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-black/60 backdrop-blur-md border border-amber-400/30 mb-8 shadow-xl">
             <IconPassportCrest className="w-4 h-4 text-amber-400" color="#D4AF37" />
             <span className="text-[11px] font-bold tracking-[0.22em] uppercase text-amber-200/90 font-mono">
-              FAME DRINK • SPECIALTY COFFEE & TEA • SÀI GÒN
+              FAME DRINK • SPECIALTY COFFEE & TEA • ĐÀ NẴNG
             </span>
           </div>
 
@@ -721,7 +721,7 @@ export default function HomePage() {
                   <div className="flex items-center justify-between pb-3 border-b border-amber-400/20">
                     <div>
                       <p className="text-[10px] font-bold text-amber-300 tracking-widest uppercase font-mono">
-                        ENERGY PASSPORT • SÀI GÒN
+                        ENERGY PASSPORT • ĐÀ NẴNG
                       </p>
                       <p className="text-xs font-bold text-white">Sổ Ký Danh Điện Tử Của Bạn</p>
                     </div>
@@ -779,7 +779,7 @@ export default function HomePage() {
               KHÁCH HÀNG NÓI GÌ
             </span>
             <h2 className="text-3xl sm:text-4xl font-black mt-2 text-white">
-              Được Yêu Thích Tại Sài Gòn
+              Được Yêu Thích Tại Đà Nẵng
             </h2>
             <div className="flex items-center justify-center gap-2 mt-3 text-amber-400 text-sm">
               <div className="flex items-center gap-1">
@@ -840,10 +840,10 @@ export default function HomePage() {
             GHÉ THĂM CHÚNG TÔI
           </span>
           <h2 className="text-3xl sm:text-5xl font-black mt-2 mb-4 text-white">
-            Flagship Atelier Sài Gòn
+            Flagship Atelier Đà Nẵng
           </h2>
           <p className="text-sm sm:text-base text-stone-300 mb-10 max-w-xl mx-auto leading-relaxed">
-            Hãy ghé thăm và trải nghiệm trực tiếp không gian cà phê đặc sản kết hợp khoa học năng lượng ngay trung tâm Quận 1.
+            Hãy ghé thăm và trải nghiệm trực tiếp không gian cà phê đặc sản kết hợp khoa học năng lượng tại 1C Đỗ Thúc Tịnh, Đà Nẵng.
           </p>
 
           <div className="surface p-8 rounded-3xl border border-white/10 text-left mb-10 grid grid-cols-1 md:grid-cols-3 gap-6 shadow-xl">
@@ -852,8 +852,8 @@ export default function HomePage() {
                 <IconMapPin className="w-5 h-5 text-amber-400" />
               </div>
               <h4 className="text-sm font-bold text-white">Địa Chỉ Atelier</h4>
-              <p className="text-xs text-stone-300">68 Nguyễn Huệ, P. Bến Nghé</p>
-              <p className="text-xs text-muted">Quận 1, TP. Hồ Chí Minh</p>
+              <p className="text-xs text-stone-300">1C Đỗ Thúc Tịnh</p>
+              <p className="text-xs text-muted">TP. Đà Nẵng</p>
             </div>
 
             <div className="space-y-1">

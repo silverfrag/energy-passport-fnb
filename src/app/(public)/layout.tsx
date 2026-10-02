@@ -40,7 +40,7 @@ export default function PublicLayout({
                 Flagship Atelier
               </h4>
               <p className="text-xs text-muted leading-relaxed">
-                68 Nguyễn Huệ, P. Bến Nghé, Quận 1, TP. Hồ Chí Minh
+                1C Đỗ Thúc Tịnh, TP. Đà Nẵng
               </p>
               <div className="flex items-center gap-1.5 text-xs text-white/80 pt-1">
                 <IconClock className="w-3.5 h-3.5 text-wake" color="var(--color-wake)" />

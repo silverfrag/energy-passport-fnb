@@ -171,7 +171,7 @@ export default function RecommendationClient({ result }: Props) {
       <div className="text-center space-y-2">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/25 text-[10px] font-bold tracking-[0.2em] uppercase text-amber-300 font-mono">
           <IconPassportCrest className="w-3.5 h-3.5 text-amber-400" color="#D4AF37" />
-          <span>ĐƠN KÊ NĂNG LƯỢNG ĐỘC BẢN • ATELIER SÀI GÒN</span>
+          <span>ĐƠN KÊ NĂNG LƯỢNG ĐỘC BẢN • ATELIER ĐÀ NẴNG</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
           Công Thức Hương Vị Dành Riêng Cho Bạn

@@ -40,9 +40,9 @@ const SAMPLE_CUSTOMERS: CustomerSummary[] = [
     qualifiesForReward: true,
     lastVisitedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
     recentDrinks: [
-      { productName: 'Cold Brew Ủ Lạnh 12H', category: 'WAKE', caffeine: 150, consumedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() },
-      { productName: 'Americano Double Shot', category: 'WAKE', caffeine: 120, consumedAt: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString() },
-      { productName: 'Matcha Latte Ceremonial', category: 'FOCUS', caffeine: 70, consumedAt: new Date(Date.now() - 50 * 60 * 60 * 1000).toISOString() },
+      { productName: 'Cà Phê Sốt Biscoff', category: 'WAKE', caffeine: 120, consumedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() },
+      { productName: 'Cà Phê Caramel Kem Muối', category: 'WAKE', caffeine: 125, consumedAt: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString() },
+      { productName: 'Matcha Cookie Kem Dẻo', category: 'FOCUS', caffeine: 70, consumedAt: new Date(Date.now() - 50 * 60 * 60 * 1000).toISOString() },
     ],
   },
   {
@@ -58,8 +58,8 @@ const SAMPLE_CUSTOMERS: CustomerSummary[] = [
     qualifiesForReward: false,
     lastVisitedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
     recentDrinks: [
-      { productName: 'Peach Oolong Sparkling Tea', category: 'REFRESH', caffeine: 30, consumedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString() },
-      { productName: 'Matcha Espresso Dirty', category: 'FOCUS', caffeine: 110, consumedAt: new Date(Date.now() - 28 * 60 * 60 * 1000).toISOString() },
+      { productName: 'Trà Dưa Hấu Ổi Hồng', category: 'REFRESH', caffeine: 20, consumedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString() },
+      { productName: 'Coco Matcha', category: 'FOCUS', caffeine: 65, consumedAt: new Date(Date.now() - 28 * 60 * 60 * 1000).toISOString() },
     ],
   },
   {
@@ -75,7 +75,7 @@ const SAMPLE_CUSTOMERS: CustomerSummary[] = [
     qualifiesForReward: false,
     lastVisitedAt: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString(),
     recentDrinks: [
-      { productName: 'Americano Double Shot', category: 'WAKE', caffeine: 120, consumedAt: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString() },
+      { productName: 'Cà Phê Sữa Tươi Sương Sáo', category: 'WAKE', caffeine: 110, consumedAt: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString() },
     ],
   },
   {
@@ -91,7 +91,7 @@ const SAMPLE_CUSTOMERS: CustomerSummary[] = [
     qualifiesForReward: true,
     lastVisitedAt: new Date(Date.now() - 40 * 60 * 60 * 1000).toISOString(),
     recentDrinks: [
-      { productName: 'Lychee Mint Herbal Sparkler', category: 'REFRESH', caffeine: null, consumedAt: new Date(Date.now() - 40 * 60 * 60 * 1000).toISOString() },
+      { productName: 'Trà Vải Hoa Hồng', category: 'REFRESH', caffeine: 20, consumedAt: new Date(Date.now() - 40 * 60 * 60 * 1000).toISOString() },
     ],
   },
 ]
@@ -204,7 +204,7 @@ export async function getCustomersData(): Promise<{
  */
 export async function recordManualDrink(
   userId: string,
-  productSlug: string = 'wake-cold-brew'
+  productSlug: string = 'ca-phe-sot-biscoff'
 ): Promise<{ success: boolean; message: string }> {
   try {
     const supabase = await createClient()
@@ -217,7 +217,7 @@ export async function recordManualDrink(
       .maybeSingle()
 
     const product = productRaw as any
-    const productId = product?.id || 'wake-cold-brew'
+    const productId = product?.id || 'ca-phe-sot-biscoff'
     const caffeine = product?.caffeine_mg ?? 120
 
     // 2. Insert into consumption_logs

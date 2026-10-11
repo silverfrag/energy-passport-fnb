@@ -20,15 +20,15 @@ interface Props {
 export default function PackagingClient({ products, baseUrl }: Props) {
   const [activeTab, setActiveTab] = useState<'design' | 'generator' | 'print'>('design')
   const [selectedProduct, setSelectedProduct] = useState<Product>(products[0] || {
-    id: 'wake-cold-brew',
-    slug: 'wake-cold-brew',
-    name: 'Cold Brew Ủ Lạnh 12H',
+    id: 'ca-phe-sot-biscoff',
+    slug: 'ca-phe-sot-biscoff',
+    name: 'Cà Phê Sốt Biscoff',
     category: 'WAKE',
-    short_description: 'Ủ lạnh chậm 12-16 giờ ở 4°C, ngọt hậu tự nhiên.',
+    short_description: 'Cà phê đậm đà kết hợp sốt bánh quy Biscoff béo ngậy và vụn bánh giòn tan.',
     description: null,
-    price: 55000,
-    caffeine_mg: 150,
-    image_url: '/images/drinks/wake-cold-brew.jpg',
+    price: 31000,
+    caffeine_mg: 120,
+    image_url: '/images/drinks/ca-phe-sot-biscoff.jpg',
     active: true,
     featured: true,
     sort_order: 1,

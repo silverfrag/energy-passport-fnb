@@ -67,7 +67,7 @@ export default function CustomerManagementClient({ initialCustomers, stats }: Pr
   // Barista Action: Record +1 Drink
   const handleAddDrink = async (customer: CustomerSummary) => {
     setLoadingId(customer.id)
-    const res = await recordManualDrink(customer.id, 'wake-cold-brew')
+    const res = await recordManualDrink(customer.id, 'ca-phe-sot-biscoff')
     setLoadingId(null)
 
     if (res.success) {
@@ -87,9 +87,9 @@ export default function CustomerManagementClient({ initialCustomers, stats }: Pr
             lastVisitedAt: new Date().toISOString(),
             recentDrinks: [
               {
-                productName: 'Cold Brew Ủ Lạnh 12H',
+                productName: 'Cà Phê Sốt Biscoff',
                 category: 'WAKE',
-                caffeine: 150,
+                caffeine: 120,
                 consumedAt: new Date().toISOString(),
               },
               ...c.recentDrinks,

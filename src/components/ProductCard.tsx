@@ -23,13 +23,17 @@ export default function ProductCard({ product, href }: ProductCardProps) {
       >
         {/* Image Container with Gradient Fade */}
         <div
-          className="relative flex-shrink-0 overflow-hidden"
-          style={{ height: 180, background: 'var(--color-surface-2)' }}
+          className="relative aspect-square flex-shrink-0 overflow-hidden"
+          style={{ background: 'var(--color-surface-2)' }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imageUrl}
             alt={product.name}
+            width={1024}
+            height={1024}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           />
           <div className="absolute inset-0 drink-overlay opacity-60 group-hover:opacity-40 transition-opacity" />

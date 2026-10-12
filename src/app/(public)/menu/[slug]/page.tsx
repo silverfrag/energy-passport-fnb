@@ -59,11 +59,13 @@ export default async function ProductDetailPage({ params }: Props) {
   return (
     <div className="w-full fade-in pb-20">
       {/* Product Hero Photography */}
-      <div className="relative h-80 sm:h-[450px] w-full overflow-hidden bg-stone-950">
+      <div className="relative aspect-square w-full max-w-[600px] mx-auto overflow-hidden bg-stone-950">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={imageUrl}
           alt={product.name}
+          width={1024}
+          height={1024}
           className="w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] via-black/20 to-black/50" />

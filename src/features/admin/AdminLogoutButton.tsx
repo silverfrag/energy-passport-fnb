@@ -1,16 +1,19 @@
 'use client'
 
 import { useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import { logoutAdminPasskey } from './customer-actions'
 import { IconLock } from '@/components/icons'
 
 export default function AdminLogoutButton() {
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   const handleLogout = () => {
     startTransition(async () => {
       await logoutAdminPasskey()
-      window.location.href = '/admin'
+      router.replace('/admin')
+      router.refresh()
     })
   }
 

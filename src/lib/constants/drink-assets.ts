@@ -1,4 +1,4 @@
-import type { DrinkCategory } from '@/types'
+import type { DrinkCategory, Product } from '@/types'
 
 export const DRINK_IMAGES: Record<string, string> = {
   // WAKE (8 Cà phê)
@@ -48,76 +48,298 @@ export const DRINK_IMAGES: Record<string, string> = {
   'refresh-lychee-mint': '/images/drinks/tra-vai-hoa-hong.jpg',
 }
 
-export const DRINK_METADATA: Record<string, {
+export interface DrinkCopy {
+  summary: string
+  description: string
   tastingNotes: string[]
-  origin: string
-  brewing: string
-  bestTime: string
-  servingTemp: string
-}> = {
-  'ca-phe-sot-biscoff': {
-    tastingNotes: ['Sốt bánh Biscoff', 'Vụn quy giòn tan', 'Cà phê nguyên chất đậm đà'],
-    origin: 'Cà phê Buôn Mê & Lotus Biscoff',
-    brewing: 'Pha máy Espresso phối sốt caramel đun chậm',
-    bestTime: '07:30 - 11:30 Sáng',
-    servingTemp: 'Đá viên mát lạnh',
+}
+
+// Public copy describes flavor only. Origin, caffeine and preparation claims
+// require verified recipe data before they are published.
+export const DRINK_METADATA: Record<string, DrinkCopy> = {
+  "ca-phe-sot-biscoff": {
+    "summary": "Cà phê đậm vị, Biscoff thơm ngọt.",
+    "description": "Vị đậm của cà phê kết hợp hương bánh quy Biscoff thơm ngọt và béo nhẹ.",
+    "tastingNotes": [
+      "Đậm vị cà phê",
+      "Biscoff thơm ngọt"
+    ]
   },
-  'ca-phe-kem-deo-buon-me': {
-    tastingNotes: ['Cốt Robusta đậm đà', 'Kem dẻo mịn béo', 'Hậu vị ngọt sâu'],
-    origin: 'Robusta mộc Buôn Ma Thuột',
-    brewing: 'Pha phin truyền thống phối kem dẻo tươi',
-    bestTime: '07:00 - 11:00 Sáng',
-    servingTemp: 'Đá lạnh phân tầng',
+  "ca-phe-kem-deo-buon-me": {
+    "summary": "Cà phê đậm đà cùng kem dẻo béo mịn.",
+    "description": "Cà phê đậm đà kết hợp lớp kem dẻo mềm mịn, dành cho gu thích vị cà phê cùng chút béo ngọt.",
+    "tastingNotes": [
+      "Đậm đà",
+      "Kem dẻo béo mịn"
+    ]
   },
-  'ca-phe-caramel-kem-muoi': {
-    tastingNotes: ['Kem muối biển béo ngậy', 'Caramel ngọt đắng', 'Cà phê đậm vị'],
-    origin: 'Cà phê Tây Nguyên tuyển chọn',
-    brewing: 'Đánh foam kem muối biển tươi thủ công',
-    bestTime: '08:00 - 14:00',
-    servingTemp: 'Phục vụ đá lạnh 4°C',
+  "ca-phe-sua-tuoi-suong-sao": {
+    "summary": "Cà phê, sữa tươi và sương sáo mềm.",
+    "description": "Cà phê thơm đậm, sữa tươi béo nhẹ và sương sáo mềm tạo nên một lựa chọn nhiều vị trong cùng một ly.",
+    "tastingNotes": [
+      "Thơm vị cà phê",
+      "Sữa béo nhẹ",
+      "Sương sáo mềm"
+    ]
   },
-  'coco-matcha': {
-    tastingNotes: ['Matcha Uji thơm mát', 'Cốt dừa béo bùi', 'Hương hoa ngọt dịu'],
-    origin: 'Matcha cao cấp & Cốt dừa Bến Tre',
-    brewing: 'Đánh chổi tre Chasen thủ công 80°C',
-    bestTime: '09:00 - 15:30 Chiều',
-    servingTemp: 'Đá lạnh phân tầng',
+  "ca-phe-caramel-kem-muoi": {
+    "summary": "Caramel ngọt thơm, kem muối béo nhẹ.",
+    "description": "Cà phê đậm vị kết hợp caramel thơm ngọt và lớp kem muối béo nhẹ, có chút mặn cân bằng vị ngọt.",
+    "tastingNotes": [
+      "Caramel",
+      "Kem muối",
+      "Đậm vị cà phê"
+    ]
   },
-  'matcha-cookie-kem-deo': {
-    tastingNotes: ['Vụn Oreo giòn tan', 'Lớp kem dẻo đặc quánh', 'Matcha đậm vị'],
-    origin: 'Matcha Uji thượng hạng',
-    brewing: 'Ủ lạnh và đánh bông kem dẻo',
-    bestTime: '13:00 - 17:00 Chiều',
-    servingTemp: 'Đá tuyết mát lạnh',
+  "ca-phe-cot-dua": {
+    "summary": "Cà phê đậm vị, cốt dừa thơm béo.",
+    "description": "Vị đậm của cà phê quyện cùng cốt dừa thơm béo, với hương dừa rõ trong từng ngụm.",
+    "tastingNotes": [
+      "Cà phê đậm",
+      "Dừa thơm béo"
+    ]
   },
-  'matcha-coldwhisk': {
-    tastingNotes: ['Foam matcha dày mịn', 'Umami thanh khiết', 'Diệp lục nguyên bản'],
-    origin: 'Matcha Ceremonial Uji, Kyoto',
-    brewing: 'Cold-whisk lạnh tốc độ cao',
-    bestTime: '08:30 - 16:00',
-    servingTemp: 'Lạnh 2°C sủi bọt',
+  "bac-siu": {
+    "summary": "Nhiều vị sữa, cà phê đắng nhẹ.",
+    "description": "Bạc sỉu thiên về vị sữa ngọt béo, điểm thêm hương cà phê và vị đắng nhẹ.",
+    "tastingNotes": [
+      "Sữa ngọt béo",
+      "Cà phê nhẹ"
+    ]
   },
-  'tra-dua-hau-oi-hong': {
-    tastingNotes: ['Dưa hấu mọng nước', 'Ổi xá lị hồng ngát hương', 'Trà lài thanh mát'],
-    origin: 'Trái cây tươi Đà Nẵng & Trà Lài cao sơn',
-    brewing: 'Ép lạnh tươi trong ngày',
-    bestTime: '11:00 - 18:00 Trưa/Chiều',
-    servingTemp: 'Đá tuyết sảng khoái',
+  "ca-phe-sua": {
+    "summary": "Cà phê đậm đà, sữa ngọt béo.",
+    "description": "Cà phê kết hợp sữa ngọt béo, một lựa chọn quen thuộc cho gu thích vị cà phê đậm và hậu vị sữa.",
+    "tastingNotes": [
+      "Đậm đà",
+      "Sữa ngọt béo"
+    ]
   },
-  'tra-dao-cam-sa': {
-    tastingNotes: ['Đào miếng giòn ngọt', 'Cam vàng mọng nước', 'Sả chanh thơm nồng'],
-    origin: 'Đào mật & Cam sành tươi',
-    brewing: 'Ủ trà Oolong ngâm sả tươi chiết xuất chậm',
-    bestTime: '13:00 - 18:00 Chiều',
-    servingTemp: 'Đá viên tinh khiết',
+  "ca-phe-den": {
+    "summary": "Hương cà phê rõ, vị đắng đậm.",
+    "description": "Cà phê đen với hương cà phê rõ và vị đắng đậm, dành cho gu thích cà phê không sữa.",
+    "tastingNotes": [
+      "Vị đắng đậm",
+      "Không sữa"
+    ]
   },
-  'tra-mang-cau-tuoi': {
-    tastingNotes: ['Thịt mãng cầu dai giòn', 'Chua ngọt bùng nổ', 'Trà lài thanh tao'],
-    origin: 'Mãng cầu xiêm Đắk Lắk',
-    brewing: 'Xé tươi ngào đường phèn phối trà hoa lài',
-    bestTime: '12:00 - 19:00 Chiều/Tối',
-    servingTemp: 'Đá lạnh tuyết',
+  "matcha-caramel": {
+    "summary": "Matcha chát nhẹ, caramel thơm ngọt.",
+    "description": "Vị chát nhẹ của matcha kết hợp caramel thơm ngọt, tạo nên hương vị trà xanh cùng nét béo ngọt.",
+    "tastingNotes": [
+      "Matcha chát nhẹ",
+      "Caramel thơm ngọt"
+    ]
   },
+  "matcha-dua-non": {
+    "summary": "Matcha cùng vị dừa non thanh nhẹ.",
+    "description": "Hương matcha kết hợp vị dừa thanh nhẹ và dừa non mềm, bùi.",
+    "tastingNotes": [
+      "Vị trà xanh",
+      "Dừa non mềm bùi"
+    ]
+  },
+  "matcha-cookie-kem-deo": {
+    "summary": "Matcha, bánh quy và kem dẻo béo mịn.",
+    "description": "Vị matcha kết hợp bánh quy thơm và lớp kem dẻo béo mịn, dành cho gu thích đồ uống ngọt béo.",
+    "tastingNotes": [
+      "Vị trà xanh",
+      "Bánh quy",
+      "Kem dẻo"
+    ]
+  },
+  "matcha-xoai-sua": {
+    "summary": "Matcha, xoài thơm ngọt và sữa béo nhẹ.",
+    "description": "Matcha kết hợp vị xoài thơm ngọt và sữa béo nhẹ, có cả vị trà xanh lẫn hương trái cây.",
+    "tastingNotes": [
+      "Xoài thơm ngọt",
+      "Sữa béo nhẹ",
+      "Matcha"
+    ]
+  },
+  "matcha-dau-sua": {
+    "summary": "Matcha, dâu chua ngọt và sữa.",
+    "description": "Vị dâu chua ngọt kết hợp sữa và matcha, tạo nên ly nước có vị trà xanh cùng hương dâu.",
+    "tastingNotes": [
+      "Dâu chua ngọt",
+      "Sữa béo",
+      "Matcha"
+    ]
+  },
+  "matcha-coldwhisk": {
+    "summary": "Hương matcha rõ, lớp bọt mịn.",
+    "description": "Matcha Coldwhisk có hương trà xanh rõ, vị chát nhẹ và lớp bọt mịn.",
+    "tastingNotes": [
+      "Vị trà xanh",
+      "Chát nhẹ",
+      "Bọt mịn"
+    ]
+  },
+  "coco-matcha": {
+    "summary": "Matcha đậm vị cùng cốt dừa thơm béo.",
+    "description": "Hương matcha đậm vị kết hợp cốt dừa thơm béo, dành cho gu thích trà xanh và dừa.",
+    "tastingNotes": [
+      "Matcha đậm vị",
+      "Dừa thơm béo"
+    ]
+  },
+  "matcha-latte": {
+    "summary": "Matcha chát nhẹ quyện sữa béo.",
+    "description": "Matcha Latte kết hợp vị trà xanh chát nhẹ với sữa béo, cân bằng giữa vị trà và vị sữa.",
+    "tastingNotes": [
+      "Trà xanh chát nhẹ",
+      "Sữa béo"
+    ]
+  },
+  "tra-buoi": {
+    "summary": "Vị bưởi chua ngọt trên nền trà.",
+    "description": "Hương bưởi cùng vị chua ngọt kết hợp với trà, một lựa chọn cho gu thích vị trái cây có chút đắng nhẹ.",
+    "tastingNotes": [
+      "Hương bưởi",
+      "Chua ngọt",
+      "Đắng nhẹ"
+    ]
+  },
+  "tra-cam-quyt": {
+    "summary": "Cam quýt thơm, vị chua ngọt.",
+    "description": "Trà kết hợp hương cam quýt cùng vị chua ngọt quen thuộc của nhóm trái cây có múi.",
+    "tastingNotes": [
+      "Hương cam quýt",
+      "Chua ngọt"
+    ]
+  },
+  "tra-vai-hoa-hong": {
+    "summary": "Vải ngọt dịu, hương hoa hồng.",
+    "description": "Vị vải ngọt dịu kết hợp với hương hoa hồng trên nền trà.",
+    "tastingNotes": [
+      "Vải ngọt dịu",
+      "Hương hoa hồng"
+    ]
+  },
+  "tra-luu-do-habicus": {
+    "summary": "Lựu đỏ và hibiscus chua nhẹ.",
+    "description": "Vị lựu đỏ kết hợp hibiscus chua nhẹ, với sắc đỏ đặc trưng.",
+    "tastingNotes": [
+      "Lựu đỏ",
+      "Hibiscus",
+      "Chua nhẹ"
+    ]
+  },
+  "tra-chanh-day-nhiet-doi": {
+    "summary": "Chanh dây thơm, chua ngọt rõ vị.",
+    "description": "Hương chanh dây nổi bật cùng vị chua ngọt trên nền trà, dành cho gu thích vị trái cây nhiệt đới.",
+    "tastingNotes": [
+      "Hương chanh dây",
+      "Chua ngọt"
+    ]
+  },
+  "tra-dua-luoi": {
+    "summary": "Hương dưa lưới, vị ngọt dịu.",
+    "description": "Trà kết hợp hương dưa lưới và vị ngọt dịu, dành cho gu thích hương trái cây nhẹ nhàng.",
+    "tastingNotes": [
+      "Dưa lưới",
+      "Ngọt dịu"
+    ]
+  },
+  "tra-dao-cam-sa": {
+    "summary": "Đào ngọt, cam chua nhẹ và hương sả.",
+    "description": "Vị đào ngọt kết hợp cam chua nhẹ cùng hương sả, một tổ hợp hương vị quen thuộc trên nền trà.",
+    "tastingNotes": [
+      "Đào ngọt",
+      "Cam chua nhẹ",
+      "Hương sả"
+    ]
+  },
+  "tra-tac": {
+    "summary": "Hương tắc thơm, chua ngọt quen thuộc.",
+    "description": "Trà kết hợp vị tắc chua và ngọt, với hương tắc thơm rõ.",
+    "tastingNotes": [
+      "Hương tắc",
+      "Chua ngọt"
+    ]
+  },
+  "tra-mang-cau-tuoi": {
+    "summary": "Mãng cầu chua ngọt, có thịt quả.",
+    "description": "Vị trà kết hợp mãng cầu chua ngọt và phần thịt quả mềm.",
+    "tastingNotes": [
+      "Mãng cầu",
+      "Chua ngọt",
+      "Thịt quả mềm"
+    ]
+  },
+  "tra-chanh-day-chom-chom": {
+    "summary": "Chanh dây chua, chôm chôm ngọt.",
+    "description": "Trà kết hợp hương chanh dây chua cùng vị chôm chôm ngọt, tạo nên hai vị trái cây trong một ly.",
+    "tastingNotes": [
+      "Chanh dây",
+      "Chôm chôm",
+      "Chua ngọt"
+    ]
+  },
+  "tra-dao-luu-do": {
+    "summary": "Đào thơm ngọt cùng vị lựu đỏ.",
+    "description": "Trà kết hợp hương đào thơm ngọt với vị lựu đỏ, có vị chua ngọt nhẹ.",
+    "tastingNotes": [
+      "Hương đào",
+      "Lựu đỏ",
+      "Chua ngọt nhẹ"
+    ]
+  },
+  "tra-xoai-yakult": {
+    "summary": "Xoài thơm ngọt, Yakult chua dịu.",
+    "description": "Vị xoài thơm ngọt kết hợp vị chua dịu đặc trưng của Yakult.",
+    "tastingNotes": [
+      "Xoài thơm",
+      "Yakult chua dịu"
+    ]
+  },
+  "tra-me": {
+    "summary": "Vị me chua ngọt đậm đà.",
+    "description": "Trà Me có vị me chua ngọt đậm đà và hương me đặc trưng.",
+    "tastingNotes": [
+      "Hương me",
+      "Chua ngọt đậm"
+    ]
+  },
+  "tra-dau": {
+    "summary": "Hương dâu thơm, vị chua ngọt.",
+    "description": "Trà kết hợp hương dâu cùng vị chua ngọt, dành cho gu thích vị trái cây quen thuộc.",
+    "tastingNotes": [
+      "Hương dâu",
+      "Chua ngọt"
+    ]
+  },
+  "tra-viet-quat": {
+    "summary": "Việt quất chua ngọt, hương quả mọng.",
+    "description": "Trà kết hợp vị việt quất chua ngọt và hương quả mọng đặc trưng.",
+    "tastingNotes": [
+      "Việt quất",
+      "Chua ngọt"
+    ]
+  },
+  "tra-dua-hau-oi-hong": {
+    "summary": "Dưa hấu ngọt nhẹ, ổi hồng thơm.",
+    "description": "Vị dưa hấu ngọt nhẹ kết hợp hương ổi hồng trên nền trà.",
+    "tastingNotes": [
+      "Dưa hấu",
+      "Hương ổi hồng",
+      "Ngọt nhẹ"
+    ]
+  }
+}
+
+export function getPublicProductCopy(product: Pick<Product, 'slug' | 'category'>): DrinkCopy {
+  const knownCopy = DRINK_METADATA[product.slug]
+  if (knownCopy) return knownCopy
+
+  // Older database/local catalog descriptions can contain unverified claims.
+  // New catalog items get neutral copy until their flavor information is reviewed.
+  const label = CATEGORY_DETAILS[product.category].label
+  return {
+    summary: label,
+    description: `Một lựa chọn trong nhóm ${label.toLocaleLowerCase('vi-VN')} của Fame Drink. Trao đổi với Fame để biết thêm về hương vị và thành phần.`,
+    tastingNotes: [],
+  }
 }
 
 export const CATEGORY_DEFAULT_IMAGE: Record<DrinkCategory, string> = {
@@ -127,17 +349,9 @@ export const CATEGORY_DEFAULT_IMAGE: Record<DrinkCategory, string> = {
 }
 
 export function getProductImage(slug?: string | null, category?: DrinkCategory): string {
-  if (slug) {
-    if (DRINK_IMAGES[slug]) {
-      return DRINK_IMAGES[slug]
-    }
-    // direct fallback to slug.jpg if exists in drinks folder
-    return `/images/drinks/${slug}.jpg`
-  }
-  if (category && CATEGORY_DEFAULT_IMAGE[category]) {
-    return CATEGORY_DEFAULT_IMAGE[category]
-  }
-  return '/images/drinks/ca-phe-sot-biscoff.jpg'
+  if (slug) return DRINK_IMAGES[slug] ?? `/images/drinks/${slug}.jpg`
+  if (category) return CATEGORY_DEFAULT_IMAGE[category]
+  return CATEGORY_DEFAULT_IMAGE.WAKE
 }
 
 export interface CategoryInfo {
@@ -160,27 +374,27 @@ export interface CategoryInfo {
 export const CATEGORY_DETAILS: Record<DrinkCategory, CategoryInfo> = {
   WAKE: {
     id: 'WAKE',
-    label: 'WAKE',
-    customerGoal: 'Tỉnh táo hơn',
-    subtitle: 'Khởi động & Nạp năng lượng',
-    tagline: 'Khai mở năng lượng tức thì',
-    desc: 'Cà phê đặc sản Fame Drink đậm đà phối hợp sốt Biscoff, kem dẻo Buôn Mê, cốt dừa sánh mịn giúp bạn bật dậy và tràn đầy sinh lực.',
+    label: 'Cà phê',
+    customerGoal: 'Thích vị cà phê',
+    subtitle: 'Đậm vị, thơm béo',
+    tagline: 'Gu cà phê quen thuộc, thêm chút mới mẻ',
+    desc: 'Cà phê đen, cà phê sữa và những kết hợp cùng Biscoff, kem dẻo, caramel hoặc cốt dừa.',
     color: 'var(--color-wake)',
-    lightColor: 'rgba(255, 107, 53, 0.08)',
-    borderColor: 'rgba(255, 107, 53, 0.25)',
+    lightColor: 'rgba(185, 71, 32, 0.08)',
+    borderColor: 'rgba(185, 71, 32, 0.25)',
     gradientClass: 'gradient-wake',
     glowClass: 'glow-wake',
     defaultDrinkName: 'Cà Phê Sốt Biscoff',
     defaultDrinkPrice: '31.000₫',
-    defaultCaffeine: '~120mg',
+    defaultCaffeine: '',
   },
   FOCUS: {
     id: 'FOCUS',
-    label: 'FOCUS',
-    customerGoal: 'Tập trung ổn định',
-    subtitle: 'Làm việc sâu & Bền bỉ',
-    tagline: 'Duy trì sự tập trung êm ái',
-    desc: 'Matcha cao cấp đánh bọt mịn phối kem dẻo, cốt dừa, hoa quả dồi dào L-theanine tự nhiên, giữ trạng thái làm việc sâu (Deep Work) tĩnh tại bền bỉ.',
+    label: 'Matcha',
+    customerGoal: 'Thích vị trà xanh',
+    subtitle: 'Vị trà xanh, béo nhẹ',
+    tagline: 'Matcha cùng những hương vị bạn thích',
+    desc: 'Matcha kết hợp sữa, caramel, bánh quy, dừa hoặc vị trái cây chua ngọt.',
     color: 'var(--color-focus)',
     lightColor: 'rgba(45, 122, 79, 0.08)',
     borderColor: 'rgba(45, 122, 79, 0.25)',
@@ -188,22 +402,22 @@ export const CATEGORY_DETAILS: Record<DrinkCategory, CategoryInfo> = {
     glowClass: 'glow-focus',
     defaultDrinkName: 'Coco Matcha',
     defaultDrinkPrice: '40.000₫',
-    defaultCaffeine: '~65mg',
+    defaultCaffeine: '',
   },
   REFRESH: {
     id: 'REFRESH',
-    label: 'REFRESH',
-    customerGoal: 'Thư giãn / Làm mới',
-    subtitle: 'Hạ nhiệt & Thư thái',
-    tagline: 'Làm mới tinh thần & Xoa dịu căng thẳng',
-    desc: 'Trà trái cây nhiệt đới tươi mát thanh lọc vị giác: dưa hấu ổi hồng, mãng cầu tươi, xoài Yakult phục hồi sự sảng khoái nhẹ nhàng.',
+    label: 'Trà trái cây',
+    customerGoal: 'Thích vị trái cây',
+    subtitle: 'Chua ngọt, thơm hương trái cây',
+    tagline: 'Chọn hương trái cây yêu thích',
+    desc: 'Trà kết hợp đào, vải, dâu, chanh dây và nhiều hương vị trái cây khác.',
     color: 'var(--color-refresh)',
-    lightColor: 'rgba(74, 144, 217, 0.08)',
-    borderColor: 'rgba(74, 144, 217, 0.25)',
+    lightColor: 'rgba(61, 140, 168, 0.08)',
+    borderColor: 'rgba(61, 140, 168, 0.25)',
     gradientClass: 'gradient-refresh',
     glowClass: 'glow-refresh',
     defaultDrinkName: 'Trà Dưa Hấu Ổi Hồng',
     defaultDrinkPrice: '40.000₫',
-    defaultCaffeine: '~20mg',
+    defaultCaffeine: '',
   },
 }

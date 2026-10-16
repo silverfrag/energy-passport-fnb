@@ -86,7 +86,6 @@ function runTests() {
   })
 
   test('selectProduct: excludes inactive products', () => {
-    const wakeProducts = mockProducts.filter(p => p.category === 'WAKE' && p.active)
     const inactiveIncluded = selectProduct(mockProducts, 'WAKE', 2)
     assert(inactiveIncluded?.id !== 'p5', 'Inactive product p5 should not be selected')
   })

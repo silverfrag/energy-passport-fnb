@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import type { DrinkCategory } from '@/types'
+import { requireOrderAdmin } from '@/lib/orders/auth'
 import {
   saveAdminProduct,
   deleteOrToggleAdminProduct,
@@ -13,6 +14,7 @@ export async function createProduct(
   prevState: { error?: string } | null,
   formData: FormData
 ): Promise<{ error?: string }> {
+  await requireOrderAdmin()
   const slug = formData.get('slug')?.toString().trim().toLowerCase().replace(/\s+/g, '-')
   const name = formData.get('name')?.toString().trim()
   const category = formData.get('category')?.toString() as DrinkCategory
@@ -58,6 +60,7 @@ export async function updateProduct(
   prevState: { error?: string } | null,
   formData: FormData
 ): Promise<{ error?: string }> {
+  await requireOrderAdmin()
   const slug = formData.get('slug')?.toString().trim().toLowerCase().replace(/\s+/g, '-') || id
   const name = formData.get('name')?.toString().trim()
   const category = formData.get('category')?.toString() as DrinkCategory
@@ -104,16 +107,21 @@ export async function updateProduct(
 }
 
 export async function deleteProduct(id: string) {
-  await deleteOrToggleAdminProduct(id, false)
+  await requireOrderAdmin()
+  const result = await deleteOrToggleAdminProduct(id, false)
+  if (!result.success) return { error: result.error }
   revalidatePath('/admin/products')
   revalidatePath('/menu')
   redirect('/admin/products')
 }
 
 export async function toggleProductActive(id: string, currentActive: boolean) {
-  await deleteOrToggleAdminProduct(id, !currentActive)
+  await requireOrderAdmin()
+  const result = await deleteOrToggleAdminProduct(id, !currentActive)
+  if (!result.success) return { error: result.error }
   revalidatePath('/admin/products')
   revalidatePath('/menu')
+  return { success: true }
 }
 
 export async function handleSyncProducts(): Promise<{
@@ -121,6 +129,7 @@ export async function handleSyncProducts(): Promise<{
   count: number
   error?: string
 }> {
+  await requireOrderAdmin()
   const res = await syncProductsToSupabase()
   revalidatePath('/admin/products')
   revalidatePath('/menu')

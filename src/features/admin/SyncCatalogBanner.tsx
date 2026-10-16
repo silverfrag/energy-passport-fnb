@@ -45,10 +45,12 @@ export default function SyncCatalogBanner({
             setShowSqlGuide(true)
           }
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         setResult({
           success: false,
-          message: err?.message || 'Lỗi kết nối khi đồng bộ',
+          message: err && typeof err === 'object' && 'message' in err && typeof err.message === 'string' && err.message
+            ? err.message
+            : 'Lỗi kết nối khi đồng bộ',
         })
       }
     })

@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local image masters, QA artifacts, and Supabase CLI cache
+/output/
+/supabase/.temp/

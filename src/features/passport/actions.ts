@@ -4,6 +4,12 @@ import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 
+type ProfilePhoneUpdate = {
+  id: string
+  phone_number: string
+  updated_at: string
+}
+
 export async function updatePhoneNumber(
   phone: string
 ): Promise<{ success: boolean; error?: string }> {
@@ -27,13 +33,15 @@ export async function updatePhoneNumber(
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
       // Upsert profile with phone_number
-      await supabase
-        .from('profiles')
-        .upsert({
-          id: user.id,
-          phone_number: cleanPhone,
-          updated_at: new Date().toISOString(),
-        } as any)
+      // Narrow the write contract while the legacy hand-written schema lacks SDK metadata.
+      const profiles = supabase.from('profiles') as unknown as {
+        upsert(value: ProfilePhoneUpdate): PromiseLike<unknown>
+      }
+      await profiles.upsert({
+        id: user.id,
+        phone_number: cleanPhone,
+        updated_at: new Date().toISOString(),
+      })
     }
   } catch (err) {
     console.error('Failed to update phone number in Supabase:', err)

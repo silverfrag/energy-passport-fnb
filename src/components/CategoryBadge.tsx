@@ -1,24 +1,24 @@
-import type { DrinkCategory } from '@/types'
+﻿import type { DrinkCategory } from '@/types'
 import { IconWake, IconFocus, IconRefresh } from '@/components/icons'
 
 const CONFIG: Record<DrinkCategory, { label: string; icon: typeof IconWake; className: string; iconColor: string }> = {
   WAKE: {
-    label: 'WAKE',
+    label: 'Cà phê',
     icon: IconWake,
-    className: 'badge-pill badge-wake',
-    iconColor: '#FFA07A',
+    className: 'border-[#ead4bf] bg-[#fbefdf] text-[#86502b]',
+    iconColor: '#86502b',
   },
   FOCUS: {
-    label: 'FOCUS',
+    label: 'Matcha',
     icon: IconFocus,
-    className: 'badge-pill badge-focus',
-    iconColor: '#95D5B2',
+    className: 'border-[#d4e1c6] bg-[#eef3e5] text-[#476438]',
+    iconColor: '#476438',
   },
   REFRESH: {
-    label: 'REFRESH',
+    label: 'Trà trái cây',
     icon: IconRefresh,
-    className: 'badge-pill badge-refresh',
-    iconColor: '#A0C4E2',
+    className: 'border-[#edd4c3] bg-[#fff0e5] text-[#9a542f]',
+    iconColor: '#9a542f',
   },
 }
 
@@ -28,13 +28,14 @@ interface CategoryBadgeProps {
 }
 
 export default function CategoryBadge({ category, showEmoji = true }: CategoryBadgeProps) {
-  const cfg = CONFIG[category]
-  const Icon = cfg.icon
+  const config = CONFIG[category]
+  const Icon = config.icon
 
   return (
-    <span className={cfg.className}>
-      {showEmoji && <Icon className="w-3 h-3 flex-shrink-0" color={cfg.iconColor} />}
-      <span>{cfg.label}</span>
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold ${config.className}`}>
+      {showEmoji && <Icon className="h-3 w-3 flex-shrink-0" color={config.iconColor} />}
+      <span>{config.label}</span>
+      <span className="ml-0.5 text-[9px] font-medium tracking-wider opacity-80">{category}</span>
     </span>
   )
 }

@@ -6,11 +6,7 @@ import FameDrinkLogo from '@/components/FameDrinkLogo'
 import Link from 'next/link'
 import { IconShield, IconSparkles } from '@/components/icons'
 
-interface Props {
-  userEmail?: string | null
-}
-
-export default function AdminUnlockCard({ userEmail }: Props) {
+export default function AdminUnlockCard() {
   const [pin, setPin] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -21,18 +17,15 @@ export default function AdminUnlockCard({ userEmail }: Props) {
     setLoading(true)
     setError(null)
 
-    const res = await verifyAdminPasskey(pin)
-    setLoading(false)
-
-    if (res.success) {
-      setSuccess(true)
-      setTimeout(() => {
-        // Reload current page to unlock layout seamlessly
+    try {
+      const res = await verifyAdminPasskey(pin)
+      if (res.success) {
+        setSuccess(true)
         window.location.reload()
-      }, 400)
-    } else {
-      setError(res.message)
-    }
+      } else setError(res.message)
+    } catch {
+      setError('Không thể đăng nhập. Vui lòng kiểm tra kết nối và thử lại.')
+    } finally { setLoading(false) }
   }
 
   return (
@@ -51,22 +44,24 @@ export default function AdminUnlockCard({ userEmail }: Props) {
             Đăng Nhập Quản Trị Quán
           </h2>
           <p className="text-xs text-muted mt-2 leading-relaxed">
-            Dành riêng cho Chủ quán và Quản lý vận hành. Nhập mã PIN trực tiếp để truy cập quản lý thực đơn, ưu đãi và số liệu mà không cần tạo tài khoản.
+            Dành cho người quản lý cửa hàng. Nhập mật khẩu quản trị đã được cấu hình trên máy chủ để quản lý đơn và thanh toán.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-left">
           <div>
-            <label className="text-[11px] font-mono uppercase text-muted block mb-1.5">
-              Mã PIN Quản Trị Cửa Hàng
+            <label htmlFor="admin-password" className="text-[11px] font-mono uppercase text-muted block mb-1.5">
+              Mật khẩu quản trị
             </label>
             <input
               type="password"
+              id="admin-password"
+              autoComplete="current-password"
               required
               autoFocus
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              placeholder="••••"
+              placeholder="Nhập mật khẩu quản trị"
               className="w-full text-center tracking-[0.5em] text-lg font-mono font-bold px-4 py-3 rounded-xl bg-stone-900 border border-white/20 text-white outline-none focus:border-amber-400 transition-colors"
             />
           </div>
@@ -107,7 +102,7 @@ export default function AdminUnlockCard({ userEmail }: Props) {
             ← Ra website
           </Link>
           <span className="text-[11px] text-white/40">
-            Truy cập một chạm (PIN)
+            Phiên đăng nhập 8 giờ
           </span>
         </div>
       </div>

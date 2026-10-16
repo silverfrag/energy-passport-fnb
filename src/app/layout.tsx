@@ -4,27 +4,27 @@ import './globals.css'
 
 const playfair = Playfair_Display({
   subsets: ['latin', 'vietnamese'],
-  variable: '--font-serif',
+  variable: '--font-playfair',
   display: 'swap',
 })
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin', 'vietnamese'],
-  variable: '--font-sans',
+  variable: '--font-jakarta',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
   title: {
-    default: 'Fame Drink — Energy Passport Atelier | WAKE · FOCUS · REFRESH',
+    default: 'Fame Drink — Cà phê, Matcha & Trà trái cây giao tận nơi',
     template: '%s | Fame Drink',
   },
-  description: 'Fame Drink — Đồ uống đặc sản định hướng trạng thái năng lượng. Cà phê Arabica Cầu Đất, Matcha Ceremonial Uji và Trà Oolong cao sơn kết hợp sổ ký danh Energy Passport.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'),
+  description: 'Chọn cà phê, matcha và trà trái cây tại Fame Drink. Đặt đồ uống online, thanh toán chuyển khoản QR và theo dõi đơn giao tận nơi.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://energy-passport-fnb.vercel.app'),
   openGraph: {
     type: 'website',
     locale: 'vi_VN',
-    siteName: 'Fame Drink — Energy Passport Atelier',
+    siteName: 'Fame Drink',
   },
 }
 

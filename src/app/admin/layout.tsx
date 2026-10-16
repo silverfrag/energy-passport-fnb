@@ -9,17 +9,16 @@ import {
   IconTimer, 
   IconTag 
 } from '@/components/icons'
-import { cookies } from 'next/headers'
+import { isOrderAdmin } from '@/lib/orders/auth'
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const cookieStore = await cookies()
-  const isAdmin = cookieStore.get('ep_admin_session')?.value === 'true'
+  const isAdmin = await isOrderAdmin()
 
-  // If not admin, show store PIN authorization card directly on page (no email/account required!)
+  // Server-verified, expiring signature. The legacy boolean cookie is never authorization.
   if (!isAdmin) {
     return (
       <div className="min-h-dvh flex items-center justify-center p-4" style={{ background: 'var(--color-bg)' }}>
@@ -29,6 +28,8 @@ export default async function AdminLayout({
   }
 
   const navLinks = [
+    { href: '/admin/orders', label: 'Đơn giao hàng', icon: IconDashboard },
+    { href: '/admin/payment-settings', label: 'Tài khoản nhận tiền', icon: IconTag },
     { href: '/admin', label: 'Dashboard', icon: IconDashboard },
     { href: '/admin/customers', label: 'Khách Quen & Ưu Đãi', icon: IconStar },
     { href: '/admin/products', label: 'Sản Phẩm (20k-40k)', icon: IconCoffeeBean },
@@ -40,14 +41,14 @@ export default async function AdminLayout({
     <div className="min-h-dvh" style={{ background: 'var(--color-bg)' }}>
       {/* Admin Header */}
       <header
-        className="sticky top-0 z-50 px-4 sm:px-8 py-3.5 flex items-center justify-between"
+        className="sticky top-0 z-50 flex flex-wrap items-center justify-between gap-3 px-4 py-3.5 sm:px-8"
         style={{
           background: 'rgba(15, 14, 12, 0.95)',
           backdropFilter: 'blur(12px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         }}
       >
-        <div className="flex items-center gap-6">
+        <div className="flex min-w-0 flex-wrap items-center gap-6">
           <Link href="/admin" className="flex items-center gap-2">
             <FameDrinkLogo size="sm" variant="compact" />
             <span className="font-mono text-[10px] text-amber-300 font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/30">
@@ -55,7 +56,7 @@ export default async function AdminLayout({
             </span>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden xl:flex items-center gap-1">
             {navLinks.map((item) => {
               const IconComp = item.icon
               return (
@@ -72,9 +73,9 @@ export default async function AdminLayout({
           </nav>
         </div>
 
-        <div className="flex items-center gap-3 text-xs font-mono">
+        <div className="ml-auto flex items-center gap-3 text-xs font-mono">
           <span className="hidden sm:inline text-amber-300/80 text-[11px] font-bold">
-            Chủ quán & Quản lý (PIN 1212)
+            Quản trị cửa hàng
           </span>
           <Link
             href="/"
@@ -87,7 +88,7 @@ export default async function AdminLayout({
       </header>
 
       {/* Subnav for Mobile */}
-      <div className="lg:hidden flex items-center gap-2 px-4 py-2.5 overflow-x-auto bg-stone-900 border-b border-white/10">
+      <div className="xl:hidden flex items-center gap-2 px-4 py-2.5 overflow-x-auto bg-stone-900 border-b border-white/10">
         {navLinks.map((item) => {
           const IconComp = item.icon
           return (

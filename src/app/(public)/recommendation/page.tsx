@@ -1,9 +1,6 @@
 import { Suspense } from 'react'
-import { createClient } from '@/lib/supabase/server'
-import type { Product, MicroAction, DrinkCategory } from '@/types'
+import type { DrinkCategory } from '@/types'
 import { getRecommendation } from '@/lib/recommendation/engine'
-import Link from 'next/link'
-import CategoryBadge from '@/components/CategoryBadge'
 import type { Metadata } from 'next'
 import RecommendationClient from '@/features/recommendation/RecommendationClient'
 
@@ -11,7 +8,7 @@ import { STANDARD_PRODUCTS } from '@/lib/constants/products'
 
 export const metadata: Metadata = {
   title: 'Gợi ý đồ uống — Fame Drink',
-  description: 'Đồ uống được gợi ý dựa trên trạng thái của bạn tại Fame Drink.',
+  description: 'Một gợi ý từ nhóm đồ uống bạn yêu thích tại Fame Drink.',
 }
 
 import { getAdminProductsList, getAdminActionsList } from '@/lib/store/catalog-service'
@@ -41,13 +38,12 @@ async function getProductsAndActions() {
 
 export default async function RecommendationPage({ searchParams }: PageProps) {
   const params = await searchParams
-  const fatigueLevel = parseInt(params.fatigue ?? '3') as 1 | 2 | 3 | 4 | 5
-  const desiredState = (params.state ?? 'WAKE') as DrinkCategory
+  const desiredState: DrinkCategory = params.state === 'FOCUS' || params.state === 'REFRESH' ? params.state : 'WAKE'
 
   const { products, actions } = await getProductsAndActions()
 
   const result = getRecommendation(
-    { fatigueLevel: Math.min(5, Math.max(1, fatigueLevel)) as 1 | 2 | 3 | 4 | 5, desiredState },
+    { fatigueLevel: 3, desiredState },
     products,
     actions
   )

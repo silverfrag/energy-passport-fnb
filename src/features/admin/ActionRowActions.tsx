@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toggleMicroActionActive } from '@/features/admin/action-actions'
@@ -13,17 +13,23 @@ interface Props {
 
 export default function ActionRowActions({ id, slug, active }: Props) {
   const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
   const handleToggle = () => {
     startTransition(async () => {
-      await toggleMicroActionActive(id, active)
-      router.refresh()
+      setError(null)
+      try {
+        const result = await toggleMicroActionActive(id, active)
+        if (result.error) setError(result.error)
+        else router.refresh()
+      } catch { setError('Không thể cập nhật. Vui lòng kiểm tra phiên đăng nhập và thử lại.') }
     })
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
+      {error && <p role="alert" className="w-full text-xs text-red-400">{error}</p>}
       <button
         onClick={handleToggle}
         disabled={isPending}

@@ -3,10 +3,13 @@ import Link from 'next/link'
 import { getCustomersData } from '@/features/admin/customer-actions'
 import { getAdminProductsList, getAdminActionsList } from '@/lib/store/catalog-service'
 import { IconStar, IconCoffeeBean, IconDashboard, IconTimer } from '@/components/icons'
+import { isOrderAdmin } from '@/lib/orders/auth'
+import AdminUnlockCard from '@/features/admin/AdminUnlockCard'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
+  if (!await isOrderAdmin()) return <AdminUnlockCard />
   const supabase = await createClient()
 
   const [
@@ -54,7 +57,7 @@ export default async function AdminDashboard() {
     },
     {
       label: 'Đồ Uống Đã Ghi Nhận',
-      count: logCount ?? 48,
+      count: logCount ?? 0,
       subtitle: `${customersData.activeWeeklyCount} khách dùng trong 7 ngày`,
       href: '/admin/customers',
       color: 'var(--color-refresh)',

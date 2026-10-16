@@ -1,12 +1,29 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import type { Product, ConsumptionLog } from '@/types'
+import type { Product } from '@/types'
 import { findStandardProduct } from '@/lib/constants/products'
 import { saveLocalPassportLog, getLocalPassportLogs, type LocalLog } from '@/lib/passport/store'
 import { cookies } from 'next/headers'
 
-async function getOrCreateUserId(supabase: any): Promise<string> {
+type PassportClient = Awaited<ReturnType<typeof createClient>>
+type ConsumptionInsert = Pick<LocalLog, 'user_id' | 'product_id' | 'caffeine_mg_snapshot'> & { source: 'qr_scan' }
+
+function errorMessage(error: unknown, fallback: string): string {
+  return error !== null && typeof error === 'object' && 'message' in error && typeof error.message === 'string' && error.message
+    ? error.message
+    : fallback
+}
+
+async function insertConsumption(supabase: PassportClient, payload: ConsumptionInsert): Promise<void> {
+  // Narrow the write contract while the legacy hand-written schema lacks SDK metadata.
+  const logs = supabase.from('consumption_logs') as unknown as {
+    insert(value: ConsumptionInsert): PromiseLike<unknown>
+  }
+  await logs.insert(payload)
+}
+
+async function getOrCreateUserId(supabase: PassportClient): Promise<string> {
   // 1. Try Supabase Auth
   try {
     const { data: { user } } = await supabase.auth.getUser()
@@ -93,8 +110,9 @@ export async function confirmConsumption(
         .gte('consumed_at', fiveMinutesIso)
         .limit(1)
 
-      if (recentDb && (recentDb as any[]).length > 0) {
-        return { success: false, duplicate: true, logId: (recentDb as any[])[0]?.id }
+      const recent: unknown = recentDb?.[0]
+      if (recent !== null && typeof recent === 'object' && 'id' in recent && typeof recent.id === 'string') {
+        return { success: false, duplicate: true, logId: recent.id }
       }
     } catch {
       // Supabase table not available
@@ -119,21 +137,21 @@ export async function confirmConsumption(
 
     // Also attempt saving to Supabase if database tables are active
     try {
-      const payload: Record<string, any> = {
+      const payload: ConsumptionInsert = {
         user_id: userId,
         product_id: product.id,
         caffeine_mg_snapshot: product.caffeine_mg,
         source: 'qr_scan',
       }
-      await (supabase.from('consumption_logs') as any).insert(payload)
+      await insertConsumption(supabase, payload)
     } catch {
       // Ignore Supabase failure, cookie storage already succeeded
     }
 
     return { success: true, logId }
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error confirming consumption:', err)
-    return { success: false, error: err?.message || 'Lỗi không xác định. Vui lòng thử lại.' }
+    return { success: false, error: errorMessage(err, 'Lỗi không xác định. Vui lòng thử lại.') }
   }
 }
 
@@ -185,19 +203,19 @@ export async function confirmConsumptionDespiteDuplicate(
     await saveLocalPassportLog(localLog)
 
     try {
-      const payload: Record<string, any> = {
+      const payload: ConsumptionInsert = {
         user_id: userId,
         product_id: product.id,
         caffeine_mg_snapshot: product.caffeine_mg,
         source: 'qr_scan',
       }
-      await (supabase.from('consumption_logs') as any).insert(payload)
+      await insertConsumption(supabase, payload)
     } catch {
       // Fallback succeeded
     }
 
     return { success: true, logId }
-  } catch (err: any) {
-    return { success: false, error: err?.message || 'Lỗi không xác định.' }
+  } catch (err: unknown) {
+    return { success: false, error: errorMessage(err, 'Lỗi không xác định.') }
   }
 }

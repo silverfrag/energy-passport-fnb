@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import CheckInForm from '@/features/checkin/CheckInForm'
 
 export const metadata: Metadata = {
-  title: 'Check-in trạng thái',
-  description: 'Chọn trạng thái năng lượng để nhận gợi ý đồ uống phù hợp.',
+  title: 'Gợi ý món theo khẩu vị',
+  description: 'Chọn nhóm đồ uống yêu thích để xem gợi ý từ menu Fame Drink. Không bắt buộc khi đặt món.',
 }
 
 export default function CheckInPage() {

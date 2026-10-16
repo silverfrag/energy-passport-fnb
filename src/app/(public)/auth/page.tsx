@@ -1,43 +1,38 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import AuthForm from '@/features/auth/AuthForm'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { IconPassportCrest } from '@/components/icons'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Liên Kết Sổ Ký Danh — Energy Passport',
-  description: 'Liên kết email để lưu giữ vĩnh viễn Energy Passport và tích lũy đặc quyền.',
+  title: 'Đăng nhập Passport',
+  description: 'Đăng nhập nhật ký đồ uống Fame Drink. Xem menu và đặt món không cần đăng nhập Passport.',
 }
 
 export default async function AuthPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  // Already logged in with permanent account — redirect to passport
-  if (user && !user.is_anonymous) {
-    redirect('/passport')
+  let signedIn = false
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    signedIn = !!user && !user.is_anonymous
+  } catch {
+    // Keep the public page readable when authentication is unavailable.
   }
 
-  return (
-    <div className="mx-auto max-w-sm px-4 py-12 fade-in">
-      <div className="text-center mb-8 space-y-3">
-        <div className="w-16 h-16 rounded-full bg-amber-400/10 border border-amber-400/30 flex items-center justify-center mx-auto text-amber-400">
-          <IconPassportCrest className="w-8 h-8" color="#D4AF37" />
-        </div>
-        <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-amber-400 font-mono block">
-          OFFICIAL PASSPORT REGISTRATION
-        </span>
-        <h1 className="text-2xl font-black text-white">
-          Lưu Sổ Ký Danh Passport
-        </h1>
-        <p className="text-xs text-muted leading-relaxed">
-          {user
-            ? 'Liên kết email để bảo vệ lịch sử thưởng thức và giữ nguyên vẹn các con dấu Visa khi bạn đổi điện thoại.'
-            : 'Đăng nhập để xem và quản lý sổ ký danh Energy Passport của bạn.'}
-        </p>
-      </div>
+  if (signedIn) redirect('/passport')
 
-      <AuthForm />
+  return (
+    <div className="mx-auto max-w-md px-4 py-10 sm:py-16 space-y-7">
+      <Link href="/passport" className="text-sm text-muted hover:underline">← Về Passport</Link>
+      <div className="space-y-3">
+        <p className="text-xs font-bold tracking-widest uppercase text-[#ad431e]">Nhật ký đồ uống · Tùy chọn</p>
+        <h1 className="text-3xl font-black">Đăng nhập Passport</h1>
+        <p className="text-sm text-muted leading-relaxed">Dùng email hoặc Google để truy cập tài khoản Passport. Bạn vẫn có thể xem menu và đặt món mà không cần đăng nhập.</p>
+      </div>
+      <div className="surface p-5 sm:p-6 rounded-2xl border border-[var(--color-border)]">
+        <AuthForm />
+      </div>
+      <Link href="/menu" className="btn btn-ghost btn-full">Tiếp tục xem menu</Link>
     </div>
   )
 }

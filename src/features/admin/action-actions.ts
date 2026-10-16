@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import type { DrinkCategory, ActionStep } from '@/types'
+import { requireOrderAdmin } from '@/lib/orders/auth'
 import {
   saveAdminAction,
   deleteOrToggleAdminAction,
@@ -18,6 +19,7 @@ export async function createMicroAction(
   prevState: { error?: string } | null,
   formData: FormData
 ): Promise<{ error?: string }> {
+  await requireOrderAdmin()
   const slug = formData.get('slug')?.toString().trim().toLowerCase().replace(/\s+/g, '-')
   const category = formData.get('category')?.toString() as DrinkCategory
   const title = formData.get('title')?.toString().trim()
@@ -56,6 +58,7 @@ export async function updateMicroAction(
   prevState: { error?: string } | null,
   formData: FormData
 ): Promise<{ error?: string }> {
+  await requireOrderAdmin()
   const slug = formData.get('slug')?.toString().trim().toLowerCase().replace(/\s+/g, '-') || id
   const category = formData.get('category')?.toString() as DrinkCategory
   const title = formData.get('title')?.toString().trim()
@@ -93,16 +96,21 @@ export async function updateMicroAction(
 }
 
 export async function deleteMicroAction(id: string) {
-  await deleteOrToggleAdminAction(id, false)
+  await requireOrderAdmin()
+  const result = await deleteOrToggleAdminAction(id, false)
+  if (!result.success) return { error: result.error }
   revalidatePath('/admin/actions')
   revalidatePath('/recommendation')
   redirect('/admin/actions')
 }
 
 export async function toggleMicroActionActive(id: string, currentActive: boolean) {
-  await deleteOrToggleAdminAction(id, !currentActive)
+  await requireOrderAdmin()
+  const result = await deleteOrToggleAdminAction(id, !currentActive)
+  if (!result.success) return { error: result.error }
   revalidatePath('/admin/actions')
   revalidatePath('/recommendation')
+  return { success: true }
 }
 
 export async function handleSyncActions(): Promise<{
@@ -110,6 +118,7 @@ export async function handleSyncActions(): Promise<{
   count: number
   error?: string
 }> {
+  await requireOrderAdmin()
   const res = await syncActionsToSupabase()
   revalidatePath('/admin/actions')
   revalidatePath('/recommendation')

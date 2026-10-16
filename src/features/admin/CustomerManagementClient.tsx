@@ -8,14 +8,10 @@ import {
   quickCreateCustomer 
 } from './customer-actions'
 import { 
-  IconShield, 
   IconCheck, 
-  IconClock, 
   IconCup, 
-  IconSparkles,
-  IconCompass
+  IconSparkles
 } from '@/components/icons'
-import FameDrinkLogo from '@/components/FameDrinkLogo'
 
 interface Props {
   initialCustomers: CustomerSummary[]
@@ -27,7 +23,7 @@ interface Props {
   }
 }
 
-export default function CustomerManagementClient({ initialCustomers, stats }: Props) {
+export default function CustomerManagementClient({ initialCustomers }: Props) {
   const [customers, setCustomers] = useState<CustomerSummary[]>(initialCustomers)
   const [search, setSearch] = useState('')
   const [activeTab, setActiveTab] = useState<'all' | 'reward' | 'weekly' | 'phone'>('all')
@@ -267,15 +263,15 @@ export default function CustomerManagementClient({ initialCustomers, stats }: Pr
           </div>
 
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-            {[
+            {([
               { id: 'all', label: `Tất cả (${customers.length})` },
               { id: 'reward', label: `⭐ Đủ ưu đãi (${customers.filter((c) => c.qualifiesForReward).length})` },
               { id: 'weekly', label: `7 ngày (${customers.filter((c) => c.sevenDayDrinks > 0).length})` },
               { id: 'phone', label: `Có SĐT (${customers.filter((c) => !!c.phone).length})` },
-            ].map((tab) => (
+            ] as const).map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id)}
                 className={`px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${
                   activeTab === tab.id
                     ? 'bg-amber-400 text-stone-950 font-bold shadow-md'

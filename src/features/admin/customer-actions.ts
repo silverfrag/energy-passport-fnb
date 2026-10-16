@@ -1,9 +1,24 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { cookies } from 'next/headers'
-import { ADMIN_PASSKEY } from '@/lib/constants/admin'
+import { headers } from 'next/headers'
+import { clearAdminSession, requireOrderAdmin, setAdminSession } from '@/lib/orders/auth'
+import { sessionSecret, validPasskey } from '@/lib/orders/crypto'
+import { rateLimit } from '@/lib/orders/rate-limit'
+import { OrderError } from '@/lib/orders/errors'
+import { orderDatabase } from '@/lib/orders/db'
+import type { ConsumptionLog, Product, Profile } from '@/types'
+
+type CustomerProfileRow = Profile & { email?: string | null }
+type CustomerConsumptionRow = Pick<ConsumptionLog, 'user_id' | 'consumed_at' | 'caffeine_mg_snapshot'> & {
+  product: Pick<Product, 'name' | 'category'> | null
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  return error && typeof error === 'object' && 'message' in error && typeof error.message === 'string' && error.message
+    ? error.message
+    : fallback
+}
 
 export interface CustomerSummary {
   id: string
@@ -25,76 +40,7 @@ export interface CustomerSummary {
   }[]
 }
 
-// Fallback mock customers for barista preview if database is fresh
-const SAMPLE_CUSTOMERS: CustomerSummary[] = [
-  {
-    id: 'sample-1',
-    displayName: 'Nguyễn Quốc Anh',
-    email: 'quocanh.dev@gmail.com',
-    phone: '0908123456',
-    avatarUrl: null,
-    totalDrinks: 12,
-    sevenDayDrinks: 4,
-    loyaltyClaimed: 0,
-    currentCycleDrinks: 12,
-    qualifiesForReward: true,
-    lastVisitedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    recentDrinks: [
-      { productName: 'Cà Phê Sốt Biscoff', category: 'WAKE', caffeine: 120, consumedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() },
-      { productName: 'Cà Phê Caramel Kem Muối', category: 'WAKE', caffeine: 125, consumedAt: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString() },
-      { productName: 'Matcha Cookie Kem Dẻo', category: 'FOCUS', caffeine: 70, consumedAt: new Date(Date.now() - 50 * 60 * 60 * 1000).toISOString() },
-    ],
-  },
-  {
-    id: 'sample-2',
-    displayName: 'Trần Mai Linh',
-    email: 'mailinh.designer@work.vn',
-    phone: '0912345678',
-    avatarUrl: null,
-    totalDrinks: 8,
-    sevenDayDrinks: 3,
-    loyaltyClaimed: 0,
-    currentCycleDrinks: 8,
-    qualifiesForReward: false,
-    lastVisitedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-    recentDrinks: [
-      { productName: 'Trà Dưa Hấu Ổi Hồng', category: 'REFRESH', caffeine: 20, consumedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString() },
-      { productName: 'Coco Matcha', category: 'FOCUS', caffeine: 65, consumedAt: new Date(Date.now() - 28 * 60 * 60 * 1000).toISOString() },
-    ],
-  },
-  {
-    id: 'sample-3',
-    displayName: 'Lê Hoàng Nam (Khách Giao Hàng)',
-    email: null,
-    phone: '0987654321',
-    avatarUrl: null,
-    totalDrinks: 15,
-    sevenDayDrinks: 5,
-    loyaltyClaimed: 1,
-    currentCycleDrinks: 5,
-    qualifiesForReward: false,
-    lastVisitedAt: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString(),
-    recentDrinks: [
-      { productName: 'Cà Phê Sữa Tươi Sương Sáo', category: 'WAKE', caffeine: 110, consumedAt: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString() },
-    ],
-  },
-  {
-    id: 'sample-4',
-    displayName: 'Vũ Thu Thảo',
-    email: 'thuthao.vu@gmail.com',
-    phone: '0933998877',
-    avatarUrl: null,
-    totalDrinks: 10,
-    sevenDayDrinks: 2,
-    loyaltyClaimed: 0,
-    currentCycleDrinks: 10,
-    qualifiesForReward: true,
-    lastVisitedAt: new Date(Date.now() - 40 * 60 * 60 * 1000).toISOString(),
-    recentDrinks: [
-      { productName: 'Trà Vải Hoa Hồng', category: 'REFRESH', caffeine: 20, consumedAt: new Date(Date.now() - 40 * 60 * 60 * 1000).toISOString() },
-    ],
-  },
-]
+const EMPTY_CUSTOMERS: CustomerSummary[] = []
 
 export async function getCustomersData(): Promise<{
   customers: CustomerSummary[]
@@ -103,8 +49,9 @@ export async function getCustomersData(): Promise<{
   activeWeeklyCount: number
   withPhoneCount: number
 }> {
+  await requireOrderAdmin()
   try {
-    const supabase = await createClient()
+    const supabase = orderDatabase()
 
     // 1. Fetch profiles
     const { data: profiles, error: profileErr } = await supabase
@@ -114,11 +61,11 @@ export async function getCustomersData(): Promise<{
 
     if (profileErr || !profiles || profiles.length === 0) {
       return {
-        customers: SAMPLE_CUSTOMERS,
-        totalCustomers: SAMPLE_CUSTOMERS.length,
-        rewardEligibleCount: SAMPLE_CUSTOMERS.filter((c) => c.qualifiesForReward).length,
-        activeWeeklyCount: SAMPLE_CUSTOMERS.filter((c) => c.sevenDayDrinks > 0).length,
-        withPhoneCount: SAMPLE_CUSTOMERS.filter((c) => !!c.phone).length,
+        customers: EMPTY_CUSTOMERS,
+        totalCustomers: EMPTY_CUSTOMERS.length,
+        rewardEligibleCount: EMPTY_CUSTOMERS.filter((c) => c.qualifiesForReward).length,
+        activeWeeklyCount: EMPTY_CUSTOMERS.filter((c) => c.sevenDayDrinks > 0).length,
+        withPhoneCount: EMPTY_CUSTOMERS.filter((c) => !!c.phone).length,
       }
     }
 
@@ -129,12 +76,12 @@ export async function getCustomersData(): Promise<{
       .order('consumed_at', { ascending: false })
       .limit(500)
 
-    const logs = (logsRaw as any[]) || []
+    const logs = (logsRaw as CustomerConsumptionRow[] | null) || []
     const now = Date.now()
     const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000)
 
     // 3. Map logs by user_id
-    const logsByUser = new Map<string, any[]>()
+    const logsByUser = new Map<string, CustomerConsumptionRow[]>()
     for (const log of logs) {
       if (!log.user_id) continue
       const list = logsByUser.get(log.user_id) || []
@@ -143,7 +90,7 @@ export async function getCustomersData(): Promise<{
     }
 
     // 4. Combine into CustomerSummary
-    const customers: CustomerSummary[] = profiles.map((p: any) => {
+    const customers: CustomerSummary[] = (profiles as CustomerProfileRow[]).map((p) => {
       const userLogs = logsByUser.get(p.id) || []
       const totalDrinks = userLogs.length
       const sevenDayLogs = userLogs.filter((l) => new Date(l.consumed_at) >= sevenDaysAgo)
@@ -175,10 +122,7 @@ export async function getCustomersData(): Promise<{
       }
     })
 
-    // If database only has 1 or 2 users, blend with sample customers for barista testing
-    const finalCustomers = customers.length >= 3 
-      ? customers 
-      : [...customers, ...SAMPLE_CUSTOMERS.slice(0, 4 - customers.length)]
+    const finalCustomers = customers
 
     return {
       customers: finalCustomers,
@@ -190,11 +134,11 @@ export async function getCustomersData(): Promise<{
   } catch (err) {
     console.error('Error fetching customers:', err)
     return {
-      customers: SAMPLE_CUSTOMERS,
-      totalCustomers: SAMPLE_CUSTOMERS.length,
-      rewardEligibleCount: SAMPLE_CUSTOMERS.filter((c) => c.qualifiesForReward).length,
-      activeWeeklyCount: SAMPLE_CUSTOMERS.filter((c) => c.sevenDayDrinks > 0).length,
-      withPhoneCount: SAMPLE_CUSTOMERS.filter((c) => !!c.phone).length,
+      customers: EMPTY_CUSTOMERS,
+      totalCustomers: EMPTY_CUSTOMERS.length,
+      rewardEligibleCount: EMPTY_CUSTOMERS.filter((c) => c.qualifiesForReward).length,
+      activeWeeklyCount: EMPTY_CUSTOMERS.filter((c) => c.sevenDayDrinks > 0).length,
+      withPhoneCount: EMPTY_CUSTOMERS.filter((c) => !!c.phone).length,
     }
   }
 }
@@ -206,35 +150,38 @@ export async function recordManualDrink(
   userId: string,
   productSlug: string = 'ca-phe-sot-biscoff'
 ): Promise<{ success: boolean; message: string }> {
+  await requireOrderAdmin()
   try {
-    const supabase = await createClient()
+    const supabase = orderDatabase()
 
     // 1. Get product by slug
-    const { data: productRaw } = await supabase
+    const { data: productRaw, error: productError } = await supabase
       .from('products')
       .select('id, caffeine_mg, name')
       .eq('slug', productSlug)
       .maybeSingle()
 
-    const product = productRaw as any
-    const productId = product?.id || 'ca-phe-sot-biscoff'
-    const caffeine = product?.caffeine_mg ?? 120
+    if (productError || !productRaw) return { success: false, message: 'Chưa tìm thấy món trong cơ sở dữ liệu. Chưa ghi nhận ly nào.' }
+    const product = productRaw
+    const productId = product.id
+    const caffeine = product.caffeine_mg
 
     // 2. Insert into consumption_logs
-    await supabase.from('consumption_logs').insert({
+    const { error } = await supabase.from('consumption_logs').insert({
       user_id: userId,
       product_id: productId,
       caffeine_mg_snapshot: caffeine,
       source: 'manual',
       consumed_at: new Date().toISOString(),
-    } as any)
+    })
+    if (error) return { success: false, message: 'Chưa ghi nhận được ly vào cơ sở dữ liệu. Vui lòng kiểm tra hồ sơ khách.' }
 
     revalidatePath('/admin/customers')
     revalidatePath('/admin')
     revalidatePath('/passport')
     return { success: true, message: `Đã ghi nhận +1 ly cho khách hàng thành công!` }
-  } catch (err: any) {
-    return { success: false, message: err?.message || 'Có lỗi khi ghi nhận đồ uống.' }
+  } catch (err: unknown) {
+    return { success: false, message: getErrorMessage(err, 'Có lỗi khi ghi nhận đồ uống.') }
   }
 }
 
@@ -244,23 +191,32 @@ export async function recordManualDrink(
 export async function claimCustomerReward(
   userId: string
 ): Promise<{ success: boolean; message: string }> {
+  await requireOrderAdmin()
   try {
-    const supabase = await createClient()
+    const supabase = orderDatabase()
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('loyalty_drinks_claimed')
       .eq('id', userId)
       .maybeSingle()
 
-    const nextClaimed = ((profile as any)?.loyalty_drinks_claimed || 0) + 1
+    if (profileError || !profile) return { success: false, message: 'Không tìm thấy hồ sơ khách trong cơ sở dữ liệu.' }
+    const claimed = profile.loyalty_drinks_claimed || 0
+    const { count, error: countError } = await supabase.from('consumption_logs').select('id', { head: true, count: 'exact' }).eq('user_id', userId)
+    if (countError || (count || 0) - claimed * 10 < 10) return { success: false, message: 'Chưa đủ lượt hợp lệ để áp dụng ưu đãi.' }
+    const nextClaimed = claimed + 1
 
-    await (supabase.from('profiles') as any)
+    const { data: updated, error: updateError } = await supabase.from('profiles')
       .update({
         loyalty_drinks_claimed: nextClaimed,
         updated_at: new Date().toISOString(),
       })
       .eq('id', userId)
+      .eq('loyalty_drinks_claimed', claimed)
+      .select('id')
+      .maybeSingle()
+    if (updateError || !updated) return { success: false, message: 'Chưa lưu được ưu đãi hoặc hồ sơ vừa thay đổi. Vui lòng tải lại.' }
 
     revalidatePath('/admin/customers')
     revalidatePath('/admin')
@@ -269,8 +225,8 @@ export async function claimCustomerReward(
       success: true, 
       message: '✓ Đã kích hoạt ưu đãi tri ân thành công! Chu kỳ tích lũy đã được cập nhật.' 
     }
-  } catch (err: any) {
-    return { success: false, message: err?.message || 'Có lỗi khi áp dụng ưu đãi.' }
+  } catch (err: unknown) {
+    return { success: false, message: getErrorMessage(err, 'Có lỗi khi áp dụng ưu đãi.') }
   }
 }
 
@@ -281,67 +237,35 @@ export async function quickCreateCustomer(
   displayName: string,
   phone: string
 ): Promise<{ success: boolean; message: string }> {
+  await requireOrderAdmin()
   const cleanPhone = phone.trim().replace(/\s+/g, '')
   if (!cleanPhone || cleanPhone.length < 9) {
     return { success: false, message: 'Số điện thoại không hợp lệ (tối thiểu 9 số).' }
   }
 
-  try {
-    const supabase = await createClient()
-    const dummyId = `cust_${Date.now()}`
-
-    // Insert into profiles
-    const { error } = await supabase
-      .from('profiles')
-      .upsert({
-        id: dummyId,
-        display_name: displayName.trim() || `Khách ${cleanPhone.slice(-4)}`,
-        phone_number: cleanPhone,
-        loyalty_drinks_claimed: 0,
-        updated_at: new Date().toISOString(),
-      } as any)
-
-    if (error) {
-      console.warn('Could not insert dummy profile in auth-linked table:', error.message)
-    }
-
-    revalidatePath('/admin/customers')
-    return { success: true, message: `Đã lưu thông tin khách ${cleanPhone} thành công!` }
-  } catch (err: any) {
-    return { success: false, message: err?.message || 'Có lỗi khi tạo khách hàng.' }
-  }
+  void displayName
+  // profiles.id is a foreign key to auth.users; inventing a phone-based ID cannot create a valid profile.
+  return { success: false, message: 'Hồ sơ Passport cần được khách liên kết tài khoản trước. Thông tin khách đặt giao hàng được lưu riêng trong đơn hàng.' }
 }
 
-/**
- * Self-service Admin PIN authorization for Store Owner & Barista
- * PIN: 1212
- */
+/** Existing login form now uses the same secure session as order management. */
 export async function verifyAdminPasskey(
   passkey: string
 ): Promise<{ success: boolean; message: string }> {
-  const cleanPass = passkey.trim()
-  if (cleanPass !== ADMIN_PASSKEY) {
-    return { success: false, message: 'Mã PIN quản trị viên không chính xác.' }
-  }
-
   try {
-    // 1. Set persistent HTTP-only admin session cookie (guarantees instant access regardless of DB RLS)
-    const cookieStore = await cookies()
-    cookieStore.set('ep_admin_session', 'true', {
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-      path: '/',
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-    })
+    sessionSecret()
+    const headerList = await headers()
+    await rateLimit(process.env.VERCEL ? headerList.get('x-real-ip') || 'unknown' : 'local', 'admin-login', 5, 900)
+    if (typeof passkey !== 'string' || passkey.length > 256 || !validPasskey(passkey)) return { success: false, message: 'Mật khẩu quản trị không chính xác.' }
+    await setAdminSession()
 
     revalidatePath('/admin')
     revalidatePath('/admin/customers')
     revalidatePath('/admin/products')
     revalidatePath('/admin/actions')
     return { success: true, message: 'Xác thực thành công! Đang mở trang quản trị...' }
-  } catch (err: any) {
-    return { success: false, message: err?.message || 'Có lỗi khi xác thực mã PIN.' }
+  } catch (err: unknown) {
+    return { success: false, message: err instanceof OrderError ? err.message : 'Không thể đăng nhập quản trị. Vui lòng thử lại.' }
   }
 }
 
@@ -349,8 +273,6 @@ export async function verifyAdminPasskey(
  * Lock/Logout from admin session (clears cookie)
  */
 export async function logoutAdminPasskey(): Promise<void> {
-  const cookieStore = await cookies()
-  cookieStore.delete('ep_admin_session')
+  await clearAdminSession()
   revalidatePath('/admin')
 }
-

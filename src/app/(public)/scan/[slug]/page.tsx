@@ -4,7 +4,6 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import ScanConfirmClient from '@/features/scan/ScanConfirmClient'
 import Link from 'next/link'
-import CategoryBadge from '@/components/CategoryBadge'
 
 interface Props {
   params: Promise<{ slug: string }>

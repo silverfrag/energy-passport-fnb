@@ -30,8 +30,8 @@
   --color-muted: #9E9990;
   --color-dim: #666158;
 
-  --font-sans: var(--font-sans), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-serif: var(--font-serif), 'Playfair Display', Georgia, serif;
+  --font-sans: var(--font-jakarta), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-playfair), 'Playfair Display', Georgia, serif;
 }
 
 :root {
@@ -512,3 +512,46 @@ body {
   background: #3B352D;
 }
 
+
+/* Public storefront: takeaway and delivery. Admin retains its separate theme. */
+.takeaway-site {
+  --public-header-height: 72px;
+  --color-bg: #fffaf2;
+  --color-surface: #ffffff;
+  --color-surface-2: #f2e7d8;
+  --color-surface-elevated: #f7f1e8;
+  --color-text: #35251c;
+  --color-text-muted: #756457;
+  --color-text-dim: #867263;
+  --color-muted: #756457;
+  --color-border: #e8ddcf;
+  --color-border-subtle: #eee5da;
+  --color-border-bright: #c99f80;
+  --color-wake: #b94720;
+  --color-focus: #3e6948;
+  --color-refresh: #2b707c;
+  background: var(--color-bg);
+  color: var(--color-text);
+  color-scheme: light;
+}
+.takeaway-site :is(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid #b94720;
+  outline-offset: 3px;
+}
+.takeaway-site .btn-gold {
+  background: #b94720 !important;
+  color: #fff !important;
+  border-color: #b94720 !important;
+  box-shadow: none;
+}
+.takeaway-site .btn-gold:hover { background: #963716 !important; }
+.takeaway-site .btn-ghost { color: #493326; border-color: #d7c9b9; }
+.takeaway-site .btn-ghost:hover:not(:disabled) { background: #f2e7d8 !important; color: #35251c !important; border-color: #c99f80 !important; }
+.takeaway-site nav { scrollbar-width: thin; scrollbar-color: #c9b4a0 #fffaf2; }
+.takeaway-site ::-webkit-scrollbar { width: 5px; height: 4px; }
+.takeaway-site ::-webkit-scrollbar-track { background: #fffaf2; }
+.takeaway-site ::-webkit-scrollbar-thumb { background: #c9b4a0; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

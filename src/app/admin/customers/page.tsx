@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { getCustomersData } from '@/features/admin/customer-actions'
 import CustomerManagementClient from '@/features/admin/CustomerManagementClient'
+import { isOrderAdmin } from '@/lib/orders/auth'
+import AdminUnlockCard from '@/features/admin/AdminUnlockCard'
 
 export const metadata: Metadata = {
   title: 'Quản Lý Khách Quen & Ưu Đãi — Fame Drink Admin',
@@ -10,6 +12,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function AdminCustomersPage() {
+  if (!await isOrderAdmin()) return <AdminUnlockCard />
   const data = await getCustomersData()
 
   return (

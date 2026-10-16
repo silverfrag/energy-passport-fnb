@@ -1,190 +1,93 @@
-import { createClient } from '@/lib/supabase/server'
-import type { Product } from '@/types'
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import CategoryBadge from '@/components/CategoryBadge'
-import { getProductImage, DRINK_METADATA } from '@/lib/constants/drink-assets'
-import { 
-  IconScan, 
-  IconCompass, 
-  IconShield, 
-  IconClock, 
-  IconPassportCrest,
-  IconArrowRight 
-} from '@/components/icons'
+import AddToCartButton from '@/features/orders/AddToCartButton'
+import { getProductImage, getPublicProductCopy } from '@/lib/constants/drink-assets'
+import { findStandardProduct } from '@/lib/constants/products'
+import { getAdminProduct } from '@/lib/store/catalog-service'
+import type { Product } from '@/types'
 
 interface Props {
   params: Promise<{ slug: string }>
 }
 
-import { getAdminProduct } from '@/lib/store/catalog-service'
-import { findStandardProduct } from '@/lib/constants/products'
-
 async function getProduct(slug: string): Promise<Product | null> {
   try {
     const product = await getAdminProduct(slug)
-    if (product && product.active) return product
-  } catch { /* fallback */ }
-  return findStandardProduct(slug) ?? null
+    // An inactive catalog item must not be resurrected by the standard fallback.
+    return product?.active ? product : null
+  } catch {
+    const product = findStandardProduct(slug)
+    return product?.active ? product : null
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const product = await getProduct(slug)
-  if (!product) return { title: 'Không tìm thấy thức uống' }
+  if (!product) return { title: 'Không tìm thấy đồ uống' }
   return {
     title: `${product.name} — Fame Drink`,
-    description: product.short_description ?? product.description ?? '',
+    description: `${getPublicProductCopy(product).summary} Xem món tại Fame Drink, giao tận nơi.`,
   }
 }
 
 export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params
   const product = await getProduct(slug)
-
-  if (!product) {
-    notFound()
-  }
+  if (!product) notFound()
 
   const imageUrl = product.image_url || getProductImage(product.slug, product.category)
-  const meta = DRINK_METADATA[product.slug] || {
-    tastingNotes: ['Cân bằng hài hòa', 'Hậu vị ngọt thanh'],
-    origin: 'Nguyên liệu đặc sản tuyển chọn',
-    brewing: 'Chiết xuất thủ công chuẩn nhiệt độ',
-    bestTime: '08:00 - 16:00',
-    servingTemp: 'Đá viên tinh khiết',
-  }
+  const copy = getPublicProductCopy(product)
 
   return (
-    <div className="w-full fade-in pb-20">
-      {/* Product Hero Photography */}
-      <div className="relative aspect-square w-full max-w-[600px] mx-auto overflow-hidden bg-stone-950">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={imageUrl}
-          alt={product.name}
-          width={1024}
-          height={1024}
-          className="w-full h-full object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] via-black/20 to-black/50" />
-        
-        {/* Navigation overlay */}
-        <div className="absolute top-5 left-5 z-10">
-          <Link
-            href="/menu"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-xs font-semibold text-white hover:bg-black/90 transition-colors"
-          >
-            ← Quay lại Thực Đơn
-          </Link>
+    <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-5 sm:px-8 sm:pt-8">
+      <Link href="/menu" className="mb-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-[#756457] hover:text-[#b94720] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b94720]">
+        <span aria-hidden="true">←</span> Xem tất cả món
+      </Link>
+
+      <div className="grid items-start gap-7 md:grid-cols-2 md:gap-10 lg:gap-14">
+        <div className="overflow-hidden rounded-3xl border border-[#e8ddcf] bg-[#f7f1e8]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={imageUrl} alt={product.name} width={1254} height={1254} fetchPriority="high" className="aspect-square h-auto w-full object-contain" />
         </div>
 
-        {/* Floating Category Pill */}
-        <div className="absolute bottom-5 left-5 z-10 flex items-center gap-2">
-          <CategoryBadge category={product.category} showEmoji={false} />
-          <span className="text-[10px] font-mono tracking-wider uppercase text-amber-200/90 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-amber-400/30">
-            {meta.origin}
-          </span>
-        </div>
-      </div>
-
-      <div className="w-full mx-auto max-w-2xl px-4 sm:px-6 pt-6 space-y-6">
-        {/* Title and Price */}
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-white/10 pb-4">
+        <div className="space-y-6 md:pt-2">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white">
-              {product.name}
-            </h1>
-            {product.short_description && (
-              <p className="text-xs sm:text-sm text-stone-300 mt-1 leading-relaxed">
-                {product.short_description}
-              </p>
-            )}
-          </div>
-          {product.price && (
-            <span className="text-2xl font-black font-mono text-amber-300 flex-shrink-0">
-              {new Intl.NumberFormat('vi-VN').format(product.price)}₫
-            </span>
-          )}
-        </div>
-
-        {/* Tasting Notes Highlight */}
-        <div className="p-4 rounded-xl bg-surface border border-white/10 space-y-2">
-          <p className="text-[10px] uppercase tracking-wider text-muted font-mono">
-            Hương Vị Ghi Nhận (Tasting Notes)
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {meta.tastingNotes.map((note) => (
-              <span
-                key={note}
-                className="px-3 py-1 rounded-full text-xs font-medium bg-amber-400/10 text-amber-200 border border-amber-400/20"
-              >
-                {note}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Technical Specs Grid */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="p-3.5 rounded-xl bg-surface border border-white/10">
-            <p className="text-[10px] uppercase tracking-wider text-muted font-mono">
-              Hàm Lượng Caffeine
+            <CategoryBadge category={product.category} />
+            <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-[#35251c] sm:text-4xl">{product.name}</h1>
+            <p className="mt-3 text-2xl font-extrabold tracking-tight text-[#b94720]">
+              {product.price !== null ? `${new Intl.NumberFormat('vi-VN').format(product.price)}₫` : 'Liên hệ để biết giá'}
             </p>
-            <p className="text-lg font-black text-white font-mono mt-0.5">
-              {product.caffeine_mg !== null ? `~${product.caffeine_mg} mg` : 'Không đáng kể'}
-            </p>
-            <p className="text-[10px] text-stone-400 mt-1">Đo lường trên mẻ pha</p>
+            <p className="mt-4 text-base leading-relaxed text-[#756457]">{copy.description}</p>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-surface border border-white/10">
-            <p className="text-[10px] uppercase tracking-wider text-muted font-mono">
-              Thời Điểm Khuyên Dùng
+          <div className="flex flex-wrap gap-2" aria-label="Hương vị">
+            {copy.tastingNotes.map((note) => <span key={note} className="rounded-full border border-[#e5d7c7] bg-[#f7efe4] px-3 py-1.5 text-xs font-medium text-[#71533e]">{note}</span>)}
+          </div>
+
+          <section className="rounded-2xl border border-[#e8ddcf] bg-white p-5 sm:p-6" aria-labelledby="nhan-mon-heading">
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#a4522c]">Chọn món · Nhận món · Thưởng thức</p>
+            <h2 id="nhan-mon-heading" className="text-lg font-bold text-[#35251c]">Giao tận địa chỉ của bạn</h2>
+            <p className="mt-2 text-sm leading-relaxed text-[#756457]">
+              Thêm món vào giỏ, nhập địa chỉ giao hàng và gửi đơn cho Fame. Bạn có thể ghi yêu cầu riêng khi đặt món.
             </p>
-            <p className="text-lg font-black text-white font-mono mt-0.5">
-              {meta.bestTime}
-            </p>
-            <p className="text-[10px] text-stone-400 mt-1">{meta.servingTemp}</p>
+            <div className="mt-5">
+              <AddToCartButton product={product} />
+            </div>
+            <Link href="/checkout" className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-[#d7c9b9] px-5 py-2.5 text-sm font-bold text-[#493326] transition-colors hover:border-[#b94720] hover:text-[#b94720] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b94720]">
+              Xem giỏ hàng <span aria-hidden="true">→</span>
+            </Link>
+          </section>
+
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#e8ddcf] pt-5">
+            <p className="text-xs text-[#756457]">Đã có Passport của bạn?</p>
+            <Link href="/passport" className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#71533e] hover:text-[#b94720] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b94720]">
+              Xem Passport <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </div>
-
-        {/* Brewing Story */}
-        <div className="space-y-2">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-white font-mono">
-            Quy Cách Chiết Xuất & Nguồn Gốc
-          </h2>
-          <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
-            {product.description || product.short_description}
-          </p>
-          <div className="flex items-center gap-2 text-xs text-amber-300/80 pt-1">
-            <IconShield className="w-4 h-4 text-amber-400" color="#D4AF37" />
-            <span>{meta.brewing}</span>
-          </div>
-        </div>
-
-        {/* QR Scan Action / Bind to Passport */}
-        <div className="pt-4 border-t border-white/10 space-y-3">
-          <Link
-            href={`/scan/${product.slug}`}
-            className="btn btn-gold btn-full flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider py-3.5 shadow-2xl"
-          >
-            <IconScan className="w-4 h-4" />
-            <span>Quét Mã Trên Ly & Xác Nhận Vào Passport</span>
-          </Link>
-
-          <Link
-            href="/check-in"
-            className="btn btn-ghost btn-full text-xs font-semibold uppercase tracking-wider text-stone-400 hover:text-white border border-white/10 flex items-center justify-center gap-2 py-3"
-          >
-            <IconCompass className="w-3.5 h-3.5" />
-            <span>Check-in Nhận Đề Xuất Phù Hợp Trạng Thái</span>
-          </Link>
-        </div>
-
-        <p className="text-[11px] text-muted text-center pt-2 font-mono">
-          Thông tin caffeine được chuẩn hóa theo mẻ chiết xuất thủ công của Barista.
-        </p>
       </div>
     </div>
   )

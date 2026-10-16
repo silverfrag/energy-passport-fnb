@@ -1,102 +1,43 @@
 import Header from '@/components/Header'
 import Link from 'next/link'
-import { IconPassportCrest, IconShield, IconClock } from '@/components/icons'
 import FameDrinkLogo from '@/components/FameDrinkLogo'
+import CartProvider from '@/features/orders/CartProvider'
+import { FAME_FACEBOOK_URL } from '@/lib/constants/business'
 
-export default function PublicLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-dvh flex flex-col w-full" style={{ background: 'var(--color-bg)' }}>
-      <Header />
-      <main className="flex-1 w-full">{children}</main>
-      
-      {/* Luxury F&B Editorial Footer */}
-      <footer
-        className="w-full mt-20 border-t border-white/10"
-        style={{
-          background: 'linear-gradient(180deg, rgba(13,12,10,0.8) 0%, rgba(8,7,6,0.98) 100%)',
-        }}
-      >
-        <div className="w-full mx-auto max-w-6xl px-4 sm:px-8 pt-14 pb-10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-            {/* Atelier Crest & Mission */}
-            <div className="md:col-span-2 space-y-3">
-              <FameDrinkLogo size="lg" variant="full" showLink={true} />
-              <p className="text-xs text-muted leading-relaxed max-w-md">
-                Fame Drink định nghĩa lại trải nghiệm đồ uống thường nhật: kết hợp hương vị cà phê & trà thủ công tuyển chọn cùng khoa học nhịp sinh học Energy Passport. Mỗi ly nước là một nguồn năng lượng chính xác — WAKE, FOCUS hay REFRESH.
-              </p>
-              <div className="flex items-center gap-2 pt-2 text-[11px] text-amber-400/80">
-                <IconShield className="w-4 h-4 text-amber-400" color="#D4AF37" />
-                <span>100% Cà phê Arabica Cầu Đất & Matcha Ceremonial Uji nhập khẩu</span>
-              </div>
+    <CartProvider>
+      <div className="takeaway-site flex min-h-dvh w-full flex-col">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[100] focus:rounded-full focus:bg-[#35251c] focus:px-5 focus:py-3 focus:text-white">Đến nội dung chính</a>
+        <Header />
+        <main id="main-content" className="w-full flex-1">{children}</main>
+        <footer className="mt-8 border-t border-[#e8ddcf] bg-[#f2e7d8]">
+          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-8 md:grid-cols-[1.5fr_1fr_1fr]">
+            <div>
+              <FameDrinkLogo size="lg" showLink />
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-[#756457]">Cà phê, matcha và trà trái cây cho ngày của bạn. Chọn món online, Fame tiếp nhận và xác nhận đơn giao tận nơi.</p>
+              <p className="mt-3 text-xs text-[#756457]">Fame chỉ nhận đơn giao hàng, không nhận tại quầy.</p>
             </div>
-
-            {/* Atelier Hours & Locations */}
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-                Flagship Atelier
-              </h4>
-              <p className="text-xs text-muted leading-relaxed">
-                1C Đỗ Thúc Tịnh, TP. Đà Nẵng
-              </p>
-              <div className="flex items-center gap-1.5 text-xs text-white/80 pt-1">
-                <IconClock className="w-3.5 h-3.5 text-wake" color="var(--color-wake)" />
-                <span>07:00 — 22:00 (Mỗi ngày)</span>
-              </div>
-              <p className="text-[11px] text-muted pt-1">
-                Hotline Barista: 1900 8826
-              </p>
-            </div>
-
-            {/* Quick Navigation */}
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-                Trải Nghiệm
-              </h4>
-              <ul className="space-y-1.5 text-xs text-muted">
-                <li>
-                  <Link href="/check-in" className="hover:text-wake transition-colors">
-                    Check-in Cảm Xúc & Nhu Cầu
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/menu" className="hover:text-focus transition-colors">
-                    Thực Đơn Tinh Hoa (Menu)
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/passport" className="hover:text-amber-400 transition-colors">
-                    Sổ Ký Danh Energy Passport
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/packaging" className="hover:text-amber-400 transition-colors">
-                    Bao Bì & Tem QR Take-away
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/auth" className="hover:text-white transition-colors">
-                    Liên Kết Thẻ Thành Viên
-                  </Link>
-                </li>
+            <div>
+              <p className="mb-3 text-sm font-extrabold">Chọn món cùng Fame</p>
+              <ul className="space-y-1 text-sm text-[#756457]">
+                <li><Link href="/menu" className="inline-block py-2 hover:text-[#b94720]">Menu đồ uống</Link></li>
+                <li><Link href="/checkout" className="inline-block py-2 hover:text-[#b94720]">Giỏ hàng của bạn</Link></li>
+                <li><Link href="/passport" className="inline-block py-2 hover:text-[#b94720]">Passport · Nhật ký đồ uống</Link></li>
               </ul>
             </div>
+            <div>
+              <p className="mb-3 text-sm font-extrabold">Liên hệ & đặt món</p>
+              <a href={FAME_FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#c9b4a0] bg-[#fffaf2] px-4 text-sm font-bold hover:border-[#b94720] hover:text-[#b94720]">Fanpage Fame Drink <span aria-hidden="true">↗</span></a>
+              <p className="mt-3 text-xs leading-relaxed text-[#756457]">Cũng có trên GrabFood và ShopeeFood. Nhắn fanpage để nhận đúng liên kết cửa hàng.</p>
+            </div>
           </div>
-
-          {/* Bottom Bar with Gold Filigree */}
-          <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-muted">
-            <p>
-              Thông tin caffeine được chuẩn hóa theo mẻ chiết xuất thủ công.
-            </p>
-            <p className="tracking-wider uppercase font-mono text-[10px]">
-              © 2026 FAME DRINK • ENERGY PASSPORT ATELIER • ALL RIGHTS RESERVED
-            </p>
+          <div className="mx-auto flex max-w-6xl flex-col justify-between gap-2 border-t border-[#dfd0be] px-4 py-5 text-xs text-[#756457] sm:flex-row sm:px-8">
+            <p>© 2026 Fame Drink</p>
+            <p>Bản demo đặt món · Phí giao 0₫ · Xác nhận chuyển khoản thủ công</p>
           </div>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
+    </CartProvider>
   )
 }

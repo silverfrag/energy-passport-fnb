@@ -1,32 +1,25 @@
 import type { Metadata } from 'next'
-import { createClient } from '@/lib/supabase/server'
+import { getAdminProductsList } from '@/lib/store/catalog-service'
 import { STANDARD_PRODUCTS } from '@/lib/constants/products'
 import type { Product } from '@/types'
 import PackagingClient from '@/features/packaging/PackagingClient'
 import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
-  title: 'Bao Bì & Mã QR Take-away — Energy Passport',
-  description: 'Thiết kế bao bì chuyên biệt cho bán mang đi và giao hàng ship (Grab/ShopeeFood), tích hợp mã QR thông minh nạp dữ liệu Energy Passport.',
+  title: 'Công cụ tạo tem QR — Dành cho nhân viên',
+  description: 'Tạo mã QR theo món để khách tự ghi nhận ly đồ uống trong Passport.',
+  robots: { index: false, follow: false },
 }
 
 async function getProducts(): Promise<Product[]> {
   try {
-    const supabase = await createClient()
-    const { data } = await supabase
-      .from('products')
-      .select('*')
-      .eq('active', true)
-      .order('sort_order', { ascending: true })
-
-    if (data && data.length > 0) {
-      return data as Product[]
-    }
+    const { products } = await getAdminProductsList()
+    return products.filter((product) => product.active)
   } catch {
     // fallback
   }
 
-  return STANDARD_PRODUCTS
+  return STANDARD_PRODUCTS.filter((product) => product.active)
 }
 
 export default async function PackagingPage() {

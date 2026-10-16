@@ -1,6 +1,2 @@
-/**
- * FAME DRINK — Store Management Access
- * Access is purely authenticated via Store PIN passkey (1212)
- * to avoid duplicate or conflicting user session states.
- */
-export const ADMIN_PASSKEY = '1212'
+/** Public UI constants only. Credentials must never be imported into a client bundle. */
+export const ADMIN_SESSION_HOURS = 8

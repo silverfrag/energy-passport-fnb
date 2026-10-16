@@ -1,7 +1,6 @@
 'use client'
 
 import { useActionState } from 'react'
-import { useRouter } from 'next/navigation'
 import type { Product, DrinkCategory } from '@/types'
 
 interface Props {

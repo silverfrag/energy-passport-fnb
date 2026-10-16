@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Product, MicroAction } from '@/types'
 import { STANDARD_PRODUCTS } from '@/lib/constants/products'
 import { STANDARD_ACTIONS } from '@/lib/constants/actions'
+import { orderDatabase } from '@/lib/orders/db'
 
 const PRODUCTS_FILE = path.join(process.cwd(), 'src', 'data', 'products-store.json')
 const ACTIONS_FILE = path.join(process.cwd(), 'src', 'data', 'actions-store.json')
@@ -11,6 +12,8 @@ const ACTIONS_FILE = path.join(process.cwd(), 'src', 'data', 'actions-store.json
 // In-memory fallback if filesystem is read-only
 let memoryProducts: Product[] | null = null
 let memoryActions: MicroAction[] | null = null
+const CATALOG_WRITE_ERROR = 'Chưa lưu được vào cơ sở dữ liệu. Kiểm tra cấu hình máy chủ và bảng danh mục; thay đổi chưa được áp dụng.'
+const identifierColumn = (value: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value) ? 'id' : 'slug'
 
 // Helper to read local JSON file safely
 function readLocalProducts(): Product[] {
@@ -108,7 +111,7 @@ export async function getAdminProduct(idOrSlug: string): Promise<Product | null>
     const { data } = await supabase
       .from('products')
       .select('*')
-      .or(`slug.eq.${idOrSlug},id.eq.${idOrSlug}`)
+      .eq(identifierColumn(idOrSlug), idOrSlug)
       .maybeSingle()
 
     if (data) return data as Product
@@ -150,18 +153,10 @@ export async function saveAdminProduct(
     updated_at: new Date().toISOString(),
   }
 
-  if (existingIdx >= 0) {
-    local[existingIdx] = updatedProduct
-  } else {
-    local.push(updatedProduct)
-  }
-  writeLocalProducts(local)
-
-  // Try to upsert into Supabase if table exists
+  // Persist first. A serverless in-memory/local write cannot count as a successful catalog update.
   try {
-    const supabase = await createClient()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from('products') as any).upsert(
+    const supabase = orderDatabase()
+    const { data, error } = await supabase.from('products').upsert(
       {
         slug: updatedProduct.slug,
         name: updatedProduct.name,
@@ -176,18 +171,27 @@ export async function saveAdminProduct(
         sort_order: updatedProduct.sort_order,
       },
       { onConflict: 'slug' }
-    )
-  } catch (err) {
-    console.warn('[catalog-service] Supabase upsert skipped (table may not exist yet):', err)
+    ).select('*').single()
+    if (error || !data) return { success: false, error: CATALOG_WRITE_ERROR }
+    if (existingIdx >= 0) local[existingIdx] = data as Product
+    else local.push(data as Product)
+    writeLocalProducts(local)
+    return { success: true, product: data as Product }
+  } catch {
+    return { success: false, error: CATALOG_WRITE_ERROR }
   }
-
-  return { success: true, product: updatedProduct }
 }
 
 export async function deleteOrToggleAdminProduct(
   idOrSlug: string,
   newActiveState?: boolean
 ): Promise<{ success: boolean; error?: string }> {
+  try {
+    const supabase = orderDatabase()
+    const query = newActiveState !== undefined ? supabase.from('products').update({ active: newActiveState }) : supabase.from('products').delete()
+    const { data, error } = await query.eq(identifierColumn(idOrSlug), idOrSlug).select('id')
+    if (error || !data?.length) return { success: false, error: CATALOG_WRITE_ERROR }
+  } catch { return { success: false, error: CATALOG_WRITE_ERROR } }
   const local = readLocalProducts()
   const idx = local.findIndex((p) => p.slug === idOrSlug || p.id === idOrSlug)
 
@@ -201,24 +205,6 @@ export async function deleteOrToggleAdminProduct(
     writeLocalProducts(local)
   }
 
-  // Try Supabase
-  try {
-    const supabase = await createClient()
-    if (newActiveState !== undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase.from('products') as any)
-        .update({ active: newActiveState })
-        .or(`slug.eq.${idOrSlug},id.eq.${idOrSlug}`)
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase.from('products') as any)
-        .delete()
-        .or(`slug.eq.${idOrSlug},id.eq.${idOrSlug}`)
-    }
-  } catch {
-    // ignore if table doesn't exist
-  }
-
   return { success: true }
 }
 
@@ -228,7 +214,7 @@ export async function syncProductsToSupabase(): Promise<{
   error?: string
 }> {
   try {
-    const supabase = await createClient()
+    const supabase = orderDatabase()
     const products = readLocalProducts()
 
     const payloads = products.map((p) => ({
@@ -251,12 +237,12 @@ export async function syncProductsToSupabase(): Promise<{
     })
 
     if (error) {
-      return { success: false, count: 0, error: error.message }
+      return { success: false, count: 0, error: CATALOG_WRITE_ERROR }
     }
 
     return { success: true, count: payloads.length }
-  } catch (err: any) {
-    return { success: false, count: 0, error: err?.message || 'Không thể kết nối Supabase' }
+  } catch {
+    return { success: false, count: 0, error: CATALOG_WRITE_ERROR }
   }
 }
 
@@ -293,7 +279,7 @@ export async function getAdminAction(idOrSlug: string): Promise<MicroAction | nu
     const { data } = await supabase
       .from('micro_actions')
       .select('*')
-      .or(`slug.eq.${idOrSlug},id.eq.${idOrSlug}`)
+      .eq(identifierColumn(idOrSlug), idOrSlug)
       .maybeSingle()
 
     if (data) return data as MicroAction
@@ -331,18 +317,10 @@ export async function saveAdminAction(
     updated_at: new Date().toISOString(),
   }
 
-  if (existingIdx >= 0) {
-    local[existingIdx] = updatedAction
-  } else {
-    local.push(updatedAction)
-  }
-  writeLocalActions(local)
-
-  // Try Supabase upsert
+  // Persist first, using a server-only credential after the server-action authorization guard.
   try {
-    const supabase = await createClient()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from('micro_actions') as any).upsert(
+    const supabase = orderDatabase()
+    const { data, error } = await supabase.from('micro_actions').upsert(
       {
         slug: updatedAction.slug,
         category: updatedAction.category,
@@ -353,18 +331,27 @@ export async function saveAdminAction(
         active: updatedAction.active,
       },
       { onConflict: 'slug' }
-    )
-  } catch (err) {
-    console.warn('[catalog-service] Supabase upsert skipped for action:', err)
+    ).select('*').single()
+    if (error || !data) return { success: false, error: CATALOG_WRITE_ERROR }
+    if (existingIdx >= 0) local[existingIdx] = data as MicroAction
+    else local.push(data as MicroAction)
+    writeLocalActions(local)
+    return { success: true, action: data as MicroAction }
+  } catch {
+    return { success: false, error: CATALOG_WRITE_ERROR }
   }
-
-  return { success: true, action: updatedAction }
 }
 
 export async function deleteOrToggleAdminAction(
   idOrSlug: string,
   newActiveState?: boolean
 ): Promise<{ success: boolean; error?: string }> {
+  try {
+    const supabase = orderDatabase()
+    const query = newActiveState !== undefined ? supabase.from('micro_actions').update({ active: newActiveState }) : supabase.from('micro_actions').delete()
+    const { data, error } = await query.eq(identifierColumn(idOrSlug), idOrSlug).select('id')
+    if (error || !data?.length) return { success: false, error: CATALOG_WRITE_ERROR }
+  } catch { return { success: false, error: CATALOG_WRITE_ERROR } }
   const local = readLocalActions()
   const idx = local.findIndex((a) => a.slug === idOrSlug || a.id === idOrSlug)
 
@@ -378,24 +365,6 @@ export async function deleteOrToggleAdminAction(
     writeLocalActions(local)
   }
 
-  // Try Supabase
-  try {
-    const supabase = await createClient()
-    if (newActiveState !== undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase.from('micro_actions') as any)
-        .update({ active: newActiveState })
-        .or(`slug.eq.${idOrSlug},id.eq.${idOrSlug}`)
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase.from('micro_actions') as any)
-        .delete()
-        .or(`slug.eq.${idOrSlug},id.eq.${idOrSlug}`)
-    }
-  } catch {
-    // ignore
-  }
-
   return { success: true }
 }
 
@@ -405,7 +374,7 @@ export async function syncActionsToSupabase(): Promise<{
   error?: string
 }> {
   try {
-    const supabase = await createClient()
+    const supabase = orderDatabase()
     const actions = readLocalActions()
 
     const payloads = actions.map((a) => ({
@@ -424,11 +393,11 @@ export async function syncActionsToSupabase(): Promise<{
     })
 
     if (error) {
-      return { success: false, count: 0, error: error.message }
+      return { success: false, count: 0, error: CATALOG_WRITE_ERROR }
     }
 
     return { success: true, count: payloads.length }
-  } catch (err: any) {
-    return { success: false, count: 0, error: err?.message || 'Không thể kết nối Supabase' }
+  } catch {
+    return { success: false, count: 0, error: CATALOG_WRITE_ERROR }
   }
 }

@@ -18,7 +18,7 @@ export function safeEqual(a: string, b: string): boolean {
 }
 export function validPasskey(value: string): boolean {
   const passkey = process.env.ADMIN_PASSKEY
-  if (!passkey || passkey.length < 12) throw new OrderError(503, 'ADMIN_NOT_CONFIGURED', 'Chưa cấu hình mật khẩu quản trị đủ mạnh trên máy chủ.')
+  if (!passkey || passkey.length > 256 || (passkey.length < 12 && !/^\d{4}$/.test(passkey))) throw new OrderError(503, 'ADMIN_NOT_CONFIGURED', 'Chưa cấu hình mật khẩu hoặc PIN quản trị hợp lệ trên máy chủ.')
   return safeEqual(hash(value), hash(passkey))
 }
 export function createAdminSession(now = Date.now()): string {

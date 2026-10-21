@@ -125,8 +125,11 @@ test('missing/weak admin configuration fails closed', () => {
   delete process.env.ADMIN_SESSION_SECRET
   assert.throws(() => crypto.createAdminSession(), /Chưa cấu hình/)
   process.env.ADMIN_SESSION_SECRET = secret
-  process.env.ADMIN_PASSKEY = '1212'
-  assert.throws(() => crypto.validPasskey('1212'), /Chưa cấu hình/)
+  for (const passkey of [undefined, '', '123', '12345', 'short-pass', 'x'.repeat(257)]) {
+    if (passkey === undefined) delete process.env.ADMIN_PASSKEY
+    else process.env.ADMIN_PASSKEY = passkey
+    assert.throws(() => crypto.validPasskey('anything'), /Chưa cấu hình/)
+  }
 })
 
 test('only admin confirmation transitions awaiting/review into paid+confirmed', () => {
@@ -203,4 +206,22 @@ test('legacy catalog writes fail visibly without durable storage and never mutat
   assert.equal((await catalog.deleteOrToggleAdminAction('test-no-write', false)).success, false)
   assert.equal(fs.readFileSync(productFile, 'utf8'), beforeProducts)
   assert.equal(fs.readFileSync(actionFile, 'utf8'), beforeActions)
+})
+
+
+test('explicit configured demo PIN uses exact match and has no fallback', () => {
+  const previousPasskey = process.env.ADMIN_PASSKEY
+  try {
+    process.env.ADMIN_PASSKEY = '0482'
+    assert.equal(crypto.validPasskey('0482'), true)
+    assert.equal(crypto.validPasskey('482'), false)
+    assert.equal(crypto.validPasskey('0483'), false)
+    assert.equal(crypto.validPasskey(' 0482'), false)
+    process.env.ADMIN_PASSKEY = 'another-test-only-long-password'
+    assert.equal(crypto.validPasskey('0482'), false)
+    assert.equal(crypto.validPasskey('another-test-only-long-password'), true)
+  } finally {
+    if (previousPasskey === undefined) delete process.env.ADMIN_PASSKEY
+    else process.env.ADMIN_PASSKEY = previousPasskey
+  }
 })

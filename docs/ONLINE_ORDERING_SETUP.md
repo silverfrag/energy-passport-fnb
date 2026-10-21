@@ -7,7 +7,7 @@ Bản demo nhận **giao hàng**, phí giao hàng **0đ**. Máy chủ tính ti�
 - `NEXT_PUBLIC_SUPABASE_URL`: URL dự án Supabase.
 - `SUPABASE_SECRET_KEY`: secret key phía máy chủ. Có thể dùng `SUPABASE_SERVICE_ROLE_KEY` nếu dự án dùng khóa legacy; chỉ cần một trong hai.
 - `ADMIN_SESSION_SECRET`: chuỗi ngẫu nhiên ít nhất 32 ký tự để ký phiên quản trị và mã truy cập đơn. Giữ ổn định giữa các lần deploy để liên kết đơn còn sử dụng được; thay giá trị sẽ vô hiệu hóa các phiên và mã cũ.
-- `ADMIN_PASSKEY`: mật khẩu quản trị ít nhất 12 ký tự. Không có mật khẩu mặc định hoặc PIN công khai.
+- `ADMIN_PASSKEY`: mật khẩu quản trị ít nhất 12 ký tự, hoặc PIN demo đúng 4 chữ số do chủ quán cấu hình rõ ràng. Không có mật khẩu/PIN mặc định hoặc fallback trong mã nguồn. PIN được giữ dạng chuỗi để không mất số 0 đầu; production nhận đơn thật nên dùng mật khẩu dài.
 
 Hai khóa bí mật và mật khẩu phải lưu trong cấu hình máy chủ, không đặt tên `NEXT_PUBLIC_*`, không commit vào Git. Cấu hình riêng từng môi trường preview/production theo đúng dự án Supabase của môi trường đó.
 

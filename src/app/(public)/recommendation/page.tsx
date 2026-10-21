@@ -7,8 +7,9 @@ import RecommendationClient from '@/features/recommendation/RecommendationClient
 import { STANDARD_PRODUCTS } from '@/lib/constants/products'
 
 export const metadata: Metadata = {
-  title: 'Gợi ý đồ uống — Fame Drink',
+  title: 'Gợi ý đồ uống',
   description: 'Một gợi ý từ nhóm đồ uống bạn yêu thích tại Fame Drink.',
+  robots: { index: false, follow: false },
 }
 
 import { getAdminProductsList, getAdminActionsList } from '@/lib/store/catalog-service'

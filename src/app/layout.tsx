@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google'
+import { Barlow_Condensed, Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
+
+const display = Barlow_Condensed({ subsets: ['latin', 'vietnamese'], weight: ['700', '800'], variable: '--font-display', display: 'swap' })
 
 const playfair = Playfair_Display({
   subsets: ['latin', 'vietnamese'],
@@ -34,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="vi" className={`${playfair.variable} ${jakarta.variable}`}>
+    <html lang="vi" className={`${playfair.variable} ${jakarta.variable} ${display.variable}`}>
       <body className="font-sans antialiased">{children}</body>
     </html>
   )

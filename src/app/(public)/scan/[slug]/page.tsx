@@ -28,8 +28,8 @@ async function getProduct(slug: string): Promise<{ product: Product | null; inac
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const { product } = await getProduct(slug)
-  if (!product) return { title: 'Sản phẩm không tồn tại' }
-  return { title: `Xác nhận: ${product.name}` }
+  if (!product) return { title: 'Sản phẩm không tồn tại', robots: { index: false, follow: false } }
+  return { title: `Xác nhận: ${product.name}`, robots: { index: false, follow: false } }
 }
 
 export default async function ScanPage({ params }: Props) {

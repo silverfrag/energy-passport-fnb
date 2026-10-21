@@ -8,6 +8,7 @@ import { MAX_ORDER_TOTAL, validOrderId } from './validation'
 import { planAdminUpdate } from './state'
 import type { AdminOrderAction, BankAccount, CreateOrderInput, Order, OrderItem, OrderRecord, PaymentSettings } from './types'
 import { STANDARD_PRODUCTS } from '@/lib/constants/products'
+import { DEFAULT_SIZE, getSizePrice } from '@/lib/constants/product-sizes'
 
 const SETTINGS_ID = 'primary'
 type SettingsRecord = { id: string; enabled: boolean; bank_bin: string; bank_name: string; account_number: string; account_name: string; delivery_fee: number | null; version: number }
@@ -37,7 +38,7 @@ export function publicOrder(row: OrderRecord): Order {
     : null
   return { id: row.id, code: row.code, fulfillment: row.fulfillment,
     customer: { name: row.customer_name, phone: row.customer_phone, address: row.customer_address },
-    note: row.note, items: row.items, subtotal: row.subtotal, deliveryFee: row.delivery_fee, total: row.total,
+    note: row.note, items: row.items.map(item => ({ ...item, size: item.size ?? DEFAULT_SIZE })), subtotal: row.subtotal, deliveryFee: row.delivery_fee, total: row.total,
     paymentStatus: row.payment_status, fulfillmentStatus: row.fulfillment_status,
     version: row.version, createdAt: row.created_at, updatedAt: row.updated_at, paidAt: row.paid_at, payment }
 }
@@ -83,11 +84,13 @@ export async function createOrder(input: CreateOrderInput): Promise<{ order: Ord
   const resolvedIds = new Set<string>()
   const items: OrderItem[] = input.items.map(item => {
     const product = products.find(p => p.id === item.productId || p.slug === item.productId)
-    if (!product || product.price === null || !Number.isSafeInteger(Number(product.price)) || Number(product.price) <= 0 || Number(product.price) > MAX_ORDER_TOTAL) throw new OrderError(409, 'ITEM_UNAVAILABLE', 'Một món trong giỏ hiện không nhận đặt hoặc chưa có giá hợp lệ. Vui lòng chọn lại từ menu.')
-    if (resolvedIds.has(product.id)) throw new OrderError(400, 'DUPLICATE_PRODUCT', 'Một món xuất hiện nhiều lần trong giỏ.')
-    resolvedIds.add(product.id)
-    const price = Number(product.price)
-    return { productId: product.id, slug: product.slug, name: product.name, unitPrice: price, quantity: item.quantity, lineTotal: price * item.quantity }
+    const size = item.size ?? DEFAULT_SIZE
+    const price = product ? getSizePrice(product.price === null ? null : Number(product.price), size) : null
+    if (!product || price === null) throw new OrderError(409, 'ITEM_UNAVAILABLE', 'Một món trong giỏ hiện không nhận đặt hoặc chưa có giá hợp lệ. Vui lòng chọn lại từ menu.')
+    const key = `${product.id}:${size}`
+    if (resolvedIds.has(key)) throw new OrderError(400, 'DUPLICATE_PRODUCT', 'Một món cùng kích cỡ xuất hiện nhiều lần trong giỏ.')
+    resolvedIds.add(key)
+    return { productId: product.id, slug: product.slug, name: product.name, size, unitPrice: price, quantity: item.quantity, lineTotal: price * item.quantity }
   })
   const subtotal = items.reduce((sum, item) => sum + item.lineTotal, 0)
   const deliveryFee = 0

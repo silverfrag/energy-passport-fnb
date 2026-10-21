@@ -1,5 +1,6 @@
 import type { CreateOrderInput, PaymentSettings } from './types'
 import { OrderError } from './errors'
+import { DEFAULT_SIZE, isProductSize } from '@/lib/constants/product-sizes'
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 export const MAX_ORDER_TOTAL = 10_000_000
@@ -32,11 +33,14 @@ export function parseCreateOrder(value: unknown): CreateOrderInput {
   const items = value.items.map((item: unknown) => {
     if (!isRecord(item)) invalid('Món trong giỏ hàng chưa hợp lệ.')
     const productId = text(item.productId, 100)
-    if (!/^[a-zA-Z0-9_-]+$/.test(productId) || seen.has(productId)) invalid('Danh sách món bị trùng hoặc không hợp lệ.')
+    const size = item.size === undefined ? DEFAULT_SIZE : item.size
+    if (!isProductSize(size)) invalid('Kích cỡ món chưa hợp lệ.')
+    const key = `${productId}:${size}`
+    if (!/^[a-zA-Z0-9_-]+$/.test(productId) || seen.has(key)) invalid('Danh sách món bị trùng hoặc không hợp lệ.')
     if (typeof item.quantity !== 'number' || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 20) invalid('Số lượng mỗi món phải từ 1 đến 20 ly.')
-    seen.add(productId)
+    seen.add(key)
     count += item.quantity
-    return { productId, quantity: item.quantity }
+    return { productId, quantity: item.quantity, ...(item.size === undefined ? {} : { size }) }
   })
   if (count > 50) invalid('Mỗi đơn tối đa 50 ly. Vui lòng liên hệ cửa hàng cho đơn lớn hơn.')
   return { idempotencyKey: key.toLowerCase(), fulfillment: value.fulfillment, customer: { name, phone, ...(address && value.fulfillment === 'delivery' ? { address } : {}) }, ...(note ? { note } : {}), items }

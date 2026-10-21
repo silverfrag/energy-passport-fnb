@@ -1,0 +1,153 @@
+/* V6 / wide-screen composition and motion derived from the supplied clips. */
+.takeaway-site .fd-home-hero-v6{background-color:#231106;background-image:radial-gradient(ellipse at 75% 25%,#ba804322,transparent 75%);transition:background-color .65s ease}
+.takeaway-site .fd-home-hero-v6[data-category=FOCUS]{background-color:#162b20}
+.takeaway-site .fd-home-hero-v6[data-category=REFRESH]{background-color:#46221c}
+.takeaway-site .fd-home-hero-v6[data-product=tra-xoai-yakult]{background-color:#483011}
+.takeaway-site .fd-home-hero-v6[data-category=FOCUS] .fd-hero-v5-outline{-webkit-text-stroke-color:#c6d4a3}
+.takeaway-site .fd-home-hero-v6 .fd-hero-v5-picks button{display:grid;place-items:center;width:72px;height:88px;overflow:hidden;border:1px solid #b0835e;border-radius:9px;background:#f5eee108;cursor:pointer;transition:background-color .2s,border-color .2s,transform .2s}
+.takeaway-site .fd-home-hero-v6 .fd-hero-v5-picks button[aria-pressed=true]{border-color:#fff2d9;background:#f5eee120}
+.takeaway-site .fd-home-hero-v6 .fd-hero-v5-picks button:hover{background:#b0835e44;transform:translateY(-3px)}
+.takeaway-site .fd-home-hero-v6 .fd-hero-v5-picks button:focus-visible{outline-color:#f6c29a}
+.takeaway-site .fd-hero-v6-media{position:absolute;inset:0}
+.takeaway-site .fd-hero-v6-media[data-animate=true]{animation:fd-hero-swap .6s cubic-bezier(.22,.8,.22,1) both}
+.takeaway-site .fd-hero-v6-art{position:absolute;inset:24px 10% 18px auto;width:75%;max-width:640px}
+.takeaway-site .fd-hero-v6-art img{object-fit:contain;filter:drop-shadow(0 26px 20px #0004)}
+.takeaway-site .fd-hero-v6-art.is-photo{overflow:hidden;border-radius:160px 160px 28px 28px;background:#f5eee1;margin-block:20px}
+.takeaway-site .fd-hero-v6-art.is-photo img{object-fit:cover;filter:none}
+.takeaway-site .fd-home-hero-v6 .fd-hero-v5-copy{animation:fd-copy-arrive .55s cubic-bezier(.22,.8,.22,1) both}
+.takeaway-site .fd-spotlight-strip{position:relative}
+.takeaway-site .fd-section-wave{position:absolute;z-index:3;top:-1px;left:0;width:100%;height:28px;pointer-events:none;color:var(--fd-paper)}
+.takeaway-site .fd-section-wave svg{display:block;width:100%;height:100%}
+.takeaway-site .fd-reveal-enter{animation:fd-section-arrive .65s cubic-bezier(.22,.8,.22,1) both}
+.takeaway-site .fd-showcase-product img{animation:fd-product-arrive .6s cubic-bezier(.22,.8,.22,1) both}
+.takeaway-site .fd-flavour-name{display:block;animation:fd-copy-arrive .42s ease both}
+@keyframes fd-copy-arrive{from{transform:translateY(14px)}to{transform:translateY(0)}}
+@keyframes fd-hero-swap{from{opacity:.2;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fd-product-arrive{from{transform:translateY(16px) rotate(-6deg) scale(.96)}to{transform:translateY(0) rotate(0) scale(1)}}
+@keyframes fd-section-arrive{from{opacity:.25;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@media(min-width:901px){
+  /* The scene reaches the viewport edge even after the text container stops growing. */
+  .takeaway-site .fd-home-hero-v6 .fd-hero-v5-scene{margin-right:calc(-1 * clamp(24px,5vw,80px) - max(0px,(100vw - 1440px)/2))}
+}
+@media(min-width:1441px){
+  .takeaway-site .fd-home-hero-v6 .fd-hero-composition{min-height:clamp(650px,37.5vw,800px)}
+  .takeaway-site .fd-home-hero-v6 h1{font-size:clamp(136px,7.5vw,176px)}
+  .takeaway-site .fd-home-hero-v6 .fd-hero-watermark{left:calc((100vw - 1440px)/2 + 150px);font-size:clamp(500px,30vw,660px)}
+}
+@media(max-width:900px){.takeaway-site .fd-home-hero-v6 .fd-hero-v5-picks button{width:55px;height:68px}}
+@media(max-width:600px){.takeaway-site .fd-home-hero-v6 .fd-hero-v5-picks button{height:66px}.takeaway-site .fd-hero-v6-art{inset:12px 18%;width:auto;max-width:none}.takeaway-site .fd-hero-v6-art.is-photo{margin-block:4px;border-radius:100px 100px 20px 20px}.takeaway-site .fd-section-wave{height:23px}}
+@media(prefers-reduced-motion:reduce){.takeaway-site .fd-home-hero-v6,.takeaway-site .fd-home-hero-v6 *,.takeaway-site .fd-reveal-enter,.takeaway-site .fd-showcase-product img,.takeaway-site .fd-flavour-name{animation:none!important;transition:none!important}}
+
+@media(min-width:1441px) { .takeaway-site .fd-home-hero-v6 .fd-hero-v5-caption { left: 50%; } }
+.takeaway-site .fd-home-hero-v6[data-category=FOCUS] .fd-hero-watermark { color: #adc18c22; }
+
+
+.takeaway-site .fd-hero-v6-media[data-animate=true] .fd-hero-v6-art img { animation: fd-product-arrive .65s cubic-bezier(.22,.8,.22,1) both; }
+@media(prefers-reduced-motion:reduce) { .takeaway-site .fd-hero-v6-media[data-animate=true] .fd-hero-v6-art img { animation: none!important; } }
+
+
+/* V7: persistent cups travel across an arc, rather than replacing a keyed image. */
+.takeaway-site .fd-drink-motion{display:block;position:absolute;inset:-8% -18%;overflow:clip;isolation:isolate}
+.takeaway-site .fd-drink-layer{display:block;position:absolute;inset:7% 15%;transform-origin:50% 110%;opacity:0;transform:translate(105%,18%) rotate(26deg) scale(.8);transition:transform 1.15s cubic-bezier(.22,.72,.18,1),opacity .3s .6s;pointer-events:none}
+.takeaway-site .fd-drink-layer[data-position=before]{transform:translate(-105%,18%) rotate(-26deg) scale(.8)}
+.takeaway-site .fd-drink-layer[data-position=active]{transform:translate(0,0) rotate(0) scale(1);opacity:1;transition:transform 1.15s cubic-bezier(.22,.72,.18,1),opacity .18s}
+.takeaway-site .fd-drink-motion .fd-drink-layer img{animation:none!important;object-fit:contain;filter:drop-shadow(0 24px 18px #0004)}
+.takeaway-site .fd-drink-layer.is-photo{overflow:hidden;border-radius:120px 120px 25px 25px}
+.takeaway-site .fd-drink-motion .fd-drink-layer.is-photo img{object-fit:cover;filter:none}
+.takeaway-site .fd-hero-v7-campaign{position:absolute;inset:0;opacity:0;transition:opacity .8s}
+.takeaway-site .fd-hero-v7-campaign[data-visible=true]{opacity:1}
+.takeaway-site .fd-hero-v7-cups{position:absolute;inset:24px 10% 18px auto;width:75%;max-width:640px;opacity:0;transition:opacity .6s}
+.takeaway-site .fd-hero-v7-cups[data-visible=true]{opacity:1}
+.takeaway-site .fd-showcase{transition:background-color 1.1s ease}
+@media(max-width:600px){.takeaway-site .fd-hero-v7-cups{inset:12px 18%;width:auto}.takeaway-site .fd-drink-motion{inset:-5% -12%}}
+@media(prefers-reduced-motion:reduce){.takeaway-site .fd-drink-layer,.takeaway-site .fd-showcase,.takeaway-site .fd-hero-v7-campaign,.takeaway-site .fd-hero-v7-cups{transition:none!important}}
+
+/* Keep decorative cup travel from intercepting the carousel controls. */
+.takeaway-site .fd-drink-motion{pointer-events:none}
+.takeaway-site .fd-showcase-gallery .fd-carousel-arrow{position:relative;z-index:2}
+
+/* Desktop hero covers the first viewport below the header. */
+@media(min-width:901px){.takeaway-site .fd-home-hero-v6 .fd-hero-composition{min-height:calc(100svh - 89px)}}
+
+/* V9: shared art direction, individual flavour palettes and ingredient drawings. */
+.takeaway-site [data-flavour=biscoff],.takeaway-site [data-theme=biscoff]{--flavour-base:#281208;--flavour-glow:#a9652e;--flavour-accent:#dfad75;--flavour-mark:#b47a3a25}
+.takeaway-site [data-flavour=matcha],.takeaway-site [data-theme=matcha]{--flavour-base:#092c23;--flavour-glow:#60864d;--flavour-accent:#bdd895;--flavour-mark:#91b87923}
+.takeaway-site [data-flavour=berry],.takeaway-site [data-theme=berry]{--flavour-base:#3e1228;--flavour-glow:#aa4c59;--flavour-accent:#f0ac9f;--flavour-mark:#df889c23}
+.takeaway-site [data-flavour=mango],.takeaway-site [data-theme=mango]{--flavour-base:#402608;--flavour-glow:#b98221;--flavour-accent:#efcf8a;--flavour-mark:#e5b75d24}
+.takeaway-site .fd-home-hero-v6[data-flavour],.takeaway-site .fd-showcase[data-flavour]{background:var(--flavour-base);transition:background-color .9s ease}
+.takeaway-site .fd-flavour-backdrop{position:absolute;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+.takeaway-site .fd-flavour-panel{position:absolute;inset:0;opacity:0;background:radial-gradient(ellipse at 80% 44%,color-mix(in srgb,var(--flavour-glow) 60%,transparent),transparent 65%),linear-gradient(115deg,var(--flavour-base) 28%,color-mix(in srgb,var(--flavour-base) 86%,var(--flavour-glow)));transition:opacity .9s ease}
+.takeaway-site .fd-flavour-panel[data-active=true]{opacity:1}
+.takeaway-site .fd-flavour-drawing{position:absolute;right:-4%;top:0;bottom:0;width:68%;color:var(--flavour-accent);transform:translate(32px,14px) rotate(3deg);transition:transform 1.3s cubic-bezier(.22,.72,.18,1)}
+.takeaway-site .fd-flavour-panel[data-active=true] .fd-flavour-drawing{transform:translate(0,0) rotate(0)}
+.takeaway-site .fd-flavour-drawing svg{display:block;width:100%;height:100%}
+.takeaway-site .fd-flavour-orbit{stroke:currentColor;stroke-width:1;opacity:.23;stroke-dasharray:2 8}
+.takeaway-site .fd-flavour-contour{stroke:currentColor;stroke-width:1;opacity:.16}
+.takeaway-site .fd-flavour-ingredient{stroke:currentColor;stroke-width:1.6;fill:currentColor;fill-opacity:.05;opacity:.56}
+.takeaway-site .fd-flavour-specks{stroke:currentColor;fill:currentColor;opacity:.6}
+.takeaway-site .fd-home-hero-v6[data-flavour] .fd-hero-watermark{color:var(--flavour-mark);transition:color .9s}
+.takeaway-site .fd-home-hero-v6[data-flavour] .fd-hero-v5-outline{-webkit-text-stroke-color:var(--flavour-accent);opacity:.8}
+.takeaway-site .fd-home-hero-v6[data-flavour] .fd-hero-v5-copy>.fd-kicker,.takeaway-site .fd-showcase[data-flavour] .fd-kicker{color:var(--flavour-accent)}
+.takeaway-site .fd-showcase[data-flavour] .fd-showcase-watermark{color:var(--flavour-mark)}
+.takeaway-site .fd-showcase[data-flavour] .fd-showcase-top,.takeaway-site .fd-showcase[data-flavour] .fd-showcase-stage,.takeaway-site .fd-showcase[data-flavour] .fd-showcase-selector{position:relative}
+.takeaway-site .fd-showcase[data-flavour] .fd-flavour-drawing{right:3%;width:78%;opacity:.8}
+@media(max-width:900px){.takeaway-site .fd-flavour-drawing{width:85%;right:-18%}}
+@media(max-width:600px){.takeaway-site .fd-home-hero-v6 .fd-flavour-drawing{top:45%;width:120%;right:-12%}.takeaway-site .fd-showcase[data-flavour] .fd-flavour-drawing{top:70px;bottom:auto;height:390px;right:-12%;width:124%}.takeaway-site .fd-flavour-ingredient{opacity:.45}}
+@media(prefers-reduced-motion:reduce){.takeaway-site .fd-flavour-panel,.takeaway-site .fd-flavour-drawing,.takeaway-site [data-flavour],.takeaway-site [data-flavour] .fd-hero-watermark{transition:none!important}}
+
+/* Wheel selection is scoped to the cup; the rest of the page scrolls normally. */
+.takeaway-site .fd-hero-wheel-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;white-space:nowrap;font-size:11px;letter-spacing:.06em;color:#fff2d9bf;pointer-events:none}
+@media(hover:none),(pointer:coarse){.takeaway-site .fd-hero-wheel-hint{display:none}}
+
+/* Shared purchase controls: size is part of the order, not a visual-only option. */
+.takeaway-site .fd-size-purchase{width:100%;min-width:0}
+.takeaway-site .fd-size-price{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:0 0 12px}
+.takeaway-site .fd-size-price>span{font-size:9px;letter-spacing:.12em;font-weight:800;opacity:.75}
+.takeaway-site .fd-size-price>strong{font-size:27px;line-height:1.15;letter-spacing:-.05em;font-weight:800;white-space:nowrap}
+.takeaway-site .fd-size-options{margin:0 0 14px;padding:0;min-width:0;border:0}
+.takeaway-site .fd-size-options legend{font-size:10px;font-weight:700;margin-bottom:7px}
+.takeaway-site .fd-size-options>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.takeaway-site .fd-size-options label{position:relative;display:block;cursor:pointer}
+.takeaway-site .fd-size-options input{position:absolute;width:1px;height:1px;opacity:0}
+.takeaway-site .fd-size-options label>span{display:grid;place-items:center;min-height:40px;border:1px solid currentColor;border-radius:9px;font-size:12px;font-weight:800;transition:background-color .2s,color .2s;opacity:.8}
+.takeaway-site .fd-size-options input:checked+span{background:#29180f;color:#fff2d9;border-color:#29180f;opacity:1}
+.takeaway-site .fd-size-options input:focus-visible+span{outline:2px solid currentColor;outline-offset:3px}
+.takeaway-site .fd-size-options:disabled{opacity:.45}
+.takeaway-site .fd-add-feedback{margin-top:9px;font-size:11px;line-height:1.7;color:inherit}
+.takeaway-site .fd-product-add{padding-top:4px}
+.takeaway-site .fd-product-add .fd-size-price>strong{font-size:24px}
+.takeaway-site .fd-product-bottom{justify-content:flex-end;border:0;padding:0;margin:10px 0 0;min-height:22px}
+.takeaway-site .fd-showcase-purchase .fd-size-price>strong{font-size:36px}
+.takeaway-site .fd-showcase-purchase .fd-size-options input:checked+span{background:#fff2d9;color:#29180f;border-color:#fff2d9}
+.takeaway-site .fd-product-purchase .fd-size-purchase{margin-top:18px}
+.takeaway-site .fd-product-purchase .fd-size-price>strong{font-size:32px}
+.takeaway-site .fd-detail-stage[data-flavour]{background:var(--flavour-base)}
+.takeaway-site .fd-detail-stage[data-flavour] .fd-detail-watermark{color:var(--flavour-mark)}
+.takeaway-site .fd-detail-stage[data-flavour] .fd-flavour-drawing{right:12%;width:76%;opacity:.75}
+.takeaway-site .fd-detail-breadcrumb,.takeaway-site .fd-detail-composition,.takeaway-site .fd-detail-stage-bottom{position:relative}
+.takeaway-site .fd-product-card[data-highlight=true] .fd-size-options input:checked+span{background:#fff2d9;color:#29180f;border-color:#fff2d9}
+@media(max-width:600px){.takeaway-site .fd-product-add .fd-size-price>strong{font-size:22px}.takeaway-site .fd-product-add .fd-size-price{flex-direction:column;gap:3px}.takeaway-site .fd-size-options>div{gap:5px}.takeaway-site .fd-size-options label>span{min-height:38px}.takeaway-site .fd-showcase-purchase>.fd-size-purchase{width:100%}.takeaway-site .fd-detail-stage[data-flavour] .fd-flavour-drawing{top:40px;height:430px;width:120%;right:-10%}}
+@media(prefers-reduced-motion:reduce){.takeaway-site .fd-size-options label>span{transition:none}}
+
+
+/* The catalogue and related items continue the flavour stages; home keeps its approved layout. */
+.takeaway-site :is(.fd-catalog-section,.fd-related-v5) .fd-product-card[data-flavour]{color:#fff2d9}
+.takeaway-site :is(.fd-catalog-section,.fd-related-v5) .fd-product-card[data-flavour]:before{background:radial-gradient(ellipse at 50% 0,color-mix(in srgb,var(--flavour-glow) 65%,var(--flavour-base)),var(--flavour-base) 78%);border:1px solid #fff2d922}
+.takeaway-site :is(.fd-catalog-section,.fd-related-v5) .fd-product-info h3{color:#fff2d9}
+.takeaway-site :is(.fd-catalog-section,.fd-related-v5) .fd-product-info>p{color:#fff2d9cc}
+.takeaway-site :is(.fd-catalog-section,.fd-related-v5) .fd-product-detail{color:var(--flavour-accent)}
+.takeaway-site :is(.fd-catalog-section,.fd-related-v5) .fd-size-options input:checked+span{background:#fff2d9;color:#29180f;border-color:#fff2d9}
+.takeaway-site :is(.fd-catalog-section,.fd-related-v5) .fd-size-options label>span{opacity:1}
+.takeaway-site :is(.fd-catalog-section,.fd-related-v5) .fd-add-button{background:#fff2d9;color:#29180f;border-color:#fff2d9}
+.takeaway-site :is(.fd-catalog-section,.fd-related-v5) .fd-product-image.fd-cutout:before{content:'';position:absolute;inset:20% 3% 7%;border:1px solid color-mix(in srgb,var(--flavour-accent) 25%,transparent);border-radius:50%;transform:rotate(-18deg);pointer-events:none}
+
+
+/* Unselected sizes have no implicit M price or checked state. */
+.takeaway-site .fd-size-price{flex-wrap:wrap}
+.takeaway-site .fd-size-purchase[data-size-selected=false] .fd-size-price>strong{font-size:22px;letter-spacing:-.04em}
+
+/* The brand exports share a body baseline; headroom accommodates each topping. */
+.takeaway-site :is(.fd-catalog-section,.fd-related-v5) .fd-product-card[data-framed=true] .fd-product-image{height:300px}
+.takeaway-site .fd-showcase-product[data-framed=true]{height:420px}
+.takeaway-site .fd-detail-centerpiece[data-framed=true] img{height:560px}
+@media(max-width:600px){.takeaway-site :is(.fd-catalog-section,.fd-related-v5) .fd-product-card[data-framed=true] .fd-product-image{height:205px}.takeaway-site .fd-showcase-product[data-framed=true]{height:340px}.takeaway-site .fd-detail-centerpiece[data-framed=true] img{height:400px}}

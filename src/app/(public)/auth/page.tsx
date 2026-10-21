@@ -7,6 +7,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Đăng nhập Passport',
   description: 'Đăng nhập nhật ký đồ uống Fame Drink. Xem menu và đặt món không cần đăng nhập Passport.',
+  robots: { index: false, follow: false },
 }
 
 export default async function AuthPage() {

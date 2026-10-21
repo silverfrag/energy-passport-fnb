@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import FameDrinkLogo from '@/components/FameDrinkLogo'
 import AdminUnlockCard from '@/features/admin/AdminUnlockCard'
 import AdminLogoutButton from '@/features/admin/AdminLogoutButton'
@@ -10,6 +11,10 @@ import {
   IconTag 
 } from '@/components/icons'
 import { isOrderAdmin } from '@/lib/orders/auth'
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 
 export default async function AdminLayout({
   children,

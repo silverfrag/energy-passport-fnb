@@ -1,0 +1,802 @@
+[
+  {
+    "slug": "bac-siu",
+    "asset": "/images/campaign/brand-v12/bac-siu.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\bac-siu.png",
+    "scale": {
+      "x": 0.772104607721046,
+      "y": 0.7366482504604052
+    },
+    "visible": {
+      "left": 140.81195516811954,
+      "top": 303.7863720073665,
+      "right": 760.8119551681195,
+      "bottom": 1204.707182320442
+    },
+    "bytes": 150064
+  },
+  {
+    "slug": "ca-phe-caramel-kem-muoi",
+    "asset": "/images/campaign/brand-v12/ca-phe-caramel-kem-muoi.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\ca-phe-caramel-kem-muoi.png",
+    "scale": {
+      "x": 0.6989853438556933,
+      "y": 0.7640878701050621
+    },
+    "visible": {
+      "left": 140.2153325817362,
+      "top": 265.0458452722063,
+      "right": 760.2153325817362,
+      "bottom": 1204.8739255014325
+    },
+    "bytes": 141410
+  },
+  {
+    "slug": "ca-phe-cot-dua",
+    "asset": "/images/campaign/brand-v12/ca-phe-cot-dua.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\ca-phe-cot-dua.png",
+    "scale": {
+      "x": 0.754257907542579,
+      "y": 0.7575757575757576
+    },
+    "visible": {
+      "left": 139.90267639902675,
+      "top": 283.24242424242425,
+      "right": 759.9026763990267,
+      "bottom": 1205.969696969697
+    },
+    "bytes": 153412
+  },
+  {
+    "slug": "ca-phe-den",
+    "asset": "/images/campaign/brand-v12/ca-phe-den.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\ca-phe-den.png",
+    "scale": {
+      "x": 0.7311320754716981,
+      "y": 0.7511737089201878
+    },
+    "visible": {
+      "left": 140.1509433962264,
+      "top": 303.0281690140845,
+      "right": 760.1509433962265,
+      "bottom": 1205.18779342723
+    },
+    "bytes": 162650
+  },
+  {
+    "slug": "ca-phe-kem-deo-buon-me",
+    "asset": "/images/campaign/brand-v12/ca-phe-kem-deo-buon-me.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\ca-phe-kem-deo-buon-me.png",
+    "scale": {
+      "x": 0.7579462102689487,
+      "y": 0.7804878048780488
+    },
+    "visible": {
+      "left": 139.99022004889977,
+      "top": 264.9756097560976,
+      "right": 759.9902200488998,
+      "bottom": 1205.4634146341464
+    },
+    "bytes": 108322
+  },
+  {
+    "slug": "ca-phe-sot-biscoff",
+    "asset": "/images/campaign/brand-v12/ca-phe-sot-biscoff.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\ca-phe-sot-biscoff.png",
+    "scale": {
+      "x": 0.7769423558897243,
+      "y": 0.8869179600886918
+    },
+    "visible": {
+      "left": 140.69674185463657,
+      "top": 96.66075388026607,
+      "right": 760.6967418546366,
+      "bottom": 1205.3082039911308
+    },
+    "bytes": 157720
+  },
+  {
+    "slug": "ca-phe-sua-tuoi-suong-sao",
+    "asset": "/images/campaign/brand-v12/ca-phe-sua-tuoi-suong-sao.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\ca-phe-sua-tuoi-suong-sao.png",
+    "scale": {
+      "x": 0.7701863354037267,
+      "y": 0.7414272474513438
+    },
+    "visible": {
+      "left": 140.06211180124222,
+      "top": 300.5699721964782,
+      "right": 760.0621118012423,
+      "bottom": 1204.3697868396662
+    },
+    "bytes": 127546
+  },
+  {
+    "slug": "ca-phe-sua",
+    "asset": "/images/campaign/brand-v12/ca-phe-sua.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\ca-phe-sua.png",
+    "scale": {
+      "x": 0.7858048162230672,
+      "y": 0.7518796992481203
+    },
+    "visible": {
+      "left": 140.73510773130545,
+      "top": 317.5563909774436,
+      "right": 760.7351077313054,
+      "bottom": 1204.0225563909773
+    },
+    "bytes": 149678
+  },
+  {
+    "slug": "coco-matcha",
+    "asset": "/images/campaign/brand-v12/coco-matcha.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\coco-matcha.png",
+    "scale": {
+      "x": 0.748792270531401,
+      "y": 0.7707129094412332
+    },
+    "visible": {
+      "left": 140.4927536231884,
+      "top": 285.3699421965318,
+      "right": 760.4927536231884,
+      "bottom": 1206.3718689788054
+    },
+    "bytes": 124966
+  },
+  {
+    "slug": "matcha-caramel",
+    "asset": "/images/campaign/brand-v12/matcha-caramel.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\matcha-caramel.png",
+    "scale": {
+      "x": 0.8010335917312662,
+      "y": 0.7568590350047304
+    },
+    "visible": {
+      "left": 140.24806201550388,
+      "top": 326.1135288552507,
+      "right": 760.2480620155039,
+      "bottom": 1204.070009460738
+    },
+    "bytes": 141394
+  },
+  {
+    "slug": "matcha-coldwhisk",
+    "asset": "/images/campaign/brand-v12/matcha-coldwhisk.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\matcha-coldwhisk.png",
+    "scale": {
+      "x": 0.7663782447466008,
+      "y": 0.7123775601068566
+    },
+    "visible": {
+      "left": 139.90234857849197,
+      "top": 346.7960819234194,
+      "right": 759.902348578492,
+      "bottom": 1204.4986642920749
+    },
+    "bytes": 100088
+  },
+  {
+    "slug": "matcha-cookie-kem-deo",
+    "asset": "/images/campaign/brand-v12/matcha-cookie-kem-deo.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\matcha-cookie-kem-deo.png",
+    "scale": {
+      "x": 0.9037900874635568,
+      "y": 0.9888751545117429
+    },
+    "visible": {
+      "left": 140.38775510204079,
+      "top": 87.08776266996291,
+      "right": 760.3877551020408,
+      "bottom": 1205.505562422744
+    },
+    "bytes": 152718
+  },
+  {
+    "slug": "matcha-dau-sua",
+    "asset": "/images/campaign/brand-v12/matcha-dau-sua.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\matcha-dau-sua.png",
+    "scale": {
+      "x": 0.9131075110456554,
+      "y": 1.0723860589812333
+    },
+    "visible": {
+      "left": 140.6273932253314,
+      "top": 102.65415549597856,
+      "right": 760.6273932253314,
+      "bottom": 1205.0670241286864
+    },
+    "bytes": 150004
+  },
+  {
+    "slug": "matcha-dua-non",
+    "asset": "/images/campaign/brand-v12/matcha-dua-non.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\matcha-dua-non.png",
+    "scale": {
+      "x": 0.7635467980295566,
+      "y": 0.7504690431519699
+    },
+    "visible": {
+      "left": 140.74384236453201,
+      "top": 298.765478424015,
+      "right": 760.7438423645319,
+      "bottom": 1204.5816135084428
+    },
+    "bytes": 151898
+  },
+  {
+    "slug": "matcha-latte",
+    "asset": "/images/campaign/brand-v12/matcha-latte.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\matcha-latte.png",
+    "scale": {
+      "x": 0.7506053268765133,
+      "y": 0.7373271889400922
+    },
+    "visible": {
+      "left": 140.62953995157383,
+      "top": 330.28110599078343,
+      "right": 760.6295399515737,
+      "bottom": 1203.2764976958524
+    },
+    "bytes": 116328
+  },
+  {
+    "slug": "matcha-xoai-sua",
+    "asset": "/images/campaign/brand-v12/matcha-xoai-sua.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\matcha-xoai-sua.png",
+    "scale": {
+      "x": 0.7451923076923077,
+      "y": 0.7633587786259542
+    },
+    "visible": {
+      "left": 140.23557692307693,
+      "top": 308.69465648854964,
+      "right": 760.2355769230769,
+      "bottom": 1205.641221374046
+    },
+    "bytes": 139584
+  },
+  {
+    "slug": "tra-buoi",
+    "asset": "/images/campaign/brand-v12/tra-buoi.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-buoi.png",
+    "scale": {
+      "x": 0.7598039215686274,
+      "y": 0.7744433688286544
+    },
+    "visible": {
+      "left": 140.63725490196077,
+      "top": 269.0077444336883,
+      "right": 760.6372549019608,
+      "bottom": 1205.3097773475315
+    },
+    "bytes": 181614
+  },
+  {
+    "slug": "tra-cam-quyt",
+    "asset": "/images/campaign/brand-v12/tra-cam-quyt.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-cam-quyt.png",
+    "scale": {
+      "x": 0.7598039215686274,
+      "y": 0.7312614259597806
+    },
+    "visible": {
+      "left": 140.3970588235294,
+      "top": 324.9689213893967,
+      "right": 760.3970588235294,
+      "bottom": 1203.945155393053
+    },
+    "bytes": 171520
+  },
+  {
+    "slug": "tra-chanh-day-chom-chom",
+    "asset": "/images/campaign/brand-v12/tra-chanh-day-chom-chom.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-chanh-day-chom-chom.png",
+    "scale": {
+      "x": 0.7740324594257179,
+      "y": 0.7729468599033816
+    },
+    "visible": {
+      "left": 140.47940074906367,
+      "top": 276.32850241545896,
+      "right": 760.4794007490636,
+      "bottom": 1206.183574879227
+    },
+    "bytes": 166606
+  },
+  {
+    "slug": "tra-chanh-day-nhiet-doi",
+    "asset": "/images/campaign/brand-v12/tra-chanh-day-nhiet-doi.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-chanh-day-nhiet-doi.png",
+    "scale": {
+      "x": 0.8255659121171771,
+      "y": 0.721370604147881
+    },
+    "visible": {
+      "left": 140.21704394141145,
+      "top": 332.5915238954013,
+      "right": 760.2170439414115,
+      "bottom": 1202.5644724977458
+    },
+    "bytes": 114790
+  },
+  {
+    "slug": "tra-dao-cam-sa",
+    "asset": "/images/campaign/brand-v12/tra-dao-cam-sa.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-dao-cam-sa.png",
+    "scale": {
+      "x": 0.850480109739369,
+      "y": 0.8359456635318704
+    },
+    "visible": {
+      "left": 140.67626886145405,
+      "top": 179.53918495297805,
+      "right": 775.9849108367628,
+      "bottom": 1205.244514106583
+    },
+    "bytes": 166120
+  },
+  {
+    "slug": "tra-dao-luu-do",
+    "asset": "/images/campaign/brand-v12/tra-dao-luu-do.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-dao-luu-do.png",
+    "scale": {
+      "x": 0.7759699624530664,
+      "y": 0.7648183556405354
+    },
+    "visible": {
+      "left": 139.92115143929914,
+      "top": 296.76864244741876,
+      "right": 759.9211514392991,
+      "bottom": 1204.6080305927342
+    },
+    "bytes": 214294
+  },
+  {
+    "slug": "tra-dau",
+    "asset": "/images/campaign/brand-v12/tra-dau.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-dau.png",
+    "scale": {
+      "x": 0.7363420427553444,
+      "y": 0.7633587786259542
+    },
+    "visible": {
+      "left": 140.2684085510689,
+      "top": 282.1374045801527,
+      "right": 760.2684085510689,
+      "bottom": 1205.0381679389313
+    },
+    "bytes": 201780
+  },
+  {
+    "slug": "tra-dua-hau-oi-hong",
+    "asset": "/images/campaign/brand-v12/tra-dua-hau-oi-hong.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-dua-hau-oi-hong.png",
+    "scale": {
+      "x": 0.9748427672955975,
+      "y": 0.9962640099626401
+    },
+    "visible": {
+      "left": 140.1509433962264,
+      "top": 114.64134495641345,
+      "right": 760.1509433962265,
+      "bottom": 1204.5541718555417
+    },
+    "bytes": 187064
+  },
+  {
+    "slug": "tra-dua-luoi",
+    "asset": "/images/campaign/brand-v12/tra-dua-luoi.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-dua-luoi.png",
+    "scale": {
+      "x": 0.8378378378378378,
+      "y": 0.7312614259597806
+    },
+    "visible": {
+      "left": 140.32432432432432,
+      "top": 310.4314442413163,
+      "right": 760.3243243243243,
+      "bottom": 1204.0329067641683
+    },
+    "bytes": 135080
+  },
+  {
+    "slug": "tra-luu-do-habicus",
+    "asset": "/images/campaign/brand-v12/tra-luu-do-habicus.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-luu-do-habicus.png",
+    "scale": {
+      "x": 0.7598039215686274,
+      "y": 0.7319304666056725
+    },
+    "visible": {
+      "left": 140.3970588235294,
+      "top": 328.3494967978042,
+      "right": 760.3970588235294,
+      "bottom": 1203.7383348581884
+    },
+    "bytes": 142126
+  },
+  {
+    "slug": "tra-mang-cau-tuoi",
+    "asset": "/images/campaign/brand-v12/tra-mang-cau-tuoi.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-mang-cau-tuoi.png",
+    "scale": {
+      "x": 0.9064327485380117,
+      "y": 0.7441860465116279
+    },
+    "visible": {
+      "left": 140.14619883040933,
+      "top": 311.3255813953488,
+      "right": 760.1461988304094,
+      "bottom": 1204.3488372093025
+    },
+    "bytes": 151708
+  },
+  {
+    "slug": "tra-me",
+    "asset": "/images/campaign/brand-v12/tra-me.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-me.png",
+    "scale": {
+      "x": 0.7598039215686274,
+      "y": 0.7692307692307693
+    },
+    "visible": {
+      "left": 140.3970588235294,
+      "top": 284.38461538461536,
+      "right": 760.3970588235294,
+      "bottom": 1205.1538461538462
+    },
+    "bytes": 204654
+  },
+  {
+    "slug": "tra-tac",
+    "asset": "/images/campaign/brand-v12/tra-tac.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-tac.png",
+    "scale": {
+      "x": 0.7673267326732673,
+      "y": 0.7774538386783285
+    },
+    "visible": {
+      "left": 140.1138613861386,
+      "top": 284.2108843537415,
+      "right": 760.1138613861386,
+      "bottom": 1206.271137026239
+    },
+    "bytes": 178424
+  },
+  {
+    "slug": "tra-vai-hoa-hong",
+    "asset": "/images/campaign/brand-v12/tra-vai-hoa-hong.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-vai-hoa-hong.png",
+    "scale": {
+      "x": 0.824468085106383,
+      "y": 0.7540056550424128
+    },
+    "visible": {
+      "left": 139.94148936170214,
+      "top": 302.8821866163996,
+      "right": 759.9414893617022,
+      "bottom": 1205.4269557021678
+    },
+    "bytes": 126770
+  },
+  {
+    "slug": "tra-viet-quat",
+    "asset": "/images/campaign/brand-v12/tra-viet-quat.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-viet-quat.png",
+    "scale": {
+      "x": 0.7616707616707616,
+      "y": 0.7525870178739417
+    },
+    "visible": {
+      "left": 140.56756756756755,
+      "top": 288.2784571966134,
+      "right": 760.5675675675675,
+      "bottom": 1204.9294449670742
+    },
+    "bytes": 200028
+  },
+  {
+    "slug": "tra-xoai-yakult",
+    "asset": "/images/campaign/brand-v12/tra-xoai-yakult.webp",
+    "width": 900,
+    "height": 1300,
+    "rim": {
+      "x": 450,
+      "y": 400,
+      "width": 620
+    },
+    "baseY": 1200,
+    "bodyHeight": 800,
+    "source": "C:\\Users\\Admin\\Documents\\Codex\\2026-10-18\\referenced-chatgpt-conversation-this-is-an\\work\\brand-v12\\raw\\tra-xoai-yakult.png",
+    "scale": {
+      "x": 0.8031088082901554,
+      "y": 0.7441860465116279
+    },
+    "visible": {
+      "left": 140.54922279792746,
+      "top": 291.16279069767444,
+      "right": 760.5492227979274,
+      "bottom": 1204.2790697674418
+    },
+    "bytes": 118140
+  }
+]

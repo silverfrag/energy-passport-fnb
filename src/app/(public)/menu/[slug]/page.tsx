@@ -1,11 +1,14 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import CategoryBadge from '@/components/CategoryBadge'
+import ProductCard from '@/components/ProductCard'
+import FlavourBackdrop, { getFlavourTheme } from '@/components/FlavourBackdrop'
+import { getProductArt } from '@/lib/constants/product-art'
 import AddToCartButton from '@/features/orders/AddToCartButton'
-import { getProductImage, getPublicProductCopy } from '@/lib/constants/drink-assets'
-import { findStandardProduct } from '@/lib/constants/products'
-import { getAdminProduct } from '@/lib/store/catalog-service'
+import { getPublicProductCopy } from '@/lib/constants/drink-assets'
+import { findStandardProduct, STANDARD_PRODUCTS } from '@/lib/constants/products'
+import { getAdminProduct, getAdminProductsList } from '@/lib/store/catalog-service'
 import type { Product } from '@/types'
 
 interface Props {
@@ -28,8 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = await getProduct(slug)
   if (!product) return { title: 'Không tìm thấy đồ uống' }
   return {
-    title: `${product.name} — Fame Drink`,
+    title: product.name,
     description: `${getPublicProductCopy(product).summary} Xem món tại Fame Drink, giao tận nơi.`,
+    alternates: { canonical: `/menu/${product.slug}` },
   }
 }
 
@@ -38,57 +42,27 @@ export default async function ProductDetailPage({ params }: Props) {
   const product = await getProduct(slug)
   if (!product) notFound()
 
-  const imageUrl = product.image_url || getProductImage(product.slug, product.category)
+  const art = getProductArt(product)
   const copy = getPublicProductCopy(product)
+  const { products } = await getAdminProductsList().catch(() => ({ products: STANDARD_PRODUCTS }))
+  const related = products.filter((item) => item.active && item.slug !== product.slug).sort((a, b) => Number(b.category === product.category) - Number(a.category === product.category)).slice(0, 4)
+  const category = product.category === 'WAKE' ? 'CÀ PHÊ' : product.category === 'FOCUS' ? 'MATCHA' : 'TRÀ TRÁI CÂY'
 
-  return (
-    <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-5 sm:px-8 sm:pt-8">
-      <Link href="/menu" className="mb-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-[#756457] hover:text-[#b94720] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b94720]">
-        <span aria-hidden="true">←</span> Xem tất cả món
-      </Link>
-
-      <div className="grid items-start gap-7 md:grid-cols-2 md:gap-10 lg:gap-14">
-        <div className="overflow-hidden rounded-3xl border border-[#e8ddcf] bg-[#f7f1e8]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={imageUrl} alt={product.name} width={1254} height={1254} fetchPriority="high" className="aspect-square h-auto w-full object-contain" />
-        </div>
-
-        <div className="space-y-6 md:pt-2">
-          <div>
-            <CategoryBadge category={product.category} />
-            <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-[#35251c] sm:text-4xl">{product.name}</h1>
-            <p className="mt-3 text-2xl font-extrabold tracking-tight text-[#b94720]">
-              {product.price !== null ? `${new Intl.NumberFormat('vi-VN').format(product.price)}₫` : 'Liên hệ để biết giá'}
-            </p>
-            <p className="mt-4 text-base leading-relaxed text-[#756457]">{copy.description}</p>
-          </div>
-
-          <div className="flex flex-wrap gap-2" aria-label="Hương vị">
-            {copy.tastingNotes.map((note) => <span key={note} className="rounded-full border border-[#e5d7c7] bg-[#f7efe4] px-3 py-1.5 text-xs font-medium text-[#71533e]">{note}</span>)}
-          </div>
-
-          <section className="rounded-2xl border border-[#e8ddcf] bg-white p-5 sm:p-6" aria-labelledby="nhan-mon-heading">
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#a4522c]">Chọn món · Nhận món · Thưởng thức</p>
-            <h2 id="nhan-mon-heading" className="text-lg font-bold text-[#35251c]">Giao tận địa chỉ của bạn</h2>
-            <p className="mt-2 text-sm leading-relaxed text-[#756457]">
-              Thêm món vào giỏ, nhập địa chỉ giao hàng và gửi đơn cho Fame. Bạn có thể ghi yêu cầu riêng khi đặt món.
-            </p>
-            <div className="mt-5">
-              <AddToCartButton product={product} />
-            </div>
-            <Link href="/checkout" className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-[#d7c9b9] px-5 py-2.5 text-sm font-bold text-[#493326] transition-colors hover:border-[#b94720] hover:text-[#b94720] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b94720]">
-              Xem giỏ hàng <span aria-hidden="true">→</span>
-            </Link>
-          </section>
-
-          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#e8ddcf] pt-5">
-            <p className="text-xs text-[#756457]">Đã có Passport của bạn?</p>
-            <Link href="/passport" className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#71533e] hover:text-[#b94720] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b94720]">
-              Xem Passport <span aria-hidden="true">→</span>
-            </Link>
-          </div>
-        </div>
+  return <div className="fd-detail-v5">
+    <section className="fd-detail-stage" data-category={product.category} data-flavour={getFlavourTheme(product)} aria-labelledby="product-title">
+      <FlavourBackdrop products={[product]} selected={0} />
+      <span className="fd-detail-watermark" aria-hidden="true">{category}</span>
+      <nav className="fd-detail-breadcrumb fd-shell" aria-label="Đường dẫn"><Link href="/">Fame Drink</Link><span aria-hidden="true">/</span><Link href="/menu">Menu</Link><span aria-hidden="true">/</span><span aria-current="page">{product.name}</span></nav>
+      <div className="fd-detail-composition fd-shell">
+        <div className="fd-detail-editorial"><p className="fd-kicker">THE FAME EDIT / {category}</p><h1 id="product-title">{product.name}</h1><p className="fd-detail-v5-description">{copy.description}</p><div className="fd-detail-v5-notes" aria-label="Hương vị">{copy.tastingNotes.map((note, i) => <span key={note}><small>{String(i + 1).padStart(2, '0')}</small>{note}</span>)}</div><Link href="/menu" className="fd-text-link">Khám phá menu ↗</Link></div>
+        <div className={`fd-detail-centerpiece${art.cutout ? ' is-cutout' : ''}`} data-framed={art.framed}><span className="fd-detail-orbit" aria-hidden="true" /><Image src={art.src} alt={product.name} width={800} height={900} sizes="(min-width: 1000px) 40vw, (min-width: 600px) 50vw, 85vw" loading="eager" fetchPriority="high" unoptimized={!art.src.startsWith('/images/')} /><span className="fd-detail-art-signature" aria-hidden="true">FAME / ĐẬM VỊ. ĐÚNG GU.</span></div>
+        <section className="fd-product-purchase" aria-labelledby="choice-heading"><p className="fd-kicker">YOUR DAILY FLAVOUR</p><h2 id="choice-heading">Một ly<br /><em>đúng gu.</em></h2><p className="fd-purchase-name">{product.name}</p><AddToCartButton product={product} /><Link href="/checkout" className="fd-button fd-button-outline">Xem giỏ hàng →</Link><p className="fd-purchase-note">Giao tận địa chỉ của bạn. Ghi yêu cầu riêng cho món tại bước đặt hàng.</p></section>
       </div>
+      <div className="fd-detail-stage-bottom fd-shell"><span>CHỌN MÓN THEO GU CỦA BẠN</span><span>{category} / FAME DRINK</span><span aria-hidden="true">✳</span></div>
+    </section>
+    <div className="fd-detail-after fd-shell">
+      <section className="fd-detail-passport-line" aria-labelledby="passport-prompt"><span className="fd-kicker">ENERGY PASSPORT</span><h2 id="passport-prompt">Mỗi ly, một dấu nhớ.</h2><p>Nhật ký đồ uống cá nhân, dùng tùy chọn.<br />Bạn không cần tài khoản để đặt món.</p><Link href="/passport" className="fd-text-link">Mở Passport ↗</Link></section>
+      {related.length > 0 && <section className="fd-related-v5" aria-labelledby="related-title"><div className="fd-heading-row"><div><p className="fd-kicker">MỘT CHÚT GU MỚI</p><h2 id="related-title">Cũng có thể bạn thích.</h2></div><Link href="/menu" className="fd-text-link">Tất cả đồ uống ↗</Link></div><div className="fd-product-grid">{related.map((item) => <ProductCard key={item.id} product={item} />)}</div></section>}
     </div>
-  )
+  </div>
 }

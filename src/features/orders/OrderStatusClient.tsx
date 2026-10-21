@@ -156,7 +156,7 @@ export default function OrderStatusClient({ orderId }: { orderId: string }) {
             <section className="rounded-3xl border border-[#e8ddcf] bg-white p-5 sm:p-6" aria-labelledby="order-summary-heading">
               <h2 id="order-summary-heading" className="text-lg font-bold text-[#35251c]">Món trong đơn</h2>
               <ul className="mt-3 divide-y divide-[#eee3d5]">
-                {order.items.map((item) => <li key={item.productId} className="flex justify-between gap-4 py-3 text-sm"><div><p className="font-semibold text-[#35251c]">{item.name}</p><p className="mt-1 text-xs text-[#756457]">{item.quantity} ly × {formatMoney(item.unitPrice)}</p></div><span className="whitespace-nowrap font-semibold text-[#71533e]">{formatMoney(item.lineTotal)}</span></li>)}
+                {order.items.map((item) => <li key={`${item.productId}:${item.size ?? 'M'}`} className="flex justify-between gap-4 py-3 text-sm"><div><p className="font-semibold text-[#35251c]">{item.name}</p><p className="mt-1 text-xs text-[#756457]">Size {item.size ?? 'M'} · {item.quantity} ly × {formatMoney(item.unitPrice)}</p></div><span className="whitespace-nowrap font-semibold text-[#71533e]">{formatMoney(item.lineTotal)}</span></li>)}
               </ul>
               <dl className="mt-2 space-y-3 border-t border-[#e8ddcf] pt-4 text-sm">
                 <div className="flex justify-between gap-4 text-[#756457]"><dt>Tiền món</dt><dd>{formatMoney(order.subtotal)}</dd></div>

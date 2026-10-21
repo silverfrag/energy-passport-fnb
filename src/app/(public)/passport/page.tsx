@@ -11,6 +11,7 @@ import { cookies } from 'next/headers'
 export const metadata: Metadata = {
   title: 'Passport — Nhật ký đồ uống',
   description: 'Nhật ký những ly đồ uống bạn tự ghi nhận tại Fame Drink. Passport là tính năng tùy chọn.',
+  robots: { index: false, follow: false },
 }
 
 async function getPassportData() {

@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useMemo, type ReactNode } from 'react'
 import type { Product } from '@/types'
+import { getProductArt } from '@/lib/constants/product-art'
+import { DEFAULT_SIZE, getSizePrice, type ProductSize } from '@/lib/constants/product-sizes'
 import { CART_KEY, parseCart, quantityError, subtractOrderedItems, type CartItem } from './cart-model'
 import { readStoredValue, useBrowserReady, useStoredValue, writeStoredValue } from './browser-storage'
 
@@ -11,16 +13,16 @@ interface CartContextValue {
   notice: string | null
   totalQuantity: number
   subtotal: number
-  addItem: (product: Product) => string | null
-  setQuantity: (productId: string, quantity: number) => string | null
-  removeItem: (productId: string) => string | null
-  removeOrdered: (items: { productId: string; quantity: number }[]) => void
+  addItem: (product: Product, size: ProductSize) => string | null
+  setQuantity: (productId: string, quantity: number, size?: ProductSize) => string | null
+  removeItem: (productId: string, size?: ProductSize) => string | null
+  removeOrdered: (items: { productId: string; quantity: number; size?: ProductSize }[]) => void
 }
 
 const CartContext = createContext<CartContextValue | null>(null)
 const currentItems = () => parseCart(readStoredValue(CART_KEY)).items
 function save(items: CartItem[]): string | null {
-  return writeStoredValue(CART_KEY, JSON.stringify({ version: 1, items })) ? null : 'Trình duyệt chưa cho phép lưu giỏ hàng. Hãy bật bộ nhớ trang web rồi thử lại.'
+  return writeStoredValue(CART_KEY, JSON.stringify({ version: 2, items })) ? null : 'Trình duyệt chưa cho phép lưu giỏ hàng. Hãy bật bộ nhớ trang web rồi thử lại.'
 }
 
 export default function CartProvider({ children }: { children: ReactNode }) {
@@ -32,22 +34,23 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     ready,
     totalQuantity: cart.items.reduce((sum, item) => sum + item.quantity, 0),
     subtotal: cart.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0),
-    addItem(product) {
-      if (!product.active || product.price === null || !Number.isSafeInteger(product.price) || product.price <= 0) return 'Món này hiện chưa nhận đặt online.'
+    addItem(product, size) {
+      const price = getSizePrice(product.price, size)
+      if (!product.active || price === null) return 'Món này hiện chưa nhận đặt online.'
       const items = currentItems()
-      const existing = items.find((item) => item.productId === product.slug)
+      const existing = items.find((item) => item.productId === product.slug && item.size === size)
       const quantity = (existing?.quantity ?? 0) + 1
-      const error = quantityError(items, product.slug, quantity)
+      const error = quantityError(items, product.slug, quantity, size)
       if (error) return error
-      const item: CartItem = { productId: product.slug, name: product.name, unitPrice: product.price, imageUrl: product.image_url || `/images/drinks/${product.slug}.jpg`, quantity }
-      return save(existing ? items.map((entry) => entry.productId === product.slug ? item : entry) : [...items, item])
+      const item: CartItem = { productId: product.slug, size, name: product.name, unitPrice: price, imageUrl: getProductArt(product).src, quantity }
+      return save(existing ? items.map((entry) => entry.productId === product.slug && entry.size === size ? item : entry) : [...items, item])
     },
-    setQuantity(productId, quantity) {
+    setQuantity(productId, quantity, size = DEFAULT_SIZE) {
       const items = currentItems()
-      const error = quantityError(items, productId, quantity)
-      return error ?? save(items.map((item) => item.productId === productId ? { ...item, quantity } : item))
+      const error = quantityError(items, productId, quantity, size)
+      return error ?? save(items.map((item) => item.productId === productId && item.size === size ? { ...item, quantity } : item))
     },
-    removeItem(productId) { return save(currentItems().filter((item) => item.productId !== productId)) },
+    removeItem(productId, size = DEFAULT_SIZE) { return save(currentItems().filter((item) => item.productId !== productId || item.size !== size)) },
     removeOrdered(ordered) { save(subtractOrderedItems(currentItems(), ordered)) },
   }
 

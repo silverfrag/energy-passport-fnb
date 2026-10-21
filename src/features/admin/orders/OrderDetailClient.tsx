@@ -121,8 +121,8 @@ export default function OrderDetailClient({ orderId, initialOrder, initialError 
             <section className="surface rounded-2xl border border-white/10 p-5 space-y-4">
               <h2 className="font-bold text-lg text-white">Món đã đặt</h2>
               <ul className="space-y-3">
-                {order.items.map((item) => <li key={item.productId} className="flex justify-between items-start gap-3 text-sm">
-                  <div><p className="text-white font-semibold">{item.quantity} × {item.name}</p><p className="text-xs text-stone-400 mt-1">{money(item.unitPrice)}/ly</p></div>
+                {order.items.map((item) => <li key={`${item.productId}:${item.size ?? 'M'}`} className="flex justify-between items-start gap-3 text-sm">
+                  <div><p className="text-white font-semibold">{item.quantity} × {item.name}</p><p className="text-xs text-stone-400 mt-1">Size {item.size ?? 'M'} · {money(item.unitPrice)}/ly</p></div>
                   <span className="text-white whitespace-nowrap">{money(item.lineTotal)}</span>
                 </li>)}
               </ul>

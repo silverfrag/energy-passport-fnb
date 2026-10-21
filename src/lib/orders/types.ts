@@ -1,3 +1,5 @@
+import type { ProductSize } from '@/lib/constants/product-sizes'
+
 export type FulfillmentMethod = 'pickup' | 'delivery'
 export type PaymentStatus = 'pending_quote' | 'awaiting_payment' | 'payment_review' | 'paid'
 export type FulfillmentStatus = 'unconfirmed' | 'confirmed' | 'preparing' | 'ready' | 'out_for_delivery' | 'completed' | 'cancelled'
@@ -7,11 +9,12 @@ export interface CreateOrderInput {
   fulfillment: FulfillmentMethod
   customer: { name: string; phone: string; address?: string }
   note?: string
-  items: { productId: string; quantity: number }[]
+  items: { productId: string; quantity: number; size?: ProductSize }[]
 }
 
 export interface OrderItem {
   productId: string
+  size: ProductSize
   slug: string
   name: string
   unitPrice: number

@@ -5,6 +5,7 @@ import CheckInForm from '@/features/checkin/CheckInForm'
 export const metadata: Metadata = {
   title: 'Gợi ý món theo khẩu vị',
   description: 'Chọn nhóm đồ uống yêu thích để xem gợi ý từ menu Fame Drink. Không bắt buộc khi đặt món.',
+  robots: { index: false, follow: false },
 }
 
 export default function CheckInPage() {

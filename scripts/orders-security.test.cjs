@@ -47,8 +47,54 @@ test('checkout rejects pickup and missing address; strips client totals/payment 
 })
 
 test('checkout rejects duplicate, fractional, oversized and injected item identifiers', () => {
-  for (const items of [[{ productId: 'tra-dau', quantity: -1 }], [{ productId: 'tra-dau', quantity: 1.5 }], [{ productId: 'tra-dau', quantity: 21 }], [{ productId: 'slug,id.eq.any', quantity: 1 }], [{ productId: 'tra-dau', quantity: 1 }, { productId: 'tra-dau', quantity: 1 }]]) {
+  for (const items of [[{ productId: 'tra-dau', quantity: -1 }], [{ productId: 'tra-dau', quantity: 1.5 }], [{ productId: 'tra-dau', quantity: 21 }], [{ productId: 'slug,id.eq.any', quantity: 1 }], [{ productId: 'tra-dau', quantity: 1 }, { productId: 'tra-dau', quantity: 1 }], [{ productId: 'tra-dau', quantity: 1, size: 'S' }, { productId: 'tra-dau', quantity: 1, size: 'S' }], [{ productId: 'tra-dau', quantity: 1, size: 'XL' }]]) {
     assert.throws(() => validation.parseCreateOrder({ ...validInput(), items }))
+  }
+})
+
+test('checkout accepts distinct sizes and retains legacy size omission for retry hashes', () => {
+  const legacy = validation.parseCreateOrder(validInput())
+  assert.equal('size' in legacy.items[0], false)
+  const sized = validation.parseCreateOrder({ ...validInput(), items: [
+    { productId: 'tra-dau', size: 'S', quantity: 1 },
+    { productId: 'tra-dau', size: 'M', quantity: 2 },
+    { productId: 'tra-dau', size: 'L', quantity: 3 },
+  ] })
+  assert.deepEqual(sized.items.map(item => item.size), ['S', 'M', 'L'])
+})
+
+test('server snapshots size prices from trusted catalog, ignoring browser price claims', async () => {
+  const dbModule = load('src/lib/orders/db')
+  const original = dbModule.orderDatabase
+  const originalSecret = process.env.ADMIN_SESSION_SECRET
+  process.env.ADMIN_SESSION_SECRET = 'test-only-random-secret-never-for-production-123456789'
+  let inserted
+  dbModule.orderDatabase = () => ({ from(table) {
+    if (table === 'online_orders') return {
+      select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: null, error: null }) }) }),
+      insert: async row => { inserted = row; return { error: null } },
+    }
+    if (table === 'online_payment_settings') return {
+      select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { enabled: true, bank_bin: bank.bankBin, bank_name: bank.bankName, account_number: bank.accountNumber, account_name: bank.accountName, version: 1 }, error: null }) }) }),
+    }
+    if (table === 'products') return {
+      select: () => ({ eq: async () => ({ data: [{ id: 'trusted-id', slug: 'tra-dau', name: 'Trusted name', price: 19000, active: true }], error: null }) }),
+    }
+    throw new Error(`Unexpected table: ${table}`)
+  } })
+  try {
+    const input = validation.parseCreateOrder({ ...validInput(), items: [
+      { productId: 'tra-dau', size: 'S', quantity: 1, unitPrice: 1 },
+      { productId: 'tra-dau', size: 'L', quantity: 2, unitPrice: 1 },
+    ] })
+    const result = await service.createOrder(input)
+    assert.deepEqual(result.order.items.map(item => [item.size, item.unitPrice, item.lineTotal]), [['S', 14000, 14000], ['L', 24000, 48000]])
+    assert.equal(result.order.subtotal, 62000)
+    assert.deepEqual(inserted.items, result.order.items)
+  } finally {
+    dbModule.orderDatabase = original
+    if (originalSecret === undefined) delete process.env.ADMIN_SESSION_SECRET
+    else process.env.ADMIN_SESSION_SECRET = originalSecret
   }
 })
 
@@ -117,11 +163,12 @@ test('bank QR has known CRC algorithm, exact amount/content and no customer PII'
 })
 
 test('public order DTO omits secrets; payment instructions disappear when paid/cancelled', () => {
-  const row = { ...validOrder(), access_token_hash: 'secret', idempotency_key: 'private', request_hash: 'private' }
+  const row = { ...validOrder(), items: [{ productId: 'tra-dau', slug: 'tra-dau', name: 'Trà Dâu', unitPrice: 30000, quantity: 1, lineTotal: 30000 }], access_token_hash: 'secret', idempotency_key: 'private', request_hash: 'private' }
   const dto = service.publicOrder(row)
   assert.equal('access_token_hash' in dto, false)
   assert.equal('idempotency_key' in dto, false)
   assert.equal(dto.payment.amount, 80000)
+  assert.equal(dto.items[0].size, 'M')
   assert.equal(service.publicOrder({ ...row, payment_status: 'paid' }).payment, null)
   assert.equal(service.publicOrder({ ...row, fulfillment_status: 'cancelled' }).payment, null)
 })

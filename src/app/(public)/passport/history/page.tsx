@@ -8,6 +8,7 @@ import { getProductImage } from '@/lib/constants/drink-assets'
 export const metadata: Metadata = {
   title: 'Lịch sử Passport',
   description: 'Những ly đồ uống bạn đã tự ghi nhận trong Passport.',
+  robots: { index: false, follow: false },
 }
 
 export default async function PassportHistoryPage() {

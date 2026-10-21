@@ -35,7 +35,7 @@ export default function CategoryBadge({ category, showEmoji = true }: CategoryBa
     <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold ${config.className}`}>
       {showEmoji && <Icon className="h-3 w-3 flex-shrink-0" color={config.iconColor} />}
       <span>{config.label}</span>
-      <span className="ml-0.5 text-[9px] font-medium tracking-wider opacity-80">{category}</span>
+      <span className="ml-0.5 text-[10px] font-medium tracking-wider">{category}</span>
     </span>
   )
 }

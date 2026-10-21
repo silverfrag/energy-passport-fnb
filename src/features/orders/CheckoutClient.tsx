@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import type { ProductSize } from '@/lib/constants/product-sizes'
 import type { Order } from '@/lib/orders/types'
 import { useCart } from './CartProvider'
 import { LAST_ORDER_KEY, PENDING_ORDER_KEY, formatMoney } from './cart-model'
@@ -10,8 +11,8 @@ import { orderAccessKey, readStoredValue, removeStoredValue, useStoredValue, wri
 import { parsePendingOrder, type PendingOrder } from './checkout-draft'
 import { FANPAGE_URL, OrderApiError, orderRequest, type OrderConfig } from './order-api'
 
-const INPUT_CLASS = 'mt-1.5 w-full rounded-xl border border-[#d8c9b7] bg-white px-3 py-3 text-base text-[#35251c] outline-none focus:border-[#b94720] focus:ring-2 focus:ring-[#b94720]/20 disabled:bg-[#f4efe7]'
-const BUTTON_CLASS = 'inline-flex min-h-11 items-center justify-center rounded-full bg-[#b94720] px-5 py-3 text-sm font-bold text-white hover:bg-[#963716] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b94720] disabled:cursor-not-allowed disabled:opacity-50'
+const INPUT_CLASS = 'fd-input'
+const BUTTON_CLASS = 'fd-checkout-submit'
 
 export default function CheckoutClient() {
   const cart = useCart()
@@ -68,7 +69,7 @@ export default function CheckoutClient() {
           fulfillment: 'delivery',
           customer: { name: customer.name.trim(), phone, address: customer.address.trim() },
           note: note.trim(),
-          items: cart.items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
+          items: cart.items.map((item) => ({ productId: item.productId, size: item.size, quantity: item.quantity })),
         },
         items: cart.items,
       } satisfies PendingOrder
@@ -109,19 +110,20 @@ export default function CheckoutClient() {
     } finally { inFlight.current = false; setBusy(false) }
   }
 
-  function changeQuantity(productId: string, next: number) {
-    setError(cart.setQuantity(productId, next) || '')
+  function changeQuantity(productId: string, next: number, size: ProductSize) {
+    setError(cart.setQuantity(productId, next, size) || '')
   }
 
   if (!cart.ready) return <div className="mx-auto max-w-6xl px-4 py-12 text-[#756457]" role="status">Đang mở giỏ hàng…</div>
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8 sm:py-12">
+    <div className="fd-checkout">
       <Link href="/menu" className="inline-flex min-h-11 items-center text-sm font-semibold text-[#756457] hover:text-[#b94720]">← Chọn thêm món</Link>
       <header className="mb-7 mt-3">
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#b94720]">Giao hàng tận nơi</p>
-        <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-[#35251c] sm:text-4xl">Giỏ hàng của bạn</h1>
+        <h1 className="fd-checkout-title mt-2">Giỏ hàng của bạn</h1>
         <p className="mt-3 text-sm text-[#756457]">Phí giao hàng 0₫ đang áp dụng cho bản demo. Fame xác nhận chuyển khoản thủ công.</p>
+        <ol className="fd-checkout-steps" aria-label="Các bước đặt hàng"><li><span><b>01</b> Giỏ hàng & địa chỉ</span></li><li><span><b>02</b> Chuyển khoản</span></li><li><span><b>03</b> Fame xác nhận</span></li></ol>
       </header>
 
       {lastOrderId && <Link href={`/orders/${lastOrderId}`} className="mb-5 inline-flex min-h-11 items-center rounded-full border border-[#d8c9b7] bg-white px-4 text-sm font-semibold text-[#71533e]">Xem đơn gần nhất →</Link>}
@@ -130,33 +132,33 @@ export default function CheckoutClient() {
       {pending && <p role="status" className="mb-5 rounded-xl border border-[#d7c9b9] bg-white p-4 text-sm text-[#71533e]">Đang giữ nguyên yêu cầu đã gửi. Nút kiểm tra bên dưới dùng lại cùng mã đơn để tránh đặt trùng, kể cả sau khi tải lại trang.</p>}
 
       {!displayItems.length && !invalidPending ? (
-        <div className="rounded-3xl border border-[#e8ddcf] bg-white px-6 py-12 text-center">
-          <h2 className="text-xl font-bold text-[#35251c]">Bạn chưa chọn món nào</h2>
+        <div className="fd-checkout-empty">
+          <span className="fd-empty-symbol" aria-hidden="true">✳</span><h2 className="text-xl font-bold text-[#35251c]">Một ly ngon đang chờ bạn.</h2>
           <p className="mt-2 text-sm text-[#756457]">Ghé menu để chọn cà phê, matcha hoặc trà trái cây nhé.</p>
           <Link href="/menu" className={`mt-6 ${BUTTON_CLASS}`}>Xem menu</Link>
         </div>
       ) : (
-        <form onSubmit={submit} className="grid items-start gap-7 lg:grid-cols-[1.05fr_0.95fr]">
-          <section className="rounded-3xl border border-[#e8ddcf] bg-white p-4 sm:p-6" aria-labelledby="cart-items-heading">
+        <form onSubmit={submit} className="fd-checkout-form">
+          <section className="fd-cart-panel" aria-labelledby="cart-items-heading">
             <div className="mb-4 flex items-baseline justify-between gap-3">
               <h2 id="cart-items-heading" className="text-xl font-bold text-[#35251c]">Món đã chọn</h2>
               <span className="text-sm text-[#756457]">{quantity} ly</span>
             </div>
             <ul className="divide-y divide-[#eee3d5]">
               {displayItems.map((item) => (
-                <li key={item.productId} className="flex gap-3 py-4">
+                <li key={`${item.productId}:${item.size}`} className="fd-cart-row">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={item.imageUrl} alt="" width={80} height={80} className="h-20 w-20 flex-shrink-0 rounded-xl bg-[#f7f1e8] object-contain" />
+                  <img src={item.imageUrl} alt="" width={80} height={80} className="fd-cart-thumbnail" />
                   <div className="min-w-0 flex-1">
                     <Link href={`/menu/${item.productId}`} className="text-sm font-bold leading-snug text-[#35251c] hover:text-[#b94720]">{item.name}</Link>
-                    <p className="mt-1 text-xs text-[#756457]">{formatMoney(item.unitPrice)} / ly</p>
+                    <p className="mt-1 text-xs text-[#756457]">Size {item.size} · {formatMoney(item.unitPrice)} / ly</p><p className="fd-cart-line-total">{formatMoney(item.unitPrice * item.quantity)}</p>
                     <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
                       <div className="inline-flex items-center rounded-full border border-[#d8c9b7]">
-                        <button type="button" disabled={locked || item.quantity <= 1} onClick={() => changeQuantity(item.productId, item.quantity - 1)} aria-label={`Giảm số lượng ${item.name}`} className="h-11 w-11 rounded-full text-lg text-[#71533e] disabled:opacity-30">−</button>
+                        <button type="button" disabled={locked || item.quantity <= 1} onClick={() => changeQuantity(item.productId, item.quantity - 1, item.size)} aria-label={`Giảm số lượng ${item.name}, size ${item.size}`} className="h-11 w-11 rounded-full text-lg text-[#71533e] disabled:opacity-30">−</button>
                         <span aria-label={`${item.quantity} ly`} className="min-w-6 text-center text-sm font-bold text-[#35251c]">{item.quantity}</span>
-                        <button type="button" disabled={locked || item.quantity >= 20 || quantity >= 50} onClick={() => changeQuantity(item.productId, item.quantity + 1)} aria-label={`Tăng số lượng ${item.name}`} className="h-11 w-11 rounded-full text-lg text-[#71533e] disabled:opacity-30">+</button>
+                        <button type="button" disabled={locked || item.quantity >= 20 || quantity >= 50} onClick={() => changeQuantity(item.productId, item.quantity + 1, item.size)} aria-label={`Tăng số lượng ${item.name}, size ${item.size}`} className="h-11 w-11 rounded-full text-lg text-[#71533e] disabled:opacity-30">+</button>
                       </div>
-                      <button type="button" disabled={locked} onClick={() => setError(cart.removeItem(item.productId) || '')} aria-label={`Xóa ${item.name} khỏi giỏ`} className="min-h-10 px-2 text-xs font-semibold text-[#a63d1b] underline underline-offset-4 disabled:opacity-40">Xóa</button>
+                      <button type="button" disabled={locked} onClick={() => setError(cart.removeItem(item.productId, item.size) || '')} aria-label={`Xóa ${item.name}, size ${item.size} khỏi giỏ`} className="min-h-10 px-2 text-xs font-semibold text-[#a63d1b] underline underline-offset-4 disabled:opacity-40">Xóa</button>
                     </div>
                   </div>
                 </li>
@@ -170,7 +172,7 @@ export default function CheckoutClient() {
             <p className="mt-3 text-xs leading-relaxed text-[#756457]">Giá được kiểm tra lại khi gửi đơn. Bạn sẽ thấy số tiền chính xác trước khi chuyển khoản.</p>
           </section>
 
-          <section className="rounded-3xl border border-[#e8ddcf] bg-white p-5 sm:p-6" aria-labelledby="delivery-heading">
+          <section className="fd-delivery-panel" aria-labelledby="delivery-heading">
             <h2 id="delivery-heading" className="text-xl font-bold text-[#35251c]">Giao đến địa chỉ của bạn</h2>
             <fieldset disabled={locked} className="mt-5 space-y-4">
               <legend className="sr-only">Thông tin người nhận</legend>

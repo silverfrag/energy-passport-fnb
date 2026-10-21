@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import OrderStatusClient from '@/features/orders/OrderStatusClient'
 
 export const metadata: Metadata = {
-  title: 'Theo dõi đơn — Fame Drink',
+  title: 'Theo dõi đơn',
   robots: { index: false, follow: false },
   referrer: 'no-referrer',
 }
